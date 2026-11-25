@@ -40,6 +40,24 @@ print(round(2.567, 2))   # 2.57
 print(max(3, 9, 4))      # 9
 ```
 
+## Gyökvonás és a math modul
+A négyzetgyököt a <code>math</code> modul <code>sqrt()</code> függvénye adja. A modult a program elején be kell kapcsolni az <code>import math</code> utasítással, a függvényt pedig a modul nevével együtt hívod: <code>math.sqrt()</code>. Gyököt hatványozással is vonhatsz: a <code>0.5</code> kitevő a négyzetgyök. A <code>math.pi</code> a π értéke. A négyzetgyök eredménye mindig <b>float</b>.
+```python
+import math
+print(math.sqrt(81))   # 9.0
+print(81 ** 0.5)       # 9.0
+print(math.pi)         # 3.141592653589793
+```
+
+## Kerekítés és a tizedestörtek pontatlansága
+A számítógép a tizedestörteket kettes számrendszerben tárolja, ezért néha apró pontatlanság jelenik meg. Emiatt két tizedestört egyenlőségét ne <code>==</code> jellel vizsgáld, és kiíráskor érdemes kerekíteni. Figyelj a <code>round()</code> szabályára is: a pontosan <b>.5</b>-re végződő számot a <b>páros</b> szomszéd felé kerekíti, ez eltér az iskolai kerekítéstől. Ha egy feladatban a „fél felfelé” szabály kell, azt másképp kell megoldani (például a hányados és a maradék segítségével).
+```python
+print(0.1 + 0.2)             # 0.30000000000000004
+print(round(0.1 + 0.2, 2))   # 0.3
+print(round(2.5))            # 2
+print(round(3.5))            # 4
+```
+
 ## Összevont operátorok
 Programozás közben gyakran kell egy változó értékét a régi értékéből kiszámolni, például <code>x = x + 1</code>. Erre rövidebb írásmód az <b>összevont (értékadó) operátor</b>: <code>x += 1</code>. Minden művelethez van ilyen: <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>, <code>//=</code>, <code>%=</code>, <code>**=</code>. Később ezekkel számolunk összeget (<code>s += x</code>) és darabszámot (<code>db += 1</code>).
 ```python
@@ -53,7 +71,7 @@ x **= 4    # x = x ** 4   → 1
 ```
 
 ## Összefoglalás
-A / mindig float-ot ad, a // egész hányadost, a % maradékot. A ** hatvány. A műveleti sorrend a matematikai. Az összevont operátorok (+=, -=, *=, …) a változó régi értékét módosítják.
+A / mindig float-ot ad, a // egész hányadost, a % maradékot. A ** hatvány. A műveleti sorrend a matematikai. Az összevont operátorok (+=, -=, *=, …) a változó régi értékét módosítják. A négyzetgyökhöz a math.sqrt (import math) vagy a ** 0.5 kell. A round() a pontosan .5-re végződő számot a páros szám felé kerekíti, és a tizedestörtek kicsit pontatlanok lehetnek.
 
 ### teszt
 kerdes: Mit ír ki a program?
@@ -179,3 +197,25 @@ kod: |
 
 ### mikiir
 kod: print(2 + 3 * 4 ** 2)
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: print(round(2.5))
+valaszok:
+- 3
+- 2
+- 2.5
+jo: 1
+magyarazat: A round() a pontosan .5-re végződő számot a páros szomszéd felé kerekíti, ezért 2 lesz.
+
+### mikiir
+kod: |
+  import math
+  print(math.sqrt(144))
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: print(0.1 + 0.2 == 0.3)
+elfogad:
+- False
+segitseg: A tizedestörtek tárolása pontatlan, a 0.1 + 0.2 értéke 0.30000000000000004.

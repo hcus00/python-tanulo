@@ -245,7 +245,13 @@ function trCheck(p, j) {
   });
   if (!wrong) return rok(p, j);
   bad(p, j);
-  $("f_" + fid(p, j)).textContent = wrong + " cella nem jó" + (empty ? " (ebből " + empty + " üres)" : "") + ". " + (q.h || "Kövesd végig a programot lépésenként!");
+  $("f_" + fid(p, j)).innerHTML = wrong + " cella nem jó" + (empty ? " (ebből " + empty + " üres)" : "") + ". " + (q.h || "Kövesd végig a programot lépésenként!");
+}
+
+/* Válaszlehetőség szövege: ha a szerző HTML-t írt bele (<code>, &lt; ...), azt megjelenítjük, különben szövegként kezeljük. */
+function optHtml(o) {
+  o = dq(o);
+  return /<\/?(code|b|i|em|strong)>|&(lt|gt|amp);/.test(o) ? o : esc(o);
 }
 
 /* Egy feladat HTML-je (j az eredeti sorszám a lecke feladattömbjében; n a kijelzett sorszám). */
@@ -255,7 +261,7 @@ function taskHtml(q, p, j, n) {
   else if (q.pz) body = parsonsHtml(q, p, j);
   else if (q.tr) body = traceHtml(q, p, j);
   else if (q.o) body = q.o.map(function (o, k) {
-    return '<button class="o' + (q.oc ? " oc" : "") + '" onclick="rans(\'' + p + "'," + j + "," + k + ',this)">' + (q.oc ? '<span class="pl">' + hl(dq(o)) + "</span>" : esc(dq(o))) + "</button>";
+    return '<button class="o' + (q.oc ? " oc" : "") + '" onclick="rans(\'' + p + "'," + j + "," + k + ',this)">' + (q.oc ? '<span class="pl">' + hl(dq(o)) + "</span>" : optHtml(o)) + "</button>";
   }).join("");
   else body = '<input id="in_' + fid(p, j) + '" class="o" placeholder="Írd be a választ"><button class="btn" onclick="rin(\'' + p + "'," + j + ')">Ellenőrzés</button>';
   return '<div style="margin-bottom:20px"><p><b>' + n + ". " + (q.bug ? "🐞 " : q.pz ? "🧩 " : q.tr ? "🔍 " : "") + q.q + "</b></p>" +
@@ -354,7 +360,7 @@ function rin(p, j) {
   var nz = function (x) { return x.trim().toLowerCase().replace(/\s+/g, " "); };
   var q = R[p].t[j], v = nz($("in_" + fid(p, j)).value);
   if (q.i.some(function (a) { return nz(a) === v; })) rok(p, j);
-  else { bad(p, j); $("f_" + fid(p, j)).textContent = "Még nem az. " + (q.h || "Nézd át újra a példát!"); }
+  else { bad(p, j); $("f_" + fid(p, j)).innerHTML = "Még nem az. " + (q.h || "Nézd át újra a példát!"); }
 }
 
 /* ---- az oldalváltás után: oldalcím, fókusz a tartalomra (képernyőolvasóhoz, billentyűzethez); görgethető kódblokkok elérhetősége ---- */

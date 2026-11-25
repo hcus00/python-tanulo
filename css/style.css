@@ -176,8 +176,7 @@ ul.exl pre{margin:4px 0 8px;white-space:pre-wrap}
 :focus-visible{outline:3px solid var(--ac);outline-offset:2px}
 .ed textarea:focus-visible{outline:none}
 .ed:focus-within{box-shadow:0 0 0 3px var(--ac)}
-.kbh{display:none;margin:4px 0 0;font-size:13px;color:var(--mut)}
-.rn:focus-within .kbh{display:block}
+.kbh{margin:4px 0 0;font-size:13px;color:var(--mut)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 
 /* ---- mobilos kódbevitel ---- */

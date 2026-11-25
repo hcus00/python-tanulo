@@ -16,6 +16,17 @@ Print('Szia')   # hibás: nagy P
 print('Szia)    # hibás: hiányzik a záró idézőjel
 ```
 
+## Behúzás
+A Python nem kapcsos zárójellel, hanem <b>behúzással</b> jelöli, hogy mely utasítások tartoznak össze egy blokkba. A behúzás a sor elején álló üres hely. Egy behúzási szint <b>4 szóköz</b> vagy <b>1 tabulátor</b> (a Tab billentyű). Egy programon belül mindig ugyanazt használd, mert a kettő keverése hibához vezet (<code>TabError</code> vagy <code>IndentationError</code>): szemre ugyanolyan a két behúzás, a Python mégis másnak látja. A mi szerkesztőnkben a Tab 4 szóközt ír be. Ahol nincs blokk, ott nem szabad behúzni: a sor elején véletlenül hagyott szóköz is hibát okoz.
+```python
+print("Ez a sor nincs behúzva")
+if 5 > 3:
+    print("Ez a sor 4 szóközzel beljebb van")
+    print("Ez is a blokkhoz tartozik")
+print("Ez megint a blokkon kívül van")
+```
+A beljebb húzott két sor akkor fut le, ha az <code>if</code> feltétele igaz. Az elágazást később tanuljuk meg, most csak a behúzás kinézetére figyelj.
+
 ## A hibaüzenet a barátod
 Ha hibázol, a Python hibaüzenetet ír, például SyntaxError. Ez nem büntetés, hanem segítség, mert megmondja, melyik sorban és milyen jellegű a hiba. Mindig olvasd el, és az utolsó sorától kezdd!
 
@@ -133,3 +144,21 @@ megoldas: |
 tesztek:
 -
 segitseg: Nézd meg a hibaüzenetet: melyik sorra mutat? Az idézőjelek párban vannak? A <code>print</code> csupa kisbetű?
+
+### teszt
+kerdes: Mekkora egy behúzási szint Pythonban?
+valaszok:
+- 1 szóköz
+- 4 szóköz vagy 1 tabulátor
+- 10 szóköz
+jo: 1
+magyarazat: A szokásos behúzás 4 szóköz (vagy 1 tabulátor). Egy programban ne keverd a kettőt.
+
+### teszt
+kerdes: Mi történik, ha egy sor elejére véletlenül egy szóközt írsz, ott, ahol nem kellene behúzni?
+valaszok:
+- semmi, a szóköz nem számít
+- IndentationError hibaüzenetet kapsz
+- NameError hibaüzenetet kapsz
+jo: 1
+magyarazat: A Python a behúzást jelentésként értelmezi, ezért a váratlan behúzás IndentationError.

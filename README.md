@@ -174,6 +174,7 @@ Az ábrák inline SVG-ként készülnek, ezért a világos/sötét témaváltás
 
 ## Python-szerkesztő, nyomkövetés, hibamagyarázat
 
+- A **Futtatás** a beolvasott (Bemenet mezőbe írt) értéket is kiírja a kérdés után, új sorban, mint egy valódi konzol; az ellenőrzések és az érettségi pontozás viszont a valódi Python kimenetével (echo nélkül) hasonlítanak.
 - A leckék kódpéldái alatt **▶ Kipróbálom** gomb nyitja meg a szerkesztőt (színezett kód, `Tab` / `Shift+Tab` behúzás, `Ctrl+Enter` futtat). Az `input()` a **Bemenet** mezőből olvas, soronként egy érték.
 - A **💻 Programozz!** feladatoknál az **✔ Ellenőrzés** gomb több tesztadattal lefuttatja a programot, és összehasonlítja a kimenetet a várttal (a sorvégi szóköz és az utolsó üres sor nem számít). Siker esetén 15 XP jár, a téma teljesítéséhez nem kötelezők.
 - A **📎 .py betöltése** gombbal a tanuló a saját gépén (például Thonnyban) megírt fájlt is betöltheti. A **🧪 Játszótér** szabad kipróbálásra való.

@@ -28,15 +28,18 @@ var PY_HARNESS = [
   "        pass",
   "    def getvalue(self):",
   "        return ''.join(self.p)",
-  "def _run(code, stdin_text, limit, seed=None):",
+  "def _run(code, stdin_text, limit, seed=None, echo=False):",
   "    out = _Out()",
   "    data = iter(stdin_text.split('\\n') if stdin_text != '' else [])",
   "    def fake_input(prompt=''):",
   "        out.write(str(prompt))",
   "        try:",
-  "            return next(data)",
+  "            v = next(data)",
   "        except StopIteration:",
   "            raise EOFError('Nincs több bemenet. Írd a Bemenet mezőbe az input() által kért értékeket, soronként egyet.')",
+  "        if echo:",
+  "            out.write(v + '\\n')",
+  "        return v",
   "    start = time.time()",
   "    cnt = [0]",
   "    def tracer(frame, event, arg):",
@@ -89,9 +92,12 @@ var PY_HARNESS = [
   "    def fake_input(prompt=''):",
   "        out.write(str(prompt))",
   "        try:",
-  "            return next(data)",
+  "            v = next(data)",
   "        except StopIteration:",
   "            raise EOFError('Nincs több bemenet. Írd a Bemenet mezőbe az input() által kért értékeket, soronként egyet.')",
+  "        if True:",
+  "            out.write(v + '\\n')",
+  "        return v",
   "    steps = []",
   "    start = time.time()",
   "    cnt = [0]",
@@ -166,9 +172,10 @@ function pyLoad() {
 }
 
 /* Egy program futtatása: {out, err}. */
-function pyRun(code, stdin, seed) {
+/* echo: a beolvasott értéket is kiírja a kérdés után (mint egy valódi konzolon); az ellenőrzések echo nélkül futnak. */
+function pyRun(code, stdin, seed, echo) {
   return pyLoad().then(function (fn) {
-    var r = fn(code, stdin || "", 5, seed == null ? null : seed), a = r.toJs();
+    var r = fn(code, stdin || "", 5, seed == null ? null : seed, !!echo), a = r.toJs();
     r.destroy();
     return { out: a[0], err: a[1] };
   });
@@ -293,7 +300,7 @@ function rnRun(id) {
   rnMsg(r, first ? "A Python betöltődik… (az első alkalommal pár másodpercig tart)" : "Fut…");
   r.querySelector(".rres").innerHTML = "";
   r.querySelector(".rtr").innerHTML = "";
-  pyRun(code, i ? i.value : "").then(function (x) {
+  pyRun(code, i ? i.value : "", null, true).then(function (x) {
     r.querySelector(".rout").textContent = x.out + (x.err ? (x.out && !/\n$/.test(x.out) ? "\n" : "") + x.err : "") || "(a program nem írt ki semmit)";
     r.querySelector(".rout").classList.toggle("er", !!x.err);
     r.querySelector(".rres").innerHTML = x.err ? hibaMagyaraz(x.err, code) : "";
@@ -370,15 +377,33 @@ function rnTrace(id) {
   r.querySelector(".rtr").innerHTML = "";
   pyTrace(code, i ? i.value : "").then(function (t) {
     rnMsg(r, "");
-    RN[id].tr = { t: t, code: code.split("\n") };
+    RN[id].tr = { t: t, code: code.split("\n"), k: 0 };
+    rnTrFrame(id, t.steps.length);
     rnTr(id, 0);
   }).catch(function () { rnLoadErr(r); });
 }
+
+/* A nyomkövető keretét (gombok, csúszka) egyszer építjük fel, lépésenként csak a tartalmát frissítjük:
+   így a megnyomott gomb és a húzott csúszka nem cserélődik le, és az elrendezés sem ugrál. */
+function rnTrFrame(id, N) {
+  $(id).querySelector(".rtr").innerHTML = '<div class="tr">' +
+    '<div class="trc"></div>' +
+    '<div class="trb"><button class="btn gh" aria-label="Az első lépés" onclick="rnTr(\'' + id + "',0)\">⏮</button>" +
+    '<button class="btn gh" aria-label="Előző lépés" onclick="rnTrGo(\'' + id + "',-1)\">◀</button>" +
+    '<button class="btn" onclick="rnTrGo(\'' + id + "',1)\">▶ Következő</button>" +
+    '<button class="btn gh" aria-label="Az utolsó lépés" onclick="rnTr(\'' + id + "'," + N + ')">⏭</button>' +
+    '<span class="tn"></span></div>' +
+    '<input type="range" aria-label="Lépés" min="0" max="' + N + '" value="0" oninput="rnTr(\'' + id + '\',+this.value)">' +
+    '<p class="trn"></p><div class="trg"></div><div class="tre"></div></div>';
+}
+function rnTrGo(id, d) { rnTr(id, RN[id].tr.k + d); }
 
 /* A k. lépés kirajzolása: a következőnek végrehajtandó sor, a változók és a kimenet addig. */
 function rnTr(id, k) {
   var r = $(id), st = RN[id].tr, t = st.t, N = t.steps.length;
   k = Math.max(0, Math.min(N, k));
+  st.k = k;
+  var q = function (c) { return r.querySelector(".rtr ." + c); };
   var fin = k >= N, s = fin ? null : t.steps[k], vars = fin ? t.end : s.v;
   var prev = k > 0 ? t.steps[k - 1].v : {};
   var lines = st.code.map(function (ln, i) {
@@ -391,15 +416,13 @@ function rnTr(id, k) {
   var out = fin ? t.out : t.out.slice(0, s.n);
   var note = fin ? (t.err ? "A program hibával állt le." : t.trunc ? "A nyomkövetés 400 lépés után megállt." : "A program véget ért.") :
     "A kiemelt sor <b>végrehajtás előtt</b> áll: a változók az eddigi lépések eredményét mutatják." + (s.f !== "<module>" ? " (függvény: <code>" + esc(s.f) + "</code>)" : "");
-  r.querySelector(".rtr").innerHTML = '<div class="tr">' +
-    '<div class="trc">' + lines + "</div>" +
-    '<div class="trb"><button class="btn gh" onclick="rnTr(\'' + id + "',0)\">⏮</button>" +
-    '<button class="btn gh" onclick="rnTr(\'' + id + "'," + (k - 1) + ')">◀</button>' +
-    '<button class="btn" onclick="rnTr(\'' + id + "'," + (k + 1) + ')">▶ Következő</button>' +
-    '<button class="btn gh" onclick="rnTr(\'' + id + "'," + N + ')">⏭</button>' +
-    '<span class="tn">' + (k + 1) + " / " + (N + 1) + '</span></div>' +
-    '<input type="range" min="0" max="' + N + '" value="' + k + '" oninput="rnTr(\'' + id + '\',+this.value)">' +
-    '<p class="trn">' + note + "</p>" +
-    '<div class="trg"><div><b>Változók</b>' + vt + '</div><div><b>Kimenet eddig</b><pre>' + (esc(out) || " ") + "</pre></div></div>" +
-    (fin && t.err ? '<pre class="rout er">' + esc(t.err) + "</pre>" + hibaMagyaraz(t.err, st.code.join("\n")) : "") + "</div>";
+  var cur = q("trc"), sc = cur.scrollTop;
+  cur.innerHTML = lines;
+  cur.scrollTop = sc;
+  q("tn").textContent = (k + 1) + " / " + (N + 1);
+  var sl = r.querySelector(".rtr input[type=range]");
+  if (+sl.value !== k) sl.value = k;
+  q("trn").innerHTML = note;
+  q("trg").innerHTML = '<div><b>Változók</b>' + vt + '</div><div><b>Kimenet eddig</b><pre>' + (esc(out) || " ") + "</pre></div>";
+  q("tre").innerHTML = fin && t.err ? '<pre class="rout er">' + esc(t.err) + "</pre>" + hibaMagyaraz(t.err, st.code.join("\n")) : "";
 }

@@ -84,6 +84,13 @@ const section = (s) => console.log('\n== ' + s);
           const id = key + '-' + j, box = document.getElementById('f_' + id);
           if (!box) return 'nincs feladatdoboz';
           const q = R[key].t[j], wrap = box.parentNode;
+          /* a szerző által írt HTML (<code>, &lt;) sehol se jelenhet meg szövegként: sem a feladatban, sem a rossz válaszra adott súgóban */
+          const raw = /<\/?(code|b|i|em|strong|br|pre|span)>|&(lt|gt|amp|nbsp);/;
+          if (raw.test(wrap.innerText)) return 'nyers HTML a feladat szövegében: ' + raw.exec(wrap.innerText)[0];
+          if (t.o) { const bs = [...wrap.querySelectorAll('button.o')]; bs[bs.findIndex((x, k) => k !== q.a)].click(); }
+          else if (t.tr) wrap.querySelector('button.btn').click();
+          else if (!t.k && !t.pz) { document.getElementById('in_' + id).value = 'zzzz'; wrap.querySelector('button.btn').click(); }
+          if (raw.test(box.innerText)) return 'nyers HTML a visszajelzésben: ' + raw.exec(box.innerText)[0];
           if (t.k) {
             const rn = wrap.querySelector('.rn'); rn.querySelector('textarea').value = q.m; rnSync(rn.id); rnCheck(rn.id);
             for (let k = 0; k < 300; k++) { await new Promise(r => setTimeout(r, 100)); if (rn.querySelector('.rres').textContent) break; }
@@ -200,6 +207,22 @@ const section = (s) => console.log('\n== ' + s);
     return rn.querySelector('.rtr').innerText.replace(/\s+/g, ' ');
   });
   if (!/A program véget ért/.test(tr) || !/x 8/.test(tr)) bad('a nyomkövető nem a várt eredményt adja:', tr.slice(0, 200));
+  {
+    /* valódi egérkattintásokkal: a gomb nem ugrál a fókusz változásától, minden kattintás lépést jelent, a csúszka is működik */
+    await page.evaluate(() => rnTr(document.querySelector('.rn').id, 0));
+    const btn = page.locator('.rn .trb .btn', { hasText: 'Következő' }).first();
+    const ys = [(await btn.evaluate(e => e.getBoundingClientRect().top + scrollY))];
+    await page.locator('.rn textarea').first().click(); ys.push((await btn.evaluate(e => e.getBoundingClientRect().top + scrollY)));
+    await btn.click(); ys.push((await btn.evaluate(e => e.getBoundingClientRect().top + scrollY)));
+    await page.locator('.rn .trb .btn', { hasText: '◀' }).first().click(); ys.push((await btn.evaluate(e => e.getBoundingClientRect().top + scrollY)));
+    await btn.click(); await btn.click(); ys.push((await btn.evaluate(e => e.getBoundingClientRect().top + scrollY)));
+    const tn = await page.locator('.rn .tn').first().innerText();
+    if (!/^3 \//.test(tn)) bad('a nyomkövető gombjai nem minden kattintásra léptek:', tn);
+    if (new Set(ys.map(Math.round)).size !== 1) bad('a nyomkövető gombja elmozdul kattintás közben:', ys.join(', '));
+    await page.locator('.rn .tr input[type=range]').first().fill('5');
+    const tn2 = await page.locator('.rn .tn').first().innerText();
+    if (!/^6 \//.test(tn2)) bad('a nyomkövető csúszkája nem léptet:', tn2);
+  }
   const he = await page.evaluate(async () => {
     const rn = document.querySelector('.rn'); rn.querySelector('textarea').value = 'print(nev)'; rnSync(rn.id); rnRun(rn.id);
     for (let k = 0; k < 300; k++) { await new Promise(r => setTimeout(r, 100)); if (rn.querySelector('.rres').textContent) break; }
@@ -212,6 +235,13 @@ const section = (s) => console.log('\n== ' + s);
   /* ---------- 4b. szerkesztő: billentyűzet és telefonos gyorsbillentyűk ---------- */
   if (want('szerkeszto')) {
     section('Szerkesztő: billentyűzet, gyorsbillentyűk');
+  {
+    /* a Futtatás kiírja a beolvasott értéket is (mint egy konzol), az ellenőrzés viszont a valódi Python kimenetével hasonlít */
+    const code = 'x = input("Neved: ")\nprint("Szia", x)';
+    const [plain, echo] = await page.evaluate(async c => { const a = await pyRun(c, 'Anna'), b = await pyRun(c, 'Anna', null, true); return [a.out, b.out]; }, code);
+    if (plain !== 'Neved: Szia Anna\n') bad('az ellenőrző futtatás kimenete megváltozott:', JSON.stringify(plain));
+    if (echo !== 'Neved: Anna\nSzia Anna\n') bad('a Futtatás nem írja ki a beolvasott értéket új sorban:', JSON.stringify(echo));
+  }
     await page.evaluate(() => { document.documentElement.dataset.theme = 'light'; play(); });
     const ta = page.locator('.rn textarea').first();
     const val = () => page.evaluate(() => document.querySelector('.rn textarea').value);
