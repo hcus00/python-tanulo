@@ -1,0 +1,222 @@
+# Egymásba ágyazott ciklusok
+
+## Ciklus a ciklusban
+A beágyazott ciklusnál a <b>belső ciklus a külső minden lépésében teljesen lefut</b>. Ha a külső 3-szor, a belső 4-szer ismétel, a belső törzs összesen 3 · 4 = 12-szer fut le. Az első példa egy kis szorzótáblát ír ki. Az <code>end=" "</code> a számokat egy sorba teszi, az üres <code>print()</code> pedig a sor végén sort tör.
+```python
+for i in range(1, 4):
+    for j in range(1, 4):
+        print(i * j, end=" ")
+    print()
+# 1 2 3
+# 2 4 6
+# 3 6 9
+```
+
+## A végrehajtás sorrendje
+A külső ciklus egy lépésére a belső ciklus <b>végigfut</b>. Az ábrán a számok a végrehajtás sorrendjét mutatják: az első sor (<code>i = 0</code>) mind a négy oszlopát kitöltjük, és csak utána jön a következő sor.
+@abra egymasba
+
+## Hogyan kövesd nyomon?
+Írd fel táblázatban, mely értéket veszi fel a két ciklusváltozó. Például két külső és három belső lépésnél: i = 1: j = 1, 2, 3; majd i = 2: j = 1, 2, 3. Fontos, hogy a két ciklus változója különböző nevű legyen, mert egyébként a belső felülírja a külsőt.
+
+## Alakzatok kirajzolása
+A csillagháromszög minden sora eggyel hosszabb. Két módszer van: a szöveg ismétlése, vagy beágyazott ciklus.
+```python
+for i in range(1, 5):
+    print("*" * i)
+
+for i in range(1, 5):
+    for j in range(i):
+        print("*", end="")
+    print()
+```
+
+## Ciklus és elágazás együtt
+Ciklusban lehet elágazás, ez a leggyakoribb kombináció. A ciklus végigmegy az értékeken, az elágazás pedig kiválasztja, mit kell velük tenni. Az elágazás ciklust is tartalmazhat. A behúzások szintjei mutatják a hovatartozást.
+```python
+db = 0
+for i in range(1, 21):
+    if i % 3 == 0:
+        db += 1
+print(db)       # 6, hiszen 3, 6, 9, 12, 15, 18
+```
+
+## Összefoglalás
+A belső ciklus a külső minden lépésében lefut, az ismétlések száma szorzódik. A ciklusváltozók neve legyen különböző. A ciklusba elágazás is tehető, ezzel feltételes feldolgozás vagy megszámlálás készíthető.
+
+### teszt
+kerdes: Hányszor fut le a print?
+kod: |
+  for i in range(3):
+      for j in range(4):
+          print("*")
+valaszok:
+- 7
+- 12
+- 4
+jo: 1
+magyarazat: 3 · 4 = 12 ismétlés.
+
+### teszt
+kerdes: Mit ír ki sorról sorra?
+kod: |
+  for i in range(1, 4):
+      print("#" * i)
+valaszok:
+- egy #, két #, három #
+- három #, két #, egy #
+- csak három #
+jo: 0
+magyarazat: Az i értéke 1, 2, 3, ennyiszer ismétlődik a # jel.
+
+### beiros
+kerdes: Hány 4-gyel osztható szám van 1 és 30 között? (A programot gondold végig, és írd be a kimenetet.)
+kod: |
+  db = 0
+  for i in range(1, 31):
+      if i % 4 == 0:
+          db += 1
+  print(db)
+elfogad:
+- 7
+segitseg: A számok: 4, 8, 12, 16, 20, 24, 28.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  s = 0
+  for i in range(1, 3):
+      for j in range(1, 4):
+          s += 1
+  print(s)
+elfogad:
+- 6
+segitseg: A belső törzs 2 · 3-szor fut le.
+
+### kod
+kerdes: Olvass be egy pozitív egész számot (n), és rajzolj n sorból és n oszlopból álló csillag-négyzetet. Például n = 3 esetén három sor, mindegyikben <code>***</code>.
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  for i in range(n):
+      for j in range(n):
+          print("*", end="")
+      print()
+tesztek:
+- 3
+- 1
+- 4
+
+### kod
+kerdes: Olvass be egy pozitív egész számot (n), és rajzolj háromszöget: az első sorban 1, a másodikban 2, … az n-edikben n csillag.
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  for i in range(1, n + 1):
+      for j in range(i):
+          print("*", end="")
+      print()
+tesztek:
+- 3
+- 4
+- 1
+
+### kod
+kerdes: Olvass be egy pozitív egész számot (n), és írd ki az n × n-es szorzótáblát. Egy sorban a számok szóközzel elválasztva szerepeljenek. Például n = 3: <code>1 2 3</code>, <code>2 4 6</code>, <code>3 6 9</code>.
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  for i in range(1, n + 1):
+      for j in range(1, n + 1):
+          print(i * j, end=" ")
+      print()
+tesztek:
+- 3
+- 1
+- 4
+
+### kod
+kerdes: Olvass be egy pozitív egész számot (n). Az i-edik sorba írd ki az i számjegyet i-szer egymás után: n = 3 esetén <code>1</code>, <code>22</code>, <code>333</code>.
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  for i in range(1, n + 1):
+      for j in range(i):
+          print(i, end="")
+      print()
+tesztek:
+- 3
+- 4
+- 1
+
+### hiba
+kerdes: A program n × n-es csillag-négyzetet rajzolna, de minden csillag külön sorba kerül. Javítsd ki.
+kezdokod: |
+  n = int(input())
+  for i in range(n):
+      for j in range(n):
+          print("*", end="")
+          print()
+megoldas: |
+  n = int(input())
+  for i in range(n):
+      for j in range(n):
+          print("*", end="")
+      print()
+tesztek:
+- 3
+- 1
+- 2
+segitseg: A sortörést (<code>print()</code>) a belső ciklus befejezése után kell kiírni.
+
+### sorrend
+kerdes: Rendezd sorba a sorokat: a program háromszöget rajzol csillagokból, az i-edik sorban i darabbal.
+sorok: |
+  n = int(input())
+  for i in range(1, n + 1):
+      for j in range(i):
+          print("*", end="")
+      print()
+tesztek:
+- 3
+- 4
+
+### nyomkovetes
+kerdes: Kövesd végig a programot, és töltsd ki a táblázatot: a változók értéke minden alkalommal, amikor a program a(z) 3. sorhoz ér (a sor végrehajtása <b>előtt</b>). Az első sor példa. Segít a 🔍 Lépésenként gomb a Játszótéren.
+kod: |
+  for i in range(1, 3):
+      for j in range(1, 4):
+          print(i * j)
+sor: 3
+valtozok: i, j
+
+### beiros
+kerdes: Melyik számot kapja az a kör az ábrán, ahol <code>i = 1</code> és <code>j = 2</code>? (A számot írd be.)
+abra: egymasba
+elfogad:
+- 7
+segitseg: Az i = 0 sor 1–4, az i = 1 sor 5–8.
+
+### mikiir
+kod: |
+  db = 0
+  for i in range(3):
+      for j in range(4):
+          db += 1
+  print(db)
+
+### mikiir
+kod: |
+  s = 0
+  for i in range(1, 4):
+      for j in range(1, 3):
+          s += i * j
+  print(s)

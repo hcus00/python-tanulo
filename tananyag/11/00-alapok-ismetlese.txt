@@ -1,0 +1,151 @@
+# Ismétlés: változók, döntések, ciklusok, listák
+
+## Hogyan használd ezt az ismétlést?
+A 11. évfolyam anyaga a korábbi évek tudására épül. Ebben a témában gyorsan végigmegyünk az alapokon: változók, műveletek, elágazás, ciklusok és listák. Minden blokk végén van egy rövid kódminta. Ha valamelyik nem megy, lépj vissza az adott évfolyam megfelelő témájához: a felső címre kattintva a témák listájához jutsz.
+
+## Változók, típusok, átalakítás
+A legfontosabb tudnivalók:
+- a változó névvel ellátott tárolóhely, az <code>=</code> értékadás, jobbról balra olvasd
+- a típusok: <code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>
+- átalakítás: <code>int()</code>, <code>float()</code>, <code>str()</code>; az <code>int()</code> levág, nem kerekít
+- az <code>input()</code> mindig szöveget ad vissza
+- a <code>/</code> mindig <code>float</code>-ot ad, a <code>//</code> egész osztás, a <code>%</code> maradék
+```python
+kor = int(input("Hány éves vagy? "))
+print("Jövőre", kor + 1, "éves leszel.")
+print(7 / 2, 7 // 2, 7 % 2)   # 3.5 3 1
+```
+
+## Döntések
+Az <code>if</code>, <code>elif</code>, <code>else</code> ágait kettőspont és behúzás jelöli. A feltételben az összehasonlító operátorokat (<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>) és a logikai műveleteket (<code>and</code>, <code>or</code>, <code>not</code>) használhatod. Az első igaz ág fut le, ezért az <code>elif</code>-eknél a sorrend számít.
+```python
+pont = 82
+if pont >= 90:
+    jegy = 5
+elif pont >= 75:
+    jegy = 4
+elif pont >= 60:
+    jegy = 3
+else:
+    jegy = 2
+print(jegy)   # 4
+```
+
+## Ciklusok
+Két ciklust ismersz:
+- a <code>for i in range(a, b)</code> a-tól b-1-ig számol, a felső határ nincs benne; akkor használd, ha előre tudod, hányszor kell ismételni, vagy minden elemet be kell járni
+- a <code>while</code> addig ismétel, amíg a feltétel igaz; kell hozzá kezdőérték, feltétel és léptetés, különben végtelen ciklus lesz
+- beágyazott ciklusnál a belső mindig teljesen lefut a külső minden lépésében
+```python
+for i in range(1, 4):
+    for j in range(1, 3):
+        print(i, j)       # 6 sor: 1 1, 1 2, 2 1, ...
+
+szam = 1
+while szam < 50:
+    szam *= 2
+print(szam)               # 64
+```
+
+## Listák
+A lista több összetartozó adatot kezel egy néven. Az index 0-tól indul, a negatív index hátulról számol (<code>l[-1]</code> az utolsó). A lista módosítható. Két bejárási mód van:
+- elemenként: <code>for elem in lista</code>
+- index szerint: <code>for i in range(len(lista))</code>, ez kell, ha módosítani akarsz, vagy a helyre is szükséged van
+```python
+szamok = [4, 8, 15]
+for elem in szamok:
+    print(elem)
+
+for i in range(len(szamok)):
+    szamok[i] = szamok[i] * 2
+print(szamok)   # [8, 16, 30]
+```
+
+## Ellenőrzőlista: gyakori hibák
+Mielőtt továbblépsz, nézd át, hogy felismered-e ezeket:
+- <code>=</code> írása <code>==</code> helyett (<code>SyntaxError</code>)
+- hiányzó kettőspont vagy rossz behúzás (<code>SyntaxError</code>, <code>IndentationError</code>)
+- elírt vagy még nem létező változónév (<code>NameError</code>)
+- szöveg és szám összefűzése (<code>TypeError</code>)
+- nem számot tartalmazó szöveg átalakítása (<code>ValueError</code>)
+- túl nagy index (<code>IndexError</code>)
+- a <code>range</code> felső határának félreértése
+- végtelen <code>while</code>: nincs léptetés
+
+## Összefoglalás
+Ha ezek a blokkok mennek, bátran léphetsz tovább. A következő témában a programozási tételeket ismételjük át, ezek az érettségi feladatok gerincét adják.
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: print(17 // 5, 17 % 5, 17 / 5)
+valaszok:
+- 3 2 3.4
+- 3.4 2 3
+- 3 2 3
+jo: 0
+magyarazat: 17 = 3 · 5 + 2, az osztás eredménye pedig 3.4.
+
+### teszt
+kerdes: Hányszor fut le a ciklus törzse?
+kod: |
+  for i in range(2, 6):
+      print(i)
+valaszok:
+- 3
+- 4
+- 5
+jo: 1
+magyarazat: Az értékek: 2, 3, 4, 5. A felső határ nincs benne.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  x = "7"
+  y = int(x) + 3
+  print(y)
+elfogad:
+- 10
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [5, 6, 7, 8]
+  l[1] = l[-1] + 1
+  print(l)
+elfogad:
+- [5, 9, 7, 8]
+segitseg: Az l[-1] a 8, ehhez 1-et adunk, és az 1-es indexű helyre írjuk.
+
+### teszt
+kerdes: Melyik hibát okozza ez a kód?
+kod: |
+  l = [1, 2, 3]
+  print(l[3])
+valaszok:
+- IndexError
+- ValueError
+- NameError
+jo: 0
+magyarazat: A lista indexei 0, 1, 2, a 3-as index nem létezik.
+
+### kod
+kerdes: Olvass be egy pozitív egész számot (n), majd n egész számot (soronként egyet). Írd ki, hány páros szám volt közöttük, és mennyi volt a pozitívak összege, egy sorban szóközzel elválasztva.
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  paros = 0
+  osszeg = 0
+  for i in range(n):
+      x = int(input())
+      if x % 2 == 0:
+          paros += 1
+      if x > 0:
+          osszeg += x
+  print(paros, osszeg)
+tesztek:
+- 3\n4\n-2\n5
+- 1\n7
+- 4\n1\n1\n1\n1
+- 2\n-4\n-6

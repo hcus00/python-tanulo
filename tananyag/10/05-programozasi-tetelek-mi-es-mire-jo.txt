@@ -1,0 +1,79 @@
+# Bevezetés a programozási tételekbe
+
+## Mi az a programozási tétel?
+A <b>programozási tétel</b> egy gyakori feladattípusra kidolgozott, bevált megoldási minta. Nem matematikai tétel, inkább olyan, mint egy recept: ha felismered, melyik feladattípussal állsz szemben, a megoldás vázát már ismered. A tételek legtöbbje egy lista (sorozat) elemeit dolgozza fel.
+
+## Miért hasznos?
+Az új feladatot nem a nulláról kell kitalálni. Azt kell eldönteni, melyik tétel illik rá, és a mintát az adott feladathoz igazítani. Ez gyorsabb, kevesebb hibát okoz, és az érettségin is ilyen feladatokat kapsz.
+
+## A tételek áttekintése
+Ebben és a következő témákban az alábbi tételekkel ismerkedünk meg:
+- <b>összegzés</b>: az elemek összeadása
+- <b>megszámlálás</b>: hány elem teljesít egy feltételt
+- <b>eldöntés</b>: van-e olyan elem, amelyik teljesíti a feltételt
+- <b>keresés</b>: hol van ilyen elem, ha egyáltalán van
+- <b>kiválasztás</b>: hol van ilyen elem, ha biztosan van
+- <b>szélsőérték-kiválasztás</b>: a legnagyobb vagy a legkisebb elem (ezt a 11. évfolyamon tanuljuk)
+
+## A kérdésből a tételre következtetünk
+A feladat szövegéből ismerhető fel a tétel:
+- „Mennyi a jegyek összege?” → összegzés
+- „Hány ötös jegy van?” → megszámlálás
+- „Van-e elégtelen jegy?” → eldöntés
+- „Hányadik helyen van az első ötös?” → keresés
+- „Hányadik az első páros szám? (biztosan van ilyen)” → kiválasztás
+
+## A közös váz
+A legtöbb tétel ugyanazt a szerkezetet követi. Ha a lista minden elemét meg kell vizsgálnunk, <code>for</code> ciklust használunk. Ha elég addig menni, amíg megtaláljuk az elemet, <code>while</code> ciklust. A következő vázlat a <code>for</code> változatot mutatja:
+```python
+# 1. a kezdőérték beállítása a ciklus előtt
+for elem in lista:
+    # 2. az elem feldolgozása
+# 3. az eredmény kiírása a ciklus után
+```
+
+## Hogyan gondolkodj?
+Egy tételes feladatnál mindig tedd fel ezeket a kérdéseket:
+- mi a bemenet, és mi a kimenet
+- melyik tétel illik a kérdésre
+- minden elemet meg kell vizsgálni, vagy megállhatok az első megfelelőnél
+- mi legyen a kezdőérték, és mi történjen, ha nincs megfelelő elem
+
+## Összefoglalás
+A programozási tétel bevált megoldási minta gyakori feladattípusra. A feladat szövegéből ismerjük fel. A következő témákban egyenként tanuljuk meg az összegzést, megszámlálást, eldöntést, keresést és kiválasztást.
+
+### teszt
+kerdes: Mi a programozási tétel?
+valaszok:
+- bevált megoldási minta gyakori feladattípusra
+- matematikai bizonyítás
+- a Python egyik beépített függvénye
+jo: 0
+magyarazat: A tétel olyan, mint egy recept: a feladattípushoz kész megoldási vázat ad.
+
+### teszt
+kerdes: Melyik tétel kell ehhez a feladathoz: „Hány páros szám van a listában?”
+valaszok:
+- összegzés
+- megszámlálás
+- eldöntés
+jo: 1
+magyarazat: Azt kell megmondani, hány elem teljesít egy feltételt, ez a megszámlálás.
+
+### teszt
+kerdes: Melyik tétel kell ehhez a feladathoz: „Van-e a listában 100-nál nagyobb szám?”
+valaszok:
+- eldöntés
+- kiválasztás
+- összegzés
+jo: 0
+magyarazat: Igen/nem választ várunk arra, van-e ilyen elem.
+
+### teszt
+kerdes: Melyik tétel kell ehhez a feladathoz: „Mennyi az elemek összege?”
+valaszok:
+- keresés
+- megszámlálás
+- összegzés
+jo: 2
+magyarazat: Az elemeket összeadjuk, ez az összegzés.

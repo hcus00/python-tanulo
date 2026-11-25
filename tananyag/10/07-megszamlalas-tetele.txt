@@ -1,0 +1,277 @@
+# Megszámlálás tétele
+
+## Mi a feladat?
+A <b>megszámlálás</b> tétele azt kérdezi: hány olyan eleme van a sorozatnak, amely teljesít egy adott feltételt? Példák: hány ötös jegyet kaptál, hány páros szám van a listában, hány 18 évnél idősebb tanuló van az osztályban. A bemenet egy lista, a kimenet egy darabszám.
+
+## Az algoritmus szavakkal
+A megszámlálás is három lépésből áll:
+- a darabszámot (számlálót) 0-ról indítjuk
+- minden elemre megvizsgáljuk a feltételt, és ha teljesül, a számlálót eggyel növeljük
+- a ciklus végén kiírjuk a számlálót
+
+## A megszámlálás folyamatábrán
+A lényeges különbség az összegzéshez képest a második rombusz: a számláló csak akkor nő, ha az elem megfelel a feltételnek. Ha nem felel meg, a nyíl a számláló növelése nélkül lép vissza a ciklushoz.
+@abra megszamlalas
+
+## A program
+Az összegzéshez hasonlóan a kezdőérték a ciklus előtt áll. A feltételt egy elágazás vizsgálja, a számláló növelése pedig csak az <code>if</code> ágban történik.
+```python
+jegyek = [5, 3, 4, 5, 2, 5]
+db = 0
+for jegy in jegyek:
+    if jegy == 5:
+        db += 1
+print("Ötösök száma:", db)   # 3
+```
+
+## Különbség az összegzéstől
+A két tétel szerkezete hasonló, de nem szabad összekevernünk őket:
+- az összegzésnél az <b>elem értékét</b> adjuk hozzá az összeghez (<code>osszeg += elem</code>)
+- a megszámlálásnál mindig csak <b>1-et</b> adunk a számlálóhoz (<code>db += 1</code>), és csak akkor, ha a feltétel igaz
+- az összegzés minden elemet felhasznál, a megszámlálás csak a megfelelőket számolja
+
+## Összetett feltételek
+A feltétel lehet összetett is: összehasonlító és logikai operátorokat kombinálhatsz. Ügyelj a feltétel pontos megfogalmazására, különösen a határoknál: a „10-nél nagyobb” <code>&gt; 10</code>, a „legalább 10” <code>&gt;= 10</code>.
+```python
+szamok = [12, 7, 18, 25, 3, 30]
+db = 0
+for szam in szamok:
+    if szam % 3 == 0 and szam > 10:
+        db += 1
+print(db)   # 3, ezek: 12, 18, 30
+```
+
+## Arány és százalék
+Ha a darabszámot elosztod az elemek számával, megkapod az arányt, 100-zal szorozva pedig a százalékot.
+```python
+jegyek = [4, 5, 3, 5]
+db = 0
+for jegy in jegyek:
+    if jegy == 5:
+        db += 1
+print(db / len(jegyek) * 100, "%")   # 50.0 %
+```
+
+## Gyakori hibák
+Ezekre figyelj:
+- a számláló kezdőértéke hiányzik, ilyenkor NameError keletkezik
+- a <code>db += 1</code> kikerül az <code>if</code> ágból, így minden elemet megszámol
+- a <code>db += jegy</code> alakot írod <code>db += 1</code> helyett, így összegzést kapsz
+- a kezdőértéket a ciklusba teszed, ezért a számláló minden körben nullázódik
+
+## Összefoglalás
+A megszámlálás számlálót használ: kezdőértéke 0, és minden megfelelő elemnél eggyel nő. A feltételt elágazás vizsgálja. Összegzésnél az elem értékét, megszámlálásnál az 1-et adjuk hozzá.
+
+### teszt
+kerdes: Mi a megszámlálás számlálójának kezdőértéke?
+valaszok:
+- 0
+- 1
+- az első elem értéke
+jo: 0
+magyarazat: Még egyetlen megfelelő elemet sem találtunk, ezért 0-ról indul.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [5, 3, 4, 5, 2, 5]
+  db = 0
+  for x in l:
+      if x == 5:
+          db += 1
+  print(db)
+elfogad:
+- 3
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [8, 15, 22, 9, 30]
+  db = 0
+  for x in l:
+      if x > 10:
+          db += 1
+  print(db)
+elfogad:
+- 3
+segitseg: A 15, 22 és 30 nagyobb 10-nél.
+
+### teszt
+kerdes: Mit számol a db ebben a programban?
+kod: |
+  db = 0
+  for x in l:
+      if x > 0:
+          print(x)
+      db += 1
+valaszok:
+- az összes elemet
+- csak a pozitív elemeket
+- semmit
+jo: 0
+magyarazat: A db += 1 nincs az if ágban, ezért minden elemnél lefut.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [4, 5, 3, 5]
+  db = 0
+  for x in l:
+      if x == 5:
+          db += 1
+  print(db / len(l) * 100)
+elfogad:
+- 50.0
+segitseg: Két ötös van, 2 / 4 · 100.
+
+### teszt
+kerdes: Az ábra szerint mikor nő a db értéke?
+abra: megszamlalas
+valaszok:
+- minden elemnél
+- csak akkor, ha az elem megfelel a feltételnek
+- a ciklus végén, egyszer
+jo: 1
+magyarazat: A második rombusz „igen” ágán van a db = db + 1 lépés.
+
+### kod
+kerdes: Számold meg, hány eleme nagyobb 10-nél a listának. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [3, 12, 7, 15, 10, 22]
+
+megoldas: |
+  lista = [3, 12, 7, 15, 10, 22]
+  db = 0
+  for x in lista:
+      if x > 10:
+          db += 1
+  print(db)
+tesztek:
+- |
+     || pre: lista = [3, 12, 7, 15, 10, 22]
+- |
+     || pre: lista = [1, 2]
+- |
+     || pre: lista = [11, 11, 11]
+
+### kod
+kerdes: Számold meg, hány páros és hány páratlan szám van a listában. Két sort írj ki: <code>Páros: ...</code> és <code>Páratlan: ...</code>. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [3, 8, 5, 6]
+
+megoldas: |
+  lista = [3, 8, 5, 6]
+  paros = 0
+  paratlan = 0
+  for x in lista:
+      if x % 2 == 0:
+          paros += 1
+      else:
+          paratlan += 1
+  print("Páros:", paros)
+  print("Páratlan:", paratlan)
+tesztek:
+- |
+     || pre: lista = [3, 8, 5, 6]
+- |
+     || pre: lista = [1, 3, 5]
+- |
+     || pre: lista = [2]
+
+### kod
+kerdes: Számold meg, hány szó kezdődik <code>a</code> betűvel (kisbetűvel). <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  szavak = ["alma", "körte", "ananász", "barack"]
+
+megoldas: |
+  szavak = ["alma", "körte", "ananász", "barack"]
+  db = 0
+  for szo in szavak:
+      if szo[0] == "a":
+          db += 1
+  print(db)
+tesztek:
+- |
+     || pre: szavak = ["alma", "körte", "ananász", "barack"]
+- |
+     || pre: szavak = ["béka"]
+- |
+     || pre: szavak = ["a", "a", "a"]
+
+### kod
+kerdes: Számold meg, hány negatív szám van a listában. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, -2, 0, -7, 3]
+
+megoldas: |
+  lista = [4, -2, 0, -7, 3]
+  db = 0
+  for x in lista:
+      if x < 0:
+          db += 1
+  print(db)
+tesztek:
+- |
+     || pre: lista = [4, -2, 0, -7, 3]
+- |
+     || pre: lista = [1, 2]
+- |
+     || pre: lista = [-1, -1, -1]
+
+### hiba
+kerdes: A program a 10-nél nagyobb elemeket számolja, de sok sort ír ki. Javítsd ki. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [3, 12, 7, 15, 10, 22]
+  db = 0
+  for x in lista:
+      if x > 10:
+          db += 1
+      print(db)
+megoldas: |
+  lista = [3, 12, 7, 15, 10, 22]
+  db = 0
+  for x in lista:
+      if x > 10:
+          db += 1
+  print(db)
+tesztek:
+- |
+     || pre: lista = [3, 12, 7, 15, 10, 22]
+- |
+     || pre: lista = [1, 2]
+- |
+     || pre: lista = [11]
+
+### abrakod
+kerdes: Melyik program számolja meg a 10-nél nagyobb elemeket a folyamatábra szerint?
+abra: megszamlalas
+valaszok:
+- |
+    db = 0
+    for elem in lista:
+        db += 1
+        if elem > 10:
+            print(db)
+- |
+    db = 0
+    for elem in lista:
+        if elem > 10:
+            db += 1
+    print(db)
+- |
+    for elem in lista:
+        db = 0
+        if elem > 10:
+            db += 1
+    print(db)
+jo: 1
+magyarazat: A számláló növelése a feltétel „igen” ágán van, a kiírás pedig a ciklus után.
+
+### mikiir
+kod: |
+  l = [3, 12, 7, 15]
+  db = 0
+  for x in l:
+      if x > 5 and x < 14:
+          db += 1
+  print(db)

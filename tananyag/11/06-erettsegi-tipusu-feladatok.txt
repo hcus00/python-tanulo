@@ -1,0 +1,453 @@
+# Érettségi típusú programozási feladatok
+
+## A digitális kultúra érettségi programozási feladata
+A digitális kultúra középszintű érettségi gyakorlati vizsgája 180 percig tart, 100 pontot ér, és öt feladatból áll. Az ötödik feladat az <b>Algoritmizálás és programozás</b>, ez 15 pontot ér. A vizsgázó a feladat leírásából adatmodellt állít fel, algoritmust készít, és azt a programozási nyelven megvalósítja. A programozási nyelvet az iskola által megadott szoftverek közül választhatod. A követelmények változhatnak, ezért a pontos, aktuális részleteket mindig a hivatalos vizsgaleírásban és a közzétett mintafeladatokban ellenőrizd.
+
+## Milyen feladatokra számíthatsz?
+A korábbi feladatsorokban például szerepelt egy szójáték (Kitaláló), egy dobókockás szimuláció (Kockák) és egy adatsor feldolgozása megszámlálással (Létra). A feladatok jellemzően egy kis <b>történetbe</b> vannak ágyazva: játék, szimuláció, menetrend, névsor, üzenet. Közös vonásaik:
+- a feladat több, sorszámozott részfeladatra bomlik, és a részfeladatok sokszor egymásra épülnek
+- <b>nem írja ki, melyik programozási tételt kell használnod</b>: a leírásból neked kell felismerned, hogy összegzésre, megszámlálásra, keresésre vagy szélsőérték-kiválasztásra van szükség
+- a kérdőszövegeket és a kimenet formáját pontosan megadja, általában mintakimenettel
+- megadja, milyen néven kell mentened a forráskódot
+- a részfeladatok többnyire egymástól függetlenül megoldhatók: ha az egyik nem sikerül, a többi még megoldható
+- a kiírásnál az ékezetmentes változatot is elfogadták
+A feladatok többsége a tanult elemekből építkezik: véletlen számok, ciklusok, listák, szövegkezelés és programozási tételek, de gyakran egy-egy különleges esettel (üres találat, holtverseny, a lista vége). Az alábbi négy típusfeladat saját készítésű, a szerkezetük viszont a valódi feladatokét követi: más-más történet, más-más adatforrás, más-más feladattípus. A megoldások lenyitható blokkokban vannak: előbb próbáld meg magad megoldani a feladatot.
+
+## Honnan jönnek az adatok?
+Három forrás fordul elő:
+- a program <b>generálja</b> az adatot (például véletlen kockadobás vagy pörgetés)
+- a felhasználó <b>megadja</b> (<code>input</code>)
+- az adatokat <b>készen</b> kapod a feladat szövegében (például egy táblázat, menetrend vagy névsor), és neked kell a programban eltárolnod őket
+A gyakorló feladatokban mindhárom módszer előfordul. A feladat nem árulja el, milyen adatszerkezetben tárold az adatokat, ezt neked kell eldöntened. Ha az adatok táblázatban vannak megadva, érdemes az oszlopaikat listákba, vagy a sorokat egy listába írni, a feldolgozás utána ugyanaz a bejárás és ugyanazok a tételek. Véletlen számoknál figyelj arra, hogy a feladat pontosan megadja, hányszor és milyen sorrendben sorsolj.
+```python
+# a feladat szövegében megadott adatok
+szavak = ["alma", "körte", "szilva"]
+
+# a program generálja
+import random
+dobas = random.randint(1, 6)
+
+# a felhasználó adja meg
+nev = input("Neved: ")
+```
+
+## A megoldás lépései
+Minden feladatnál érdemes ugyanígy haladni:
+1. Olvasd végig az egész feladatot, és értsd meg, mi a bemenet és mi a kimenet.
+2. Döntsd el, milyen változókban és listákban tárolod az adatokat.
+3. Minden részfeladatnál válaszd ki a hozzá illő tételt (összegzés, megszámlálás, eldöntés, keresés, kiválasztás, szélsőérték).
+4. Oldd meg részfeladatonként, és mindegyiket próbáld ki, mielőtt továbblépsz.
+5. Ellenőrizd a határesetekkel (például N = 1, nincs találat).
+6. A végén vesd össze a kiírást a mintával: a szövegek és a sorrend legyen pontosan olyan, ahogy kérik.
+A lépések ismétlődnek minden részfeladatnál, ezt mutatja az ábra.
+@abra exam
+
+## 1. típusfeladat: Szerencsekerék
+A vásári szerencsekeréken öt mező van: <code>0</code>, <code>5</code>, <code>10</code>, <code>20</code> és <code>50</code> pont. A játékos legfeljebb N-szer pörgethet, és minden pörgetés a megfelelő mezőre érkezik. A pontok összeadódnak, a <code>0</code> mező viszont <b>bukó</b>: ilyenkor a játékos addigi pontjainak fele (lefelé kerekítve) elvész. Ha a pontszám eléri a 100-at, a játékos megnyeri a nagydíjat, és a játék azonnal véget ér. Készíts programot <b>kerek</b> néven!
+1. Tárold el a mezők értékeit, és kérd be a pörgetések legnagyobb számát (N) a <code>"Pörgetések: "</code> felirattal.
+2. Minden pörgetésnél sorsolj egy mezőt úgy, hogy mind az öt mező egyforma eséllyel kerüljön sorra. Pörgetésenként pontosan egy sorsolás legyen.
+3. Minden pörgetés után írd ki, melyik mezőre érkeztél és mennyi a pontszám a pörgetés hatásának alkalmazása után, a mintának megfelelően.
+4. Ha a pontszám eléri a 100-at, írd ki a <code>Nagydíj a 10. pörgetésnél!</code> sort (a számot cseréld a pörgetés sorszámára), és hagyd abba a játékot.
+5. Ha az N pörgetés után sincs nagydíj, írd ki a végső pontszámot: <code>Vége a játéknak, végső állás: 78</code>
+A mintakimenet véletlen értékeket tartalmaz, a te programod más számokat is adhat.
+```python
+Mintakimenet (N = 8):
+Pörgetések: 8
+1. pörgetés: 5 pont, állás: 5
+2. pörgetés: 50 pont, állás: 55
+3. pörgetés: 0 pont, állás: 27
+4. pörgetés: 10 pont, állás: 37
+5. pörgetés: 0 pont, állás: 18
+6. pörgetés: 20 pont, állás: 38
+7. pörgetés: 20 pont, állás: 58
+8. pörgetés: 20 pont, állás: 78
+Vége a játéknak, végső állás: 78
+```
+
+## Megoldás: Szerencsekerék
+Itt nem egy klasszikus programozási tételt kell alkalmazni, hanem egy <b>folyamatot</b> kell szimulálni: a pontszám minden pörgetésnél a korábbi állapottól függ. A megoldás elemei:
+- a ciklusnak <b>két leállási feltétele</b> van: elfogytak a pörgetések, vagy megvan a nagydíj. Ezért <code>while</code> ciklust használunk, a <code>nagydij</code> logikai jelzővel
+- a bukónál a <code>//</code> osztás adja a pontok felét lefelé kerekítve
+- a ciklus után csak akkor írjuk ki a végső állást, ha nem volt nagydíj
+```python
+import random
+
+mezok = [0, 5, 10, 20, 50]
+n = int(input("Pörgetések: "))
+pont = 0
+nagydij = False
+porgetes = 0
+while porgetes < n and not nagydij:
+    porgetes += 1
+    mezo = mezok[random.randint(0, 4)]
+    if mezo == 0:
+        pont = pont // 2
+    else:
+        pont += mezo
+    print(f"{porgetes}. pörgetés: {mezo} pont, állás: {pont}")
+    if pont >= 100:
+        nagydij = True
+        print(f"Nagydíj a {porgetes}. pörgetésnél!")
+if not nagydij:
+    print("Vége a játéknak, végső állás:", pont)
+```
+
+## 2. típusfeladat: E-mail cím
+Az iskola minden új diáknak e-mail címet készít. A cím szerkezete: <code>vezetéknév.keresztnév@suli.hu</code>, csupa kisbetűvel és <b>ékezetek nélkül</b>. Ha valakinek több keresztneve van, csak az elsőt használják. Készíts programot <b>emailcim</b> néven!
+1. Kérd be a diák teljes nevét a <code>"Teljes név: "</code> felirattal. A nevet legalább két szó alkotja, a vezetéknév az első szó.
+2. Írd ki a monogramot: a név szavainak kezdőbetűit ponttal és szóközzel elválasztva, például <code>Monogram: K. V.</code>
+3. Állítsd össze az e-mail címet: az első szó, egy pont és a második szó, kisbetűvel.
+4. Cseréld le a címben az ékezetes betűket ékezet nélküliekre: <code>áéíóöőúüű</code> helyére <code>aeiooouuu</code> kerüljön.
+5. Írd ki a kész címet: <code>E-mail cím: kiss.virag@suli.hu</code>
+```python
+Mintakimenet:
+Teljes név: Tóth Ágnes Zsófia
+Monogram: T. Á. Z.
+E-mail cím: toth.agnes@suli.hu
+```
+
+## Megoldás: E-mail cím
+Ez a feladat <b>szövegkezelés</b>, tételek nélkül:
+- a <code>split</code> bontja szavakra a nevet
+- a monogramot a szavak bejárásával építjük, minden szó első betűje (<code>szo[0]</code>) után pont és szóköz jön, a végén a <code>strip()</code> levágja a felesleges szóközt
+- az ékezetek cseréjéhez két, egyforma hosszú szöveget használunk: ahol az ékezetes betű az <code>ekezetes</code> szövegben van, ott a párja a <code>sima</code> szöveg ugyanazon indexén áll. Az <code>index</code> megadja a helyét
+- a <code>lower()</code> az ékezetes nagybetűket is kisbetűvé alakítja (<code>Ő</code> helyett <code>ő</code>), ezért előbb kisbetűsítünk, utána cserélünk
+```python
+nev = input("Teljes név: ")
+szavak = nev.split(" ")
+
+monogram = ""
+for szo in szavak:
+    monogram += szo[0] + ". "
+print("Monogram:", monogram.strip())
+
+ekezetes = "áéíóöőúüű"
+sima = "aeiooouuu"
+cim = (szavak[0] + "." + szavak[1]).lower()
+vegso = ""
+for betu in cim:
+    if betu in ekezetes:
+        vegso += sima[ekezetes.index(betu)]
+    else:
+        vegso += betu
+print("E-mail cím:", vegso + "@suli.hu")
+```
+
+## 3. típusfeladat: Buszmenetrend
+A suli előtt álló megálló munkanapi menetrendje (az indulások ideje <code>ó:p</code> alakú szövegként, időrendben) a következő. Készíts programot <b>busz</b> néven!
+1. Tárold el a menetrend adatait.
+2. Alakítsd át az indulásokat percekké: az éjféltől eltelt percek számát is tárold el. A <code>7:05</code> például <code>425</code> perc.
+3. Kérd be az aktuális időt ugyanilyen <code>ó:p</code> alakban a <code>"Hány óra van? "</code> felirattal.
+4. Írd ki a következő busz indulási idejét és azt, hogy hány perc múlva indul: <code>Következő busz: 6:48 (18 perc múlva)</code> Ha pont most indul, a várakozás 0 perc. Ha aznap már nincs több busz, ezt írd ki: <code>Ma már nincs több busz.</code>
+5. Írd ki, melyik két egymást követő busz között a leghosszabb a szünet (az elsőt, ha több egyforma van): <code>Leghosszabb szünet: 50 perc (8:10 és 9:00 között)</code>
+```python
+Az indulások időrendben:
+5:50, 6:20, 6:48, 7:05, 7:35, 8:10, 9:00
+
+Mintakimenet:
+Hány óra van? 6:30
+Következő busz: 6:48 (18 perc múlva)
+Leghosszabb szünet: 50 perc (8:10 és 9:00 között)
+```
+
+## Megoldás: Buszmenetrend
+A feladat három része három különböző gondolkodásmód:
+- a szövegből számot készítő <b>átalakítás</b>: <code>split(":")</code>, majd <code>óra * 60 + perc</code>. Percekben már könnyű összehasonlítani és kivonni
+- az első olyan busz <b>keresése</b>, amely nem indult el az adott időpont előtt. Ez <code>while</code> ciklus <code>index</code> változóval, mert a keresés megáll az első találatnál. Ha az <code>index</code> a lista végére ér, nincs több busz
+- a leghosszabb szünet <b>szélsőérték-kiválasztás</b> az egymást követő elemek különbségére. A <code>range</code> ezért az 1. indextől indul, és a különbség az <code>i</code>-edik és az <code>i - 1</code>-edik elemből áll elő. A kiíráshoz az eredeti szöveges időpontokat használjuk, így nem kell visszaalakítani a perceket
+```python
+indulasok = ["5:50", "6:20", "6:48", "7:05", "7:35", "8:10", "9:00"]
+
+percek = []
+for ido in indulasok:
+    adat = ido.split(":")
+    percek.append(int(adat[0]) * 60 + int(adat[1]))
+
+most = input("Hány óra van? ").split(":")
+mostperc = int(most[0]) * 60 + int(most[1])
+
+index = 0
+while index < len(percek) and percek[index] < mostperc:
+    index += 1
+if index < len(percek):
+    print("Következő busz: " + indulasok[index] + " (" + str(percek[index] - mostperc) + " perc múlva)")
+else:
+    print("Ma már nincs több busz.")
+
+legnagyobb = 0
+hol = 0
+for i in range(1, len(percek)):
+    kulonbseg = percek[i] - percek[i - 1]
+    if kulonbseg > legnagyobb:
+        legnagyobb = kulonbseg
+        hol = i
+print("Leghosszabb szünet: " + str(legnagyobb) + " perc (" + indulasok[hol - 1] + " és " + indulasok[hol] + " között)")
+```
+
+## 4. típusfeladat: Huszonegy
+Egyszerűsített kártyajátékot játszol a bankkal. Te a saját lapjaidból már összeállítottál egy összeget (4 és 21 közötti egész szám). A bank lapot húz: minden lap értéke 1 és 10 közötti véletlen egész szám, és a bank addig húz, amíg az összege el nem éri a 17-et. Ha a bank összege ennél is több, mint 21, a bank <b>bukott</b>. Készíts programot <b>huszonegy</b> néven!
+1. Kérd be a saját összegedet a <code>"Te összeged: "</code> felirattal.
+2. Szimuláld a bank húzásait: minden lap értékét sorsold ki az 1 és 10 közötti egész számok közül (mindkét határ lehet), húzásonként pontosan egy sorsolással.
+3. Minden húzás után írd ki a lap értékét és a bank eddigi összegét: <code>Húzott lap: 4, összeg: 4</code>
+4. A húzások végén döntsd el, ki nyert. Ha a bank bukott, ezt írd ki: <code>A bank bukott, te nyertél!</code> Egyébként az nyer, akinek nagyobb az összege: <code>A bank nyert.</code>, <code>Te nyertél!</code>, egyenlő összegnél pedig <code>Döntetlen.</code>
+A mintakimenet véletlen értékeket tartalmaz, a te programod más számokat is adhat.
+```python
+Mintakimenet:
+Te összeged: 18
+Húzott lap: 4, összeg: 4
+Húzott lap: 10, összeg: 14
+Húzott lap: 9, összeg: 23
+A bank bukott, te nyertél!
+```
+
+## Megoldás: Huszonegy
+A feladat két fő része:
+- a bank húzása egy <b>feltételes ciklus</b>: addig ismétlődik, amíg az összeg 17 alatt van. Nem tudjuk előre, hányszor, ezért a <code>for</code> nem illik ide
+- az eredmény <b>többágú elágazás</b>. A sorrend számít: előbb a bukást vizsgáljuk, mert ha a bank összege 21 fölött van, a nagyobb/kisebb összehasonlításnak már nincs értelme
+```python
+import random
+
+jatekos = int(input("Te összeged: "))
+bank = 0
+while bank < 17:
+    lap = random.randint(1, 10)
+    bank += lap
+    print(f"Húzott lap: {lap}, összeg: {bank}")
+
+if bank > 21:
+    print("A bank bukott, te nyertél!")
+elif bank > jatekos:
+    print("A bank nyert.")
+elif bank < jatekos:
+    print("Te nyertél!")
+else:
+    print("Döntetlen.")
+```
+
+## Tippek
+Néhány gyakorlati tanács:
+- olvasd végig az egész feladatot, mielőtt írni kezdenél
+- a kért szövegeket és a kimenet formáját pontosan add vissza
+- haladj részfeladatonként, és minden rész után futtasd a programot
+- ha egy részfeladat elakad, lépj tovább a többire, és később térj vissza hozzá
+- adj beszédes neveket a változóknak, és kommentekkel jelöld a részfeladatokat
+- próbáld ki a határesetekkel is (például N = 1, vagy amikor nincs találat)
+- hiba esetén olvasd el az üzenet utolsó sorát, és nézd meg a sorszámot
+
+## Összefoglalás
+A digitális kultúra érettségi programozási feladata sorszámozott részfeladatokból áll, pontosan megadott kimenettel. A megoldás menete: értsd meg a feladatot, válaszd ki a tételeket, haladj részfeladatonként, teszteld, és vesd össze a kimenetet a mintával.
+
+### teszt
+kerdes: A szerencsekeréknél a bukó mezőn a játékos pontjainak fele (lefelé kerekítve) elvész. Melyik utasítás adja meg a megmaradó pontszámot?
+valaszok:
+- <code>pont = pont // 2</code>
+- <code>pont = pont / 2</code>
+- <code>pont = pont % 2</code>
+jo: 0
+magyarazat: A <code>//</code> egész osztás lefelé kerekít, és egész számot ad. A <code>/</code> törtet adna (például 27.5), a <code>%</code> pedig a maradékot.
+
+### teszt
+kerdes: A szerencsekeréknél a játék akkor ér véget, ha elfogytak a pörgetések, vagy megvan a nagydíj. Melyik ciklus illik ide a legjobban?
+valaszok:
+- <code>for</code> ciklus, mert N-szer pörgetünk
+- <code>while</code> ciklus két feltétellel (a pörgetések száma és a nagydíj jelzője)
+- két egymás utáni <code>for</code> ciklus
+jo: 1
+magyarazat: A <code>while</code> ciklusban több leállási feltételt is megadhatsz, ezért itt ez a természetes választás.
+
+### beiros
+kerdes: Mit ír ki? (A számot írd be.)
+kod: |
+  ido = "7:05"
+  adat = ido.split(":")
+  print(int(adat[0]) * 60 + int(adat[1]))
+elfogad:
+- 425
+segitseg: 7 óra = 420 perc, ehhez jön az 5 perc.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  szo = "tűzfal"
+  ekezetes = "áéíóöőúüű"
+  sima = "aeiooouuu"
+  uj = ""
+  for betu in szo:
+      if betu in ekezetes:
+          uj += sima[ekezetes.index(betu)]
+      else:
+          uj += betu
+  print(uj)
+elfogad:
+- tuzfal
+segitseg: Csak a <code>ű</code> szerepel az ékezetes betűk között, annak párja az <code>u</code>.
+
+### beiros
+kerdes: Mit ír ki? (A számot írd be.)
+kod: |
+  indulasok = [425, 455, 490, 540]
+  legnagyobb = 0
+  for i in range(1, len(indulasok)):
+      kulonbseg = indulasok[i] - indulasok[i - 1]
+      if kulonbseg > legnagyobb:
+          legnagyobb = kulonbseg
+  print(legnagyobb)
+elfogad:
+- 50
+segitseg: A különbségek: 30, 35, 50. A legnagyobb az 50.
+
+### teszt
+kerdes: A huszonegy-feladatban a bank addig húz, amíg az összege el nem éri a 17-et. Melyik ciklusfeltétel fejezi ezt ki?
+valaszok:
+- <code>while bank &lt; 17:</code>
+- <code>while bank &gt; 17:</code>
+- <code>while bank == 17:</code>
+jo: 0
+magyarazat: A ciklus addig fut, amíg a bank összege még kisebb, mint 17. Amint eléri vagy túllépi, leáll.
+
+### teszt
+kerdes: Mit érdemes tenni, ha az egyik részfeladat nem sikerül?
+valaszok:
+- továbblépni a többire, és később visszatérni hozzá
+- feladni az egész feladatot
+- kitörölni a már működő részeket
+jo: 0
+magyarazat: A részfeladatok többnyire egymástól függetlenül megoldhatók, ezért a többit érdemes megoldani.
+
+### teszt
+kerdes: Az ábra szerint mi következik, ha a kipróbált program kimenete nem jó?
+abra: exam
+valaszok:
+- hibakeresés és javítás, majd újra kipróbálás
+- átlépünk a következő részfeladatra
+- a program kész
+jo: 0
+magyarazat: A javítás után újra kipróbáljuk, és csak jó kimenet esetén lépünk tovább.
+
+### kod
+kerdes: <b>Szerencsekerék.</b> A kerék mezői: <code>0, 5, 10, 20, 50</code>. Kérd be a pörgetések legnagyobb számát (N, felirat nélkül). Minden pörgetésnél sorsolj egy mezőt (mind az öt egyforma eséllyel, pörgetésenként pontosan egy sorsolással), a 0 mezőn a pontszám fele elvész (lefelé kerekítve), a többi mezőn a pontok hozzáadódnak. Minden pörgetés után írd ki: <code>1. pörgetés: 5 pont, állás: 5</code>. Ha az állás eléri a 100-at, írd ki: <code>Nagydíj a 10. pörgetésnél!</code> és állj meg. Ha N pörgetés után sincs nagydíj: <code>Vége a játéknak, végső állás: ...</code>. A tesztek rögzített véletlen sorozattal futnak, ezért számít, hányszor és milyen sorrendben sorsolsz.
+kezdokod: |
+  import random
+  mezok = [0, 5, 10, 20, 50]
+  n = int(input())
+
+megoldas: |
+  import random
+  mezok = [0, 5, 10, 20, 50]
+  n = int(input())
+  pont = 0
+  nagydij = False
+  porgetes = 0
+  while porgetes < n and not nagydij:
+      porgetes += 1
+      mezo = mezok[random.randint(0, 4)]
+      if mezo == 0:
+          pont = pont // 2
+      else:
+          pont += mezo
+      print(f"{porgetes}. pörgetés: {mezo} pont, állás: {pont}")
+      if pont >= 100:
+          nagydij = True
+          print(f"Nagydíj a {porgetes}. pörgetésnél!")
+  if not nagydij:
+      print("Vége a játéknak, végső állás:", pont)
+tesztek:
+- 8 || seed: 1
+- 30 || seed: 1
+- 1 || seed: 4
+- 6 || seed: 4
+segitseg: Két leállási feltétel van, ezért <code>while</code> ciklus kell, egy logikai jelzővel a nagydíjnak.
+
+### kod
+kerdes: <b>E-mail cím.</b> Kérd be a diák teljes nevét (felirat nélkül, legalább két szó, például <code>Őri Ödön</code>). Írd ki a monogramot: <code>Monogram: Ő. Ö.</code> (a szavak kezdőbetűi ponttal, szóközzel elválasztva). Majd írd ki az e-mail címet: <code>E-mail cím: ori.odon@suli.hu</code>: az első szó, pont és a második szó kisbetűvel és ékezetek nélkül (<code>áéíóöőúüű</code> helyett <code>aeiooouuu</code>), utána <code>@suli.hu</code>.
+kezdokod: |
+  nev = input()
+  szavak = nev.split(" ")
+
+megoldas: |
+  nev = input()
+  szavak = nev.split(" ")
+  monogram = ""
+  for szo in szavak:
+      monogram += szo[0] + ". "
+  print("Monogram:", monogram.strip())
+  ekezetes = "áéíóöőúüű"
+  sima = "aeiooouuu"
+  cim = (szavak[0] + "." + szavak[1]).lower()
+  vegso = ""
+  for betu in cim:
+      if betu in ekezetes:
+          vegso += sima[ekezetes.index(betu)]
+      else:
+          vegso += betu
+  print("E-mail cím:", vegso + "@suli.hu")
+tesztek:
+- Tóth Ágnes Zsófia
+- Őri Ödön
+- Kiss Virág
+- Szűcs Álmos Bendegúz
+segitseg: A kisbetűsítést (<code>lower()</code>) az ékezetek cseréje előtt végezd el, így az ékezetes nagybetűkkel (<code>Á</code>, <code>Ő</code>) sem lesz gond.
+
+### kod
+kerdes: <b>Buszmenetrend.</b> Az indulások ideje <code>ó:p</code> alakú szövegként adott, időrendben. Kérd be az aktuális időt ugyanilyen alakban (felirat nélkül). Írd ki a következő busz idejét és hogy hány perc múlva indul: <code>Következő busz: 6:48 (18 perc múlva)</code>. Ha pont most indul, 0 perc a várakozás, ha nincs több busz: <code>Ma már nincs több busz.</code> Ezután írd ki a leghosszabb szünetet két egymást követő busz között (az első ilyen): <code>Leghosszabb szünet: 50 perc (8:10 és 9:00 között)</code>. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  indulasok = ["5:50", "6:20", "6:48", "7:05", "7:35", "8:10", "9:00"]
+
+megoldas: |
+  indulasok = ["5:50", "6:20", "6:48", "7:05", "7:35", "8:10", "9:00"]
+  percek = []
+  for ido in indulasok:
+      adat = ido.split(":")
+      percek.append(int(adat[0]) * 60 + int(adat[1]))
+  most = input().split(":")
+  mostperc = int(most[0]) * 60 + int(most[1])
+  index = 0
+  while index < len(percek) and percek[index] < mostperc:
+      index += 1
+  if index < len(percek):
+      print("Következő busz: " + indulasok[index] + " (" + str(percek[index] - mostperc) + " perc múlva)")
+  else:
+      print("Ma már nincs több busz.")
+  legnagyobb = 0
+  hol = 0
+  for i in range(1, len(percek)):
+      kulonbseg = percek[i] - percek[i - 1]
+      if kulonbseg > legnagyobb:
+          legnagyobb = kulonbseg
+          hol = i
+  print("Leghosszabb szünet: " + str(legnagyobb) + " perc (" + indulasok[hol - 1] + " és " + indulasok[hol] + " között)")
+tesztek:
+- 6:30
+- 9:00 || pre: indulasok = ["5:50", "6:20", "6:48", "7:05", "7:35", "8:10", "9:00"]
+- 23:15 || pre: indulasok = ["22:10", "22:40", "23:10", "23:50"]
+- 4:00 || pre: indulasok = ["6:00", "6:10", "6:30", "7:30", "7:40", "8:40"]
+segitseg: Először alakítsd percekké az időpontokat (<code>óra * 60 + perc</code>), és ezekkel számolj. A kiíráshoz használd az eredeti szöveges időpontokat.
+
+### kod
+kerdes: <b>Huszonegy.</b> Kérd be a saját összegedet (felirat nélkül). A bank addig húz, amíg az összege el nem éri a 17-et; minden lap értékét sorsold ki az 1 és 10 közötti egész számok közül, húzásonként pontosan egy sorsolással. Minden húzás után írd ki: <code>Húzott lap: 4, összeg: 4</code>. A végén: ha a bank összege 21 fölött van, <code>A bank bukott, te nyertél!</code>, különben a nagyobb összeg nyer (<code>A bank nyert.</code> vagy <code>Te nyertél!</code>), egyenlőség esetén <code>Döntetlen.</code> A tesztek rögzített véletlen sorozattal futnak, ezért számít, hányszor és milyen sorrendben sorsolsz.
+kezdokod: |
+  import random
+  jatekos = int(input())
+
+megoldas: |
+  import random
+  jatekos = int(input())
+  bank = 0
+  while bank < 17:
+      lap = random.randint(1, 10)
+      bank += lap
+      print(f"Húzott lap: {lap}, összeg: {bank}")
+  if bank > 21:
+      print("A bank bukott, te nyertél!")
+  elif bank > jatekos:
+      print("A bank nyert.")
+  elif bank < jatekos:
+      print("Te nyertél!")
+  else:
+      print("Döntetlen.")
+tesztek:
+- 18 || seed: 3
+- 18 || seed: 4
+- 18 || seed: 7
+- 10 || seed: 1
+segitseg: A húzás <code>while bank &lt; 17</code> ciklus. A döntésnél a bukást vizsgáld elsőként.

@@ -1,0 +1,178 @@
+# A tételek rövidítése: sum, count, in, index
+
+## Miért rövidíthető?
+A Python sok gyakori tételt egyetlen függvénnyel vagy művelettel megold. Ezek a rövidítések rövidebbek és olvashatóbbak, de csak akkor érdemes használni őket, ha a hosszú változatot már értjük. Az érettségi feladatban is mindig tudnod kell, mit csinál a rövid kód a háttérben. Fontos: a rövidítések csak <b>egyszerű esetekben</b> működnek, összetett feltételekhez ciklus kell.
+
+## Összegzés: sum
+A <code>sum(lista)</code> a lista elemeinek összegét adja.
+```python
+szamok = [3, 5, 2, 7]
+print(sum(szamok))   # 17
+```
+
+## Megszámlálás: count
+A <code>lista.count(x)</code> megadja, hányszor szerepel az x érték a listában. Ez csak adott <b>értékre</b> működik: ha feltétel alapján kell számolni (például „10-nél nagyobb”), marad a ciklus.
+```python
+jegyek = [5, 3, 4, 5, 2, 5]
+print(jegyek.count(5))   # 3
+```
+
+## Eldöntés: in
+Az <code>x in lista</code> logikai értéket ad: <code>True</code>, ha az x szerepel a listában. A tagadása az <code>x not in lista</code>.
+```python
+jegyek = [5, 4, 1, 3]
+print(1 in jegyek)       # True
+print(2 in jegyek)       # False
+print(2 not in jegyek)   # True
+```
+
+## Keresés és kiválasztás: index
+A <code>lista.index(x)</code> az x érték <b>első</b> előfordulásának indexét adja. Ha az x nincs a listában, <code>ValueError</code> keletkezik, ezért ha nem biztos, hogy szerepel, előbb a <code>in</code> segítségével ellenőrizd (ez a keresés), ha biztosan szerepel, használhatod közvetlenül (ez a kiválasztás).
+```python
+jegyek = [5, 4, 1, 3, 1]
+if 1 in jegyek:
+    print("Indexe:", jegyek.index(1))     # 2
+    print("Sorszáma:", jegyek.index(1) + 1)   # 3
+else:
+    print("Nincs elégtelen jegy.")
+```
+
+## Szélsőértékek
+A legnagyobb és a legkisebb elemet a <code>max(lista)</code> és a <code>min(lista)</code> adja. Ezek hátterét, vagyis a szélsőérték-kiválasztás tételét a 11. évfolyamon tanuljuk meg.
+```python
+szamok = [3, 8, 1, 8]
+print(min(szamok), max(szamok))   # 1 8
+```
+
+## Összefoglaló táblázat
+Melyik tételt mivel rövidíthetjük:
+- összegzés → <code>sum(l)</code>
+- megszámlálás adott értékre → <code>l.count(x)</code>
+- eldöntés adott értékre → <code>x in l</code>
+- keresés vagy kiválasztás adott értékre → <code>l.index(x)</code>
+- feltétel alapján (például „nagyobb 10-nél”) → marad a ciklus
+
+## Összefoglalás
+A sum, count, in és index a tételek rövidítései adott értékre. Ha feltétel alapján dolgozunk, ciklust használunk. A listakezelő függvényeket (append, remove, sort stb.) és a szélsőérték tételét a 11. évfolyamon tanuljuk.
+
+### teszt
+kerdes: Melyik rövidíti az összegzés tételét?
+valaszok:
+- sum(l)
+- l.count(x)
+- x in l
+jo: 0
+magyarazat: A sum a lista elemeit adja össze.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: print(sum([2, 5, 3]))
+elfogad:
+- 10
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [4, 7, 7, 2]
+  print(l.count(7), l.index(7))
+elfogad:
+- 2 1
+segitseg: A 7 kétszer szerepel, az első előfordulás indexe 1.
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: |
+  l = [4, 7, 9]
+  print(9 in l, 5 in l)
+valaszok:
+- True False
+- False True
+- True True
+jo: 0
+magyarazat: A 9 szerepel a listában, az 5 nem.
+
+### teszt
+kerdes: Melyik hibát okozza a [1, 2, 3].index(5)?
+valaszok:
+- IndexError
+- ValueError
+- NameError
+jo: 1
+magyarazat: Az 5 nincs a listában, ezért nem lehet megadni az indexét: ValueError.
+
+### kod
+kerdes: Írd ki a lista elemeinek összegét és átlagát (egy tizedesre kerekítve) <code>sum</code> és <code>len</code> használatával, egy sorban, szóközzel elválasztva. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 9, 2, 7]
+
+megoldas: |
+  lista = [4, 9, 2, 7]
+  print(sum(lista), round(sum(lista) / len(lista), 1))
+tesztek:
+- |
+     || pre: lista = [4, 9, 2, 7]
+- |
+     || pre: lista = [1, 2]
+- |
+     || pre: lista = [10]
+
+### kod
+kerdes: Olvass be egy számot, és a <code>count</code> segítségével írd ki, hányszor szerepel a listában. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [3, 5, 3, 8, 3, 5]
+
+megoldas: |
+  lista = [3, 5, 3, 8, 3, 5]
+  x = int(input())
+  print(lista.count(x))
+tesztek:
+- 3
+- 5
+- 8
+- 7
+
+### kod
+kerdes: Olvass be egy számot. Az <code>in</code> segítségével írd ki: <code>van</code> vagy <code>nincs</code> ilyen elem a listában. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [3, 5, 3, 8]
+
+megoldas: |
+  lista = [3, 5, 3, 8]
+  x = int(input())
+  if x in lista:
+      print("van")
+  else:
+      print("nincs")
+tesztek:
+- 3
+- 8
+- 4
+
+### kod
+kerdes: Olvass be egy számot. Ha szerepel a listában, írd ki az első előfordulásának indexét (<code>index</code>), különben írd ki: <code>nincs</code>. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [3, 5, 3, 8]
+
+megoldas: |
+  lista = [3, 5, 3, 8]
+  x = int(input())
+  if x in lista:
+      print(lista.index(x))
+  else:
+      print("nincs")
+tesztek:
+- 3
+- 8
+- 4
+- 5
+segitseg: Az <code>index</code> hibát ad, ha nincs ilyen elem: előbb ellenőrizd az <code>in</code> operátorral!
+
+### mikiir
+kod: |
+  l = [4, 9, 2]
+  print(sum(l), max(l), min(l))
+
+### mikiir
+kod: |
+  l = [1, 2, 2, 3, 2]
+  print(l.count(2), 5 in l)

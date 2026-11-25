@@ -1,0 +1,100 @@
+# Véletlen egész számok (randint)
+
+## Mire jó a véletlen?
+Játékoknál (kockadobás, kártyahúzás), szimulációknál és tesztadatok készítésénél gyakran van szükség véletlen számra. Pythonban ezt a <code>random</code> modul adja. A <b>modul</b> kész függvények gyűjteménye, amelyet használat előtt be kell tölteni az <code>import</code> utasítással. Az importot általában a program elejére írjuk.
+
+## A randint függvény
+A <code>random.randint(a, b)</code> egy <b>a és b közötti egész számot</b> ad, és mindkét határ szerepelhet az eredmények között. A <code>randint(1, 6)</code> tehát 1, 2, 3, 4, 5 vagy 6 lehet, ahogy egy dobókockán. Minden futtatáskor más értéket kaphatsz.
+```python
+import random
+kocka = random.randint(1, 6)
+print("Dobás:", kocka)
+```
+
+## Gyakori használat
+Több véletlen szám is kérhető egymás után, mindegyik független a többitől. Ha kell egy adott alakú szám (például páros), a véletlen számot átalakíthatod egy művelettel.
+```python
+import random
+a = random.randint(1, 6)
+b = random.randint(1, 6)
+print("Két kockával:", a + b)       # 2 és 12 között
+paros = random.randint(1, 50) * 2    # 2, 4, ..., 100 valamelyike
+```
+
+## Gyakori hibák
+Ha elfelejted az importot, <code>NameError: name "random" is not defined</code> hibát kapsz. Ha a kisebb szám áll hátul (<code>randint(6, 1)</code>), <code>ValueError</code> keletkezik. Fontos még: ha ugyanarra a véletlen értékre többször is szükséged van, tárold változóban, mert a <code>randint</code> minden hívásnál új számot ad.
+
+## Összefoglalás
+A random modult importálni kell. A randint(a, b) a-tól b-ig ad egész számot, mindkét határt beleértve. A kisebb szám áll elöl. Minden hívás új értéket ad, ezért az eredményt érdemes változóban tárolni.
+
+### teszt
+kerdes: Mely értékeket adhatja a random.randint(1, 6)?
+valaszok:
+- 1-től 5-ig
+- 1-től 6-ig
+- 0-tól 6-ig
+jo: 1
+magyarazat: A randint mindkét határt beleérti, ahogy egy dobókocka.
+
+### teszt
+kerdes: Mi a hiba oka, ha a Python ezt írja: NameError: name "random" is not defined?
+valaszok:
+- Nem importáltuk a random modult
+- A randint hibásan van megadva
+- A szám túl nagy
+jo: 0
+magyarazat: A random név csak az import random sor után létezik.
+
+### teszt
+kerdes: Melyik adja a 10, 20, 30, ..., 100 számok valamelyikét?
+valaszok:
+- random.randint(1, 10) * 10
+- random.randint(10, 100)
+- random.randint(1, 10) + 10
+jo: 0
+magyarazat: Az 1 és 10 közötti szám tízszerese mindig a 10, 20, ..., 100 egyike.
+
+### beiros
+kerdes: Mi a legnagyobb érték, amit ez a program kiírhat? (Írd be a számot.)
+kod: |
+  import random
+  print(random.randint(2, 5) + random.randint(1, 3))
+elfogad:
+- 8
+segitseg: Add össze a két hívás legnagyobb lehetséges értékét.
+
+### kod
+kerdes: Dobj egy kockával kétszer (<code>random.randint(1, 6)</code>), és írd ki a két dobás összegét. <b>Fontos:</b> a tesztek rögzített véletlen sorozattal futnak, ezért pontosan kétszer hívd a <code>randint</code>-et.
+kezdokod: |
+  import random
+
+megoldas: |
+  import random
+  x = random.randint(1, 6)
+  y = random.randint(1, 6)
+  print(x + y)
+tesztek:
+- |
+     || seed: 1
+- |
+     || seed: 2
+- |
+     || seed: 7
+
+### kod
+kerdes: Húzz egy véletlen számot 1 és 100 között (<code>randint</code>), és írd ki két sorban: <code>A szám: ...</code> és <code>Az utolsó számjegye: ...</code>.
+kezdokod: |
+  import random
+
+megoldas: |
+  import random
+  szam = random.randint(1, 100)
+  print("A szám:", szam)
+  print("Az utolsó számjegye:", szam % 10)
+tesztek:
+- |
+     || seed: 3
+- |
+     || seed: 4
+- |
+     || seed: 5

@@ -1,0 +1,253 @@
+# Számlálós ciklus (for)
+
+## Miért kell ciklus?
+Sok feladatban ugyanazt a tevékenységet kell többször elvégezni. Ha tízszer akarsz kiírni valamit, nem írsz tíz <code>print</code> sort, hanem ciklust használsz. A <b>számlálós ciklus</b> akkor jó, ha előre tudod, hányszor kell ismételni.
+
+## A for ciklus és a range
+A <code>for i in range(n):</code> sor után kettőspont áll, a ciklus <b>törzse</b> pedig beljebb húzott. A törzs n-szer fut le, közben az <code>i</code> ciklusváltozó sorban 0-tól n-1-ig veszi fel az értékeket.
+```python
+for i in range(5):
+    print("Szia!")      # ötször írja ki
+```
+
+## A range három alakja
+A <code>range(n)</code> 0-tól n-1-ig számol. A <code>range(a, b)</code> a-tól b-1-ig, a <code>range(a, b, l)</code> pedig l lépésközzel halad. A felső határ <b>sosem</b> szerepel az értékek között. A lépésköz negatív is lehet, ekkor visszafelé számolunk.
+```python
+for i in range(3):           # 0 1 2
+    print(i)
+for i in range(1, 4):        # 1 2 3
+    print(i)
+for i in range(10, 0, -3):   # 10 7 4 1
+    print(i)
+```
+
+## A range számegyenesen
+A <code>range(start, stop, lépés)</code> a start értékéről indul, minden lépésben a <b>lépésköznyivel</b> megy tovább, és <b>a stop értéke előtt</b> megáll: a stop már nem kerül bele. Ezért ad a <code>range(2, 10, 3)</code> sorozata <code>2, 5, 8</code> értékeket.
+@abra range
+
+## Tipikus feladat: összeg 1-től n-ig
+A ciklusváltozót fel lehet használni a számolásban. Az összeg kezdőértéke 0, és minden lépésben hozzáadjuk az aktuális számot. Az <code>n + 1</code> azért kell, mert a felső határ nem szerepel. Ha n = 4, az összeg 1 + 2 + 3 + 4 = 10.
+```python
+n = int(input("n = "))
+osszeg = 0
+for i in range(1, n + 1):
+    osszeg += i
+print("Az összeg:", osszeg)
+```
+
+## Az összegzés folyamatábrán
+A számlálós ciklus a folyamatábrán is a már ismert visszacsatolás: az <code>i &lt;= n</code> kérdés igaz („igen”) ágán elvégezzük a törzset, majd növeljük az <code>i</code> értékét, és a nyíl visszavezet a kérdéshez. Amikor a kérdésre „nem” a válasz, kilépünk, és kiírjuk az eredményt.
+@abra for_osszeg
+
+## Gyakori hibák
+A leggyakoribb hiba a határ elrontása: a <code>range(1, n)</code> már nem éri el az n-et. Másik hiba a hiányzó kettőspont vagy behúzás. Ha a ciklusváltozóra nincs szükséged, nyugodtan használhatod csak az ismétlésre, ekkor sem szükséges külön elnevezni a lépéseket.
+
+## Összefoglalás
+A for i in range(...) számlálós ciklus. A range(n) 0-tól n-1-ig, a range(a, b) a-tól b-1-ig számol, a harmadik paraméter a lépésköz. A törzset behúzás jelöli. A felső határ soha nem tartozik bele.
+
+### teszt
+kerdes: Hányszor ír ki valamit a program?
+kod: |
+  for i in range(4):
+      print("x")
+valaszok:
+- 3
+- 4
+- 5
+jo: 1
+magyarazat: A range(4) négy értéket ad: 0, 1, 2, 3.
+
+### teszt
+kerdes: Mely számokat írja ki a program?
+kod: |
+  for i in range(2, 5):
+      print(i)
+valaszok:
+- 2 3 4
+- 2 3 4 5
+- 3 4 5
+jo: 0
+magyarazat: A felső határ, az 5, már nem szerepel.
+
+### beiros
+kerdes: Hány szám íródik ki? (A számot írd be.)
+kod: |
+  for i in range(10, 0, -3):
+      print(i)
+elfogad:
+- 4
+segitseg: Az értékek: 10, 7, 4, 1.
+
+### beiros
+kerdes: Mi lesz az osszeg értéke n = 4 esetén az összegző programban? (A számot írd be.)
+elfogad:
+- 10
+segitseg: 1 + 2 + 3 + 4.
+
+### beiros
+kerdes: Mi íródik ki az ábrán látható algoritmusban, ha n = 3? (A számot írd be.)
+abra: for_osszeg
+elfogad:
+- 6
+segitseg: 1 + 2 + 3.
+
+### kod
+kerdes: Olvass be egy pozitív egész számot (n), és írd ki az 1-től n-ig terjedő egész számokat külön sorban.
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  for i in range(1, n + 1):
+      print(i)
+tesztek:
+- 5
+- 1
+- 3
+
+### kod
+kerdes: Olvass be egy pozitív egész számot (n), és írd ki az n-ig terjedő páros számokat egy sorban, szóközzel elválasztva. (Az n = 1 esetén nem kell kiírni semmit.)
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  for i in range(2, n + 1, 2):
+      print(i, end=" ")
+  print()
+tesztek:
+- 10
+- 7
+- 2
+
+### kod
+kerdes: Olvass be egy nemnegatív egész számot (n), és írd ki az n faktoriálisát (1 · 2 · … · n). A 0 faktoriálisa 1.
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  szorzat = 1
+  for i in range(1, n + 1):
+      szorzat *= i
+  print(szorzat)
+tesztek:
+- 5
+- 1
+- 0
+- 10
+segitseg: A szorzat kezdőértéke nem 0! Miért?
+
+### kod
+kerdes: Olvass be egy számot (n), és írd ki az n szorzótábláját 1-től 10-ig ebben a formában: <code>3 x 1 = 3</code>.
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  for i in range(1, 11):
+      print(n, "x", i, "=", n * i)
+tesztek:
+- 3
+- 7
+- 12
+
+### hiba
+kerdes: A program az 1-től n-ig terjedő számok összegét számolja, de eggyel hibás az eredmény. Javítsd ki.
+kezdokod: |
+  n = int(input())
+  osszeg = 0
+  for i in range(1, n):
+      osszeg += i
+  print(osszeg)
+megoldas: |
+  n = int(input())
+  osszeg = 0
+  for i in range(1, n + 1):
+      osszeg += i
+  print(osszeg)
+tesztek:
+- 5
+- 1
+- 10
+segitseg: A <code>range</code> második paramétere már nem kerül bele a sorozatba.
+
+### sorrend
+kerdes: Rendezd sorba a sorokat: a program olvasson be egy n számot, és írja ki az 1-től n-ig terjedő számok összegét.
+sorok: |
+  n = int(input())
+  osszeg = 0
+  for i in range(1, n + 1):
+      osszeg += i
+  print(osszeg)
+tesztek:
+- 4
+- 10
+- 1
+
+### nyomkovetes
+kerdes: Kövesd végig a programot, és töltsd ki a táblázatot: a változók értéke minden alkalommal, amikor a program a(z) 3. sorhoz ér (a sor végrehajtása <b>előtt</b>). Az első sor példa. Segít a 🔍 Lépésenként gomb a Játszótéren.
+kod: |
+  osszeg = 0
+  for i in range(1, 5):
+      osszeg += i
+  print(osszeg)
+sor: 3
+valtozok: i, osszeg
+
+### nyomkovetes
+kerdes: Kövesd végig a programot, és töltsd ki a táblázatot: a változók értéke minden alkalommal, amikor a program a(z) 3. sorhoz ér (a sor végrehajtása <b>előtt</b>). Az első sor példa. Segít a 🔍 Lépésenként gomb a Játszótéren.
+kod: |
+  szorzat = 1
+  for i in range(1, 5):
+      szorzat *= i
+  print(szorzat)
+sor: 3
+valtozok: i, szorzat
+
+### abrakod
+kerdes: Melyik program felel meg a folyamatábrának?
+abra: for_osszeg
+valaszok:
+- |
+    osszeg = 0
+    for i in range(1, n):
+        osszeg += i
+    print(osszeg)
+- |
+    osszeg = 1
+    for i in range(1, n + 1):
+        osszeg += i
+    print(osszeg)
+- |
+    osszeg = 0
+    for i in range(1, n + 1):
+        osszeg += i
+    print(osszeg)
+jo: 2
+magyarazat: A ciklus <code>i = 1</code>-től <code>i &lt;= n</code>-ig fut, vagyis <code>range(1, n + 1)</code>. Az összeg 0-ról indul.
+
+### teszt
+kerdes: Mit ír ki a <code>for i in range(2, 10, 3): print(i)</code> ciklus?
+abra: range
+valaszok:
+- 2, 5, 8
+- 2, 5, 8, 10
+- 3, 6, 9
+jo: 0
+magyarazat: A 10 a stop érték, az már nem kerül bele.
+
+### mikiir
+kod: |
+  s = 0
+  for i in range(1, 10, 4):
+      s += i
+  print(s)
+
+### mikiir
+kod: |
+  db = 0
+  for i in range(10):
+      if i % 3 == 0:
+          db += 1
+  print(db)

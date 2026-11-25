@@ -1,0 +1,260 @@
+# Eldöntés tétele: van-e ilyen elem? (while)
+
+## Mi a feladat?
+Az <b>eldöntés</b> tétele azt kérdezi: <b>van-e</b> a sorozatban olyan elem, amely teljesít egy adott feltételt? A válasz egyetlen igen/nem érték (<code>True</code> vagy <code>False</code>). Példák: van-e elégtelen jegy a naplóban, van-e a listában negatív szám, szerepel-e a keresett név a névsorban.
+
+## Miért while ciklussal?
+Ha már az első megfelelő elemet megtaláltuk, a válasz igen, és nem kell tovább vizsgálni a többi elemet. Ezért az eldöntést <code>while</code> ciklussal oldjuk meg: addig lépünk az elemeken, amíg a keresett elemet meg nem találjuk, vagy el nem fogy a lista. A bejárást <b>indexszel</b> végezzük, hiszen tudnunk kell, meddig jutottunk.
+
+## Az algoritmus szavakkal
+Az eldöntés lépései:
+- az indexet 0-ról indítjuk
+- addig lépünk előre, amíg van még elem, és az aktuális elem NEM teljesíti a feltételt
+- a ciklus után megnézzük, miért álltunk meg: ha az index még a listán belül van, találtunk ilyen elemet, egyébként nincs ilyen elem
+
+## Az eldöntés folyamatábrán
+Figyeld meg, hogy a ciklus <b>két</b> okból állhat le: vagy megtaláltuk a megfelelő elemet, vagy elfogytak az elemek. A ciklus után az <code>index &lt; len(l)</code> kérdés dönti el, melyik történt. Az <code>l</code> a lista nevét jelöli.
+@abra eldontes
+
+## A program
+Nézzünk egy példát: van-e elégtelen jegy a listában? Az elégtelen az 1-es, ezért a ciklus addig megy, amíg az elem nem egyenlő 1-gyel.
+```python
+jegyek = [5, 4, 1, 3]
+index = 0
+while index < len(jegyek) and jegyek[index] != 1:
+    index += 1
+if index < len(jegyek):
+    print("Van elégtelen jegy.")
+else:
+    print("Nincs elégtelen jegy.")
+```
+
+## Nyomkövetés
+Kövessük az <code>index</code> értékét a fenti példában:
+- index = 0: a jegy 5, nem 1, ezért lépünk
+- index = 1: a jegy 4, nem 1, ezért lépünk
+- index = 2: a jegy 1, a ciklus megáll
+- az index = 2 kisebb, mint a lista hossza (4), tehát van elégtelen jegy
+Ha nem lenne 1-es jegy, az index eljutna 4-ig, és a feltétel a lista végén hamissá válna.
+<b>Tipp:</b> a Játszótéren (vagy bármelyik <b>▶ Kipróbálom</b> szerkesztőben) a <b>🔍 Lépésenként</b> gomb pontosan ezt csinálja: soronként végigköveti a programot, és megmutatja a változók értékét.
+
+## A feltétel sorrendje számít
+A ciklusfeltételben az <code>index &lt; len(l)</code> vizsgálatnak <b>előbb</b> kell szerepelnie, mint az elem vizsgálatának. Az <code>and</code> ugyanis balról jobbra értékel, és ha az első rész hamis, a másodikat már meg sem vizsgálja. Fordított sorrendnél, amikor az index már a lista végén van, a <code>l[index]</code> IndexError-t okozna.
+```python
+while jegyek[index] != 1 and index < len(jegyek):   # hiba: IndexError
+    index += 1
+
+while index < len(jegyek) and jegyek[index] != 1:    # helyes
+    index += 1
+```
+
+## A ciklusfeltétel megfordítása
+A ciklus addig fut, amíg a keresett tulajdonság <b>nem</b> igaz, ezért a ciklusfeltételben a keresett tulajdonság tagadása áll. Ezt érdemes jól begyakorolni:
+- keresett: az elem egyenlő 1-gyel → a ciklus feltétele: <code>l[index] != 1</code>
+- keresett: az elem nagyobb 10-nél → a ciklus feltétele: <code>l[index] &lt;= 10</code>
+- keresett: az elem páros (<code>l[index] % 2 == 0</code>) → a ciklus feltétele: <code>l[index] % 2 != 0</code>
+- keresett: az elem negatív (<code>l[index] &lt; 0</code>) → a ciklus feltétele: <code>l[index] &gt;= 0</code>
+
+## Logikai érték
+A válasz közvetlenül is megadható logikai változóként. Az <code>index &lt; len(l)</code> kifejezés <code>True</code>, ha találtunk megfelelő elemet.
+```python
+van = index < len(jegyek)
+print(van)   # True
+```
+
+## Összefoglalás
+Az eldöntés azt mondja meg, van-e a sorozatban a feltételnek megfelelő elem. While ciklussal és indexszel oldjuk meg, mert az első találat után megállhatunk. A ciklusfeltételben az index &lt; len(l) áll elöl, utána az elem tagadott feltétele. A ciklus után az index &lt; len(l) dönti el a választ.
+
+### teszt
+kerdes: Miért használunk while ciklust az eldöntés tételénél?
+valaszok:
+- mert az első megfelelő elem után megállhatunk
+- mert a for ciklus nem működik listával
+- mert a while gyorsabban számol
+jo: 0
+magyarazat: Ha megtaláltuk a keresett elemet, a válasz már megvan.
+
+### teszt
+kerdes: Melyik a helyes ciklusfeltétel ahhoz, hogy eldöntsük: van-e 10-nél nagyobb elem?
+valaszok:
+- while index < len(l) and l[index] <= 10:
+- while index < len(l) and l[index] > 10:
+- while l[index] <= 10 and index < len(l):
+jo: 0
+magyarazat: A ciklus addig lép, amíg az elem nem nagyobb 10-nél. Az index < len(l) vizsgálat előrébb áll.
+
+### beiros
+kerdes: Mi lesz az index értéke a ciklus végén? (A számot írd be.)
+kod: |
+  l = [5, 4, 1, 3]
+  index = 0
+  while index < len(l) and l[index] != 1:
+      index += 1
+elfogad:
+- 2
+segitseg: A ciklus az 1-es elemnél (2-es index) áll meg.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [2, 4, 6]
+  index = 0
+  while index < len(l) and l[index] % 2 == 0:
+      index += 1
+  print(index < len(l))
+elfogad:
+- False
+segitseg: Nincs páratlan elem, az index eljut 3-ig.
+
+### teszt
+kerdes: Miért kell az index < len(l) vizsgálatnak elöl állnia?
+valaszok:
+- mert különben a lista végén IndexError keletkezhet
+- mert a Python csak így fogadja el
+- mert így gyorsabb a program
+jo: 0
+magyarazat: Az and az első hamis résznél megáll, így a l[index] nem fut le a lista végén.
+
+### teszt
+kerdes: Mit ír ki az ábrán látható algoritmus, ha a ciklus azért állt le, mert az index elérte a lista hosszát?
+abra: eldontes
+valaszok:
+- Ki: nincs ilyen elem
+- Ki: van ilyen elem
+- semmit
+jo: 0
+magyarazat: Ha az index kiment a listából, nem találtunk megfelelő elemet.
+
+### kod
+kerdes: Döntsd el, van-e a listában 0. Írd ki: <code>igen</code> vagy <code>nem</code>. Használj <code>while</code> ciklust és <code>index</code> változót. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 7, 0, 3]
+  index = 0
+
+megoldas: |
+  lista = [4, 7, 0, 3]
+  index = 0
+  while index < len(lista) and lista[index] != 0:
+      index += 1
+  if index < len(lista):
+      print("igen")
+  else:
+      print("nem")
+tesztek:
+- |
+     || pre: lista = [4, 7, 0, 3]
+- |
+     || pre: lista = [1, 2, 3]
+- |
+     || pre: lista = [0]
+segitseg: A ciklus akkor álljon meg, ha elfogytak az elemek, vagy megtaláltad a nullát.
+
+### kod
+kerdes: Döntsd el, van-e a listában páros szám. Írd ki: <code>igen</code> vagy <code>nem</code>. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [3, 5, 8, 9]
+  index = 0
+
+megoldas: |
+  lista = [3, 5, 8, 9]
+  index = 0
+  while index < len(lista) and lista[index] % 2 != 0:
+      index += 1
+  if index < len(lista):
+      print("igen")
+  else:
+      print("nem")
+tesztek:
+- |
+     || pre: lista = [3, 5, 8, 9]
+- |
+     || pre: lista = [1, 3, 5]
+- |
+     || pre: lista = [2]
+
+### kod
+kerdes: Döntsd el, igaz-e, hogy a lista minden eleme pozitív. Írd ki: <code>igen</code> vagy <code>nem</code>. (Gondold végig: mi az a feltétel, amelynél a ciklus megáll?) <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [3, 5, 8]
+  index = 0
+
+megoldas: |
+  lista = [3, 5, 8]
+  index = 0
+  while index < len(lista) and lista[index] > 0:
+      index += 1
+  if index == len(lista):
+      print("igen")
+  else:
+      print("nem")
+tesztek:
+- |
+     || pre: lista = [3, 5, 8]
+- |
+     || pre: lista = [3, -5, 8]
+- |
+     || pre: lista = [0]
+- |
+     || pre: lista = [1]
+
+### hiba
+kerdes: A program azt dönti el, van-e a listában 0, de egyes listáknál hibaüzenettel áll le. Javítsd ki. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 7, 0, 3]
+  index = 0
+  while lista[index] != 0 and index < len(lista):
+      index += 1
+  if index < len(lista):
+      print("igen")
+  else:
+      print("nem")
+megoldas: |
+  lista = [4, 7, 0, 3]
+  index = 0
+  while index < len(lista) and lista[index] != 0:
+      index += 1
+  if index < len(lista):
+      print("igen")
+  else:
+      print("nem")
+tesztek:
+- |
+     || pre: lista = [4, 7, 0, 3]
+- |
+     || pre: lista = [1, 2, 3]
+- |
+     || pre: lista = [0]
+segitseg: A feltételben a két rész sorrendje számít: előbb azt kell ellenőrizni, hogy az index érvényes-e.
+
+### sorrend
+kerdes: Rendezd sorba a sorokat: a program döntse el, van-e a listában 0.
+sorok: |
+  lista = [4, 7, 0, 3]
+  index = 0
+  while index < len(lista) and lista[index] != 0:
+      index += 1
+  if index < len(lista):
+      print("igen")
+  else:
+      print("nem")
+tesztek:
+-
+
+### nyomkovetes
+kerdes: Kövesd végig a programot, és töltsd ki a táblázatot: a változók értéke minden alkalommal, amikor a program a(z) 3. sorhoz ér (a sor végrehajtása <b>előtt</b>). Az első sor példa. Segít a 🔍 Lépésenként gomb a Játszótéren.
+kod: |
+  lista = [4, 7, 5, 0, 3]
+  index = 0
+  while index < len(lista) and lista[index] != 0:
+      index += 1
+  print(index)
+sor: 3
+valtozok: index
+
+### mikiir
+kod: |
+  l = [3, 5, 8]
+  index = 0
+  while index < len(l) and l[index] % 2 == 1:
+      index += 1
+  print(index)

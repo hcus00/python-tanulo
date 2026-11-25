@@ -1,0 +1,154 @@
+# Típusátalakítás és karakterláncok
+
+## Miért kell átalakítani?
+A Python nem keveri a típusokat: egy szöveghez nem adhatsz hozzá számot. Ilyenkor az értéket át kell alakítani. Az átalakító függvények: <code>int()</code> egész számmá, <code>float()</code> tizedes törtté, <code>str()</code> szöveggé alakít.
+```python
+szam = int("42")      # szöveg → egész: 42
+ar = float("2.5")     # szöveg → tizedes tört: 2.5
+szoveg = str(7)       # szám → szöveg: "7"
+print(int(3.9))       # 3, a tizedes rész levágódik, nem kerekít!
+print(float(5))       # 5.0
+```
+
+## Mikor nem sikerül az átalakítás?
+Ha a szöveg nem számot tartalmaz, <code>ValueError</code> keletkezik: az <code>int("abc")</code> hibás. A tizedes törtet tartalmazó szöveget sem lehet közvetlenül egésszé alakítani, ilyenkor előbb <code>float()</code>, utána <code>int()</code> kell.
+```python
+print(int(float("2.5")))   # 2
+```
+
+## Karakterláncok
+A <b>karakterlánc</b> (str) karakterek sorozata. A példáinkban dupla idézőjellel adjuk meg, az üres szöveg <code>""</code>. A <code>"5"</code> szöveg, az <code>5</code> szám, ezért <code>"5" + "3"</code> összefűz (53), az <code>5 + 3</code> összead (8). A <code>+</code> szövegeket fűz össze, a <code>*</code> ismétel.
+```python
+nev = "Anna"
+print("Szia, " + nev + "!")   # Szia, Anna!
+print("ha" * 3)                # hahaha
+print("5" + "3")               # 53
+print(5 + 3)                   # 8
+```
+
+## Hossz és karakterek elérése
+A <code>len()</code> megadja a karakterlánc hosszát. Az egyes karakterek <b>index</b> szerint érhetők el, az index 0-tól indul, a negatív index hátulról számol.
+```python
+szo = "Python"
+print(len(szo))   # 6
+print(szo[0])     # P
+print(szo[-1])    # n
+```
+
+## Az indexek képen
+A szöveg karaktereit a Python <b>0-tól</b> kezdve sorszámozza. A negatív index hátulról számol: a <code>-1</code> az utolsó karakter. Egy <code>n</code> hosszú szövegnél az érvényes indexek <code>0</code>-tól <code>n-1</code>-ig, illetve <code>-n</code>-től <code>-1</code>-ig tartanak.
+@abra szo_index
+
+## Szöveg és szám együtt
+A <code>print("Kor: " + 16)</code> TypeError-t ad, mert szöveghez számot adtunk. Két jó megoldás: átalakítjuk a számot, vagy vesszővel külön adjuk át.
+```python
+print("Kor: " + str(16))   # Kor: 16
+print("Kor:", 16)          # Kor: 16
+```
+
+## Összefoglalás
+Az int(), float(), str() átalakít. Az int() levág, nem kerekít. A + szöveget fűz, a * ismétel. A len() a hosszt adja, az index 0-tól indul. Szöveget és számot nem lehet közvetlenül összeadni.
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: print(int(7.8))
+valaszok:
+- 7
+- 8
+- 7.8
+jo: 0
+magyarazat: Az int() levágja a tizedes részt, nem kerekít.
+
+### teszt
+kerdes: Melyik sor okoz hibát?
+valaszok:
+- print("a" + "b")
+- print("a" + 1)
+- print("a" * 2)
+jo: 1
+magyarazat: Szöveghez számot nem lehet hozzáadni, ez TypeError.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: print("ab" * 3 + "c")
+elfogad:
+- abababc
+segitseg: Először a szorzás (ismétlés) fut le, utána az összefűzés.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  szo = "alma"
+  print(len(szo), szo[1])
+elfogad:
+- 4 l
+segitseg: Az index 0-tól indul, tehát az 1-es index a második karakter.
+
+### kod
+kerdes: Olvass be egy szót, és írd ki kétszer egymás után, szóköz nélkül. Például <code>alma</code> → <code>almaalma</code>.
+kezdokod: |
+  szo = input()
+
+megoldas: |
+  szo = input()
+  print(szo + szo)
+tesztek:
+- alma
+- ab
+- Python
+
+### kod
+kerdes: Olvass be egy szót, és írd ki az első és az utolsó betűjét egymás mellett, szóköz nélkül. Például <code>Python</code> → <code>Pn</code>.
+kezdokod: |
+  szo = input()
+
+megoldas: |
+  szo = input()
+  print(szo[0] + szo[-1])
+tesztek:
+- Python
+- alma
+- kutya
+- ab
+
+### kod
+kerdes: Olvass be egy egész számot, és írd ki a számjegyeit kétszer egymás után. Például <code>12</code> → <code>1212</code>. (A szám szövegét kell megismételned.)
+kezdokod: |
+  szam = input()
+
+megoldas: |
+  szam = input()
+  print(szam * 2)
+tesztek:
+- 12
+- 7
+- 305
+
+### hiba
+kerdes: Olvass be egy egész számot, és írd ki a következőjét (eggyel nagyobbat). A program hibát dob: javítsd ki.
+kezdokod: |
+  szam = input()
+  print(szam + 1)
+megoldas: |
+  szam = int(input())
+  print(szam + 1)
+tesztek:
+- 5
+- -1
+- 0
+segitseg: Az <code>input()</code> mindig szöveget ad vissza. Mit kell tenni, mielőtt számolsz vele?
+
+### beiros
+kerdes: Mit ír ki a <code>print(szo[-2] + szo[1])</code>, ha a <code>szo</code> értéke <code>"Python"</code>? (A kimenetet írd be, idézőjelek nélkül.)
+abra: szo_index
+elfogad:
+- oy
+segitseg: Az ábráról olvasd le a -2 és az 1 indexű betűt.
+
+### mikiir
+kod: |
+  szo = "alma"
+  print(szo[1] + szo[-1])
+
+### mikiir
+kod: print(len("Python") + len("hu"))

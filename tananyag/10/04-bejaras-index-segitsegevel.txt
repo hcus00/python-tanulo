@@ -1,0 +1,227 @@
+# Lista bejárása indexekkel (range(len()))
+
+## Mikor kell az index?
+Az elemeket eddig közvetlenül, a <code>for elem in lista</code> alakkal jártuk be. Index viszont akkor kell, ha:
+- módosítani szeretnéd a lista elemeit
+- tudnod kell, hányadik helyen áll az elem
+- az elem szomszédjára is szükséged van
+- két listát együtt, azonos hely szerint kezelsz
+
+## A range(len(lista)) szerkezet
+Az index szerinti bejárás kulcsa: a <code>len(lista)</code> megadja az elemek számát, a <code>range(len(lista))</code> pedig pontosan az érvényes indexeket adja, 0-tól len-1-ig. A ciklusváltozó itt az <b>index</b>, az elemet a <code>lista[i]</code> adja.
+```python
+l = [4, 7, 9]
+for i in range(len(l)):
+    print(i, l[i])
+# 0 4
+# 1 7
+# 2 9
+```
+
+## Elemek módosítása
+Mivel az index segítségével az elem helye ismert, a lista elemei át is írhatók. Hasonlítsd ezt össze az előző témában látott másolattal: itt a lista tényleg megváltozik.
+```python
+l = [1, 2, 3]
+for i in range(len(l)):
+    l[i] = l[i] * 2
+print(l)    # [2, 4, 6]
+```
+
+## Részleges és fordított bejárás
+A <code>range</code> harmadik paramétere a lépésköz, így elég a minden második elemet bejárni, vagy akár visszafelé is haladhatsz.
+```python
+l = [10, 20, 30, 40, 50]
+for i in range(0, len(l), 2):
+    print(l[i])            # 10 30 50
+
+for i in range(len(l) - 1, -1, -1):
+    print(l[i])            # 50 40 30 20 10
+```
+
+## Szomszédos elemek
+Ha egy elemet a következővel kell összevetni, az utolsó előtti indexig kell menni, különben a <code>l[i + 1]</code> a lista végén túlra mutatna.
+```python
+l = [5, 7, 9]
+for i in range(len(l) - 1):
+    print(l[i], "->", l[i + 1])
+# 5 -> 7
+# 7 -> 9
+```
+
+## Két lista együtt
+Ha két lista azonos sorrendben tartozik össze (például nevek és jegyek), az azonos index köti össze az elempárokat.
+```python
+nevek = ["Anna", "Bence", "Csilla"]
+jegyek = [5, 4, 3]
+for i in range(len(nevek)):
+    print(nevek[i], jegyek[i])
+```
+
+## Gyakori hibák és választás
+Ezekre figyelj:
+- <code>range(len(l) + 1)</code> egyel túlmegy a lista végén, ez IndexError
+- a <code>l[i]</code> helyett az <code>i</code>-t írod ki, így az indexet kapod az elem helyett
+- ha az indexre nincs szükséged, a <code>for elem in lista</code> egyszerűbb és biztonságosabb
+
+## Összefoglalás
+Az index szerinti bejárás alakja for i in range(len(l)), az elem l[i]. Ezzel módosíthatunk, szomszédokat és párhuzamos listákat kezelhetünk. Ha az indexre nincs szükség, elég a for elem in l.
+
+### teszt
+kerdes: Miért kell az index, ha a lista elemeit módosítani szeretnéd?
+valaszok:
+- mert a ciklusváltozó csak másolat, az index jelöli az átírandó helyet
+- mert így gyorsabb a program
+- mert a for elem in l nem működik számokkal
+jo: 0
+magyarazat: A másolat átírása nem változtatja a listát, az l[i] viszont az eredeti elemet éri el.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [1, 2, 3]
+  for i in range(len(l)):
+      l[i] = l[i] * 2
+  print(l)
+elfogad:
+- [2, 4, 6]
+
+### beiros
+kerdes: Mi az utolsó kiírt szám? (A számot írd be.)
+kod: |
+  l = [5, 7, 9]
+  for i in range(len(l) - 1):
+      print(l[i] + l[i + 1])
+elfogad:
+- 16
+segitseg: Az i értékei 0 és 1, az összegek 12 és 16.
+
+### teszt
+kerdes: Melyik ciklus okoz IndexError-t egy 3 elemű l lista esetén?
+valaszok:
+- for i in range(len(l)):
+- for i in range(len(l) + 1):
+- for i in range(len(l) - 1):
+jo: 1
+magyarazat: A len(l) + 1 miatt az i felveszi a 3-at is, de a legnagyobb index a 2.
+
+### kod
+kerdes: Írd ki a lista minden elemét az indexével együtt ebben a formában: <code>0: 5</code>. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [5, 8, 3]
+
+megoldas: |
+  lista = [5, 8, 3]
+  for i in range(len(lista)):
+      print(f"{i}: {lista[i]}")
+tesztek:
+- |
+     || pre: lista = [5, 8, 3]
+- |
+     || pre: lista = [1]
+- |
+     || pre: lista = [4, 4, 4, 4]
+
+### kod
+kerdes: Számold meg, hány olyan szomszédos elempár van, ahol a második elem nagyobb az elsőnél. Például [1, 3, 2, 5] → <code>2</code> (1<3 és 2<5).
+kezdokod: |
+  lista = [1, 3, 2, 5]
+
+megoldas: |
+  lista = [1, 3, 2, 5]
+  db = 0
+  for i in range(len(lista) - 1):
+      if lista[i + 1] > lista[i]:
+          db += 1
+  print(db)
+tesztek:
+- |
+     || pre: lista = [1, 3, 2, 5]
+- |
+     || pre: lista = [5, 4, 3]
+- |
+     || pre: lista = [1, 2, 3, 4]
+- |
+     || pre: lista = [7]
+
+### kod
+kerdes: Két azonos hosszúságú lista elemeit add össze páronként, és írd ki az eredmény listát (<code>print(osszeg)</code>). <b>Az első két sort ne módosítsd.</b>
+kezdokod: |
+  a = [1, 2, 3]
+  b = [10, 20, 30]
+  osszeg = []
+
+megoldas: |
+  a = [1, 2, 3]
+  b = [10, 20, 30]
+  osszeg = []
+  for i in range(len(a)):
+      osszeg.append(a[i] + b[i])
+  print(osszeg)
+tesztek:
+- |
+     || pre: a = [1, 2, 3]\nb = [10, 20, 30]
+- |
+     || pre: a = [5]\nb = [6]
+- |
+     || pre: a = [0, 0, 1, 1]\nb = [1, 2, 3, 4]
+
+### kod
+kerdes: Írd ki a lista elemeit fordított sorrendben, külön sorban (az utolsótól az elsőig). <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [1, 2, 3]
+
+megoldas: |
+  lista = [1, 2, 3]
+  for i in range(len(lista) - 1, -1, -1):
+      print(lista[i])
+tesztek:
+- |
+     || pre: lista = [1, 2, 3]
+- |
+     || pre: lista = [9]
+- |
+     || pre: lista = [4, 7, 1, 8]
+segitseg: A <code>range</code> három paramétere: kezdet, vég (nem érhető el), lépésköz.
+
+### hiba
+kerdes: A program a lista elemeiből megszámolja, hányszor nagyobb a következő elem az előzőnél, de hibaüzenettel leáll. Javítsd ki. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [1, 3, 2, 5]
+  db = 0
+  for i in range(len(lista)):
+      if lista[i + 1] > lista[i]:
+          db += 1
+  print(db)
+megoldas: |
+  lista = [1, 3, 2, 5]
+  db = 0
+  for i in range(len(lista) - 1):
+      if lista[i + 1] > lista[i]:
+          db += 1
+  print(db)
+tesztek:
+- |
+     || pre: lista = [1, 3, 2, 5]
+- |
+     || pre: lista = [5, 4, 3]
+- |
+     || pre: lista = [1, 2, 3, 4]
+segitseg: Mi az utolsó érvényes index? Mit ér el a <code>lista[i + 1]</code>, ha <code>i</code> az utolsó?
+
+### nyomkovetes
+kerdes: Kövesd végig a programot, és töltsd ki a táblázatot: a változók értéke minden alkalommal, amikor a program a(z) 3. sorhoz ér (a sor végrehajtása <b>előtt</b>). Az első sor példa. Segít a 🔍 Lépésenként gomb a Játszótéren.
+kod: |
+  lista = [3, 8, 5]
+  for i in range(len(lista)):
+      lista[i] = lista[i] * 2
+  print(lista)
+sor: 3
+valtozok: i, lista
+segitseg: A listát is írd be szögletes zárójellel, például <code>[6, 8, 5]</code>.
+
+### mikiir
+kod: |
+  l = [1, 2, 3, 4]
+  for i in range(1, len(l)):
+      l[i] = l[i] + l[i - 1]
+  print(l)

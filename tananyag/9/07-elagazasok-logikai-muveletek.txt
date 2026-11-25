@@ -1,0 +1,261 @@
+# Elágazás (if–else) és logikai műveletek
+
+## Miért kell elágazás?
+Eddig a programjaink mindig ugyanazokat a lépéseket hajtották végre. Az elágazás lehetővé teszi, hogy a program <b>döntsön</b>: egy feltétel igaz vagy hamis volta alapján más-más utasításokat hajt végre. A folyamatábrán ezt a rombusz jelölte.
+
+## Az if-else szerkezet
+Az <code>if</code> után áll a feltétel, majd kettőspont. Ha a feltétel igaz, a beljebb húzott utasítások futnak le. Az <code>else</code> ág akkor fut le, ha a feltétel hamis, ez az ág elhagyható. A <b>behúzás</b> (négy szóköz) jelzi, mely utasítások tartoznak az ághoz.
+```python
+szam = int(input("Adj meg egy számot: "))
+if szam % 2 == 0:
+    print("páros")
+else:
+    print("páratlan")
+```
+
+## Az if-else folyamatábrán
+Ugyanez az elágazás folyamatábrán. A rombusz két kimenete az <code>if</code> és az <code>else</code> ág. Mindkét ág után a program ugyanott folytatódik, a STOP jelnél.
+@abra paros
+
+## Összehasonlító operátorok
+A feltétel mindig logikai értéket (<code>True</code> vagy <code>False</code>) ad. Az összehasonlító operátorok: <code>==</code> (egyenlő), <code>!=</code> (nem egyenlő), <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>. Ne keverd össze az <code>=</code> jelet (értékadás) a <code>==</code> jellel (összehasonlítás)!
+```python
+print(5 == 5)             # True
+print(5 != 5)             # False
+print(3 < 2)              # False
+print(4 >= 4)             # True
+print("alma" == "alma")   # True
+```
+
+## Logikai műveletek
+Több feltételt összekapcsolhatsz. Az <code>and</code> (és) akkor igaz, ha mindkét feltétel igaz. Az <code>or</code> (vagy) akkor igaz, ha legalább az egyik igaz. A <code>not</code> megfordítja az értéket. A kiértékelés sorrendje: <code>not</code>, majd <code>and</code>, majd <code>or</code>, zárójellel ez módosítható.
+```python
+kor = 15
+print(kor >= 12 and kor <= 18)   # True, mindkettő igaz
+print(kor < 10 or kor > 14)      # True, az egyik igaz
+print(not kor > 20)              # True, a tagadás
+print(12 <= kor <= 18)           # True, rövidebb alak
+```
+
+## Gyakori hibák
+Három tipikus hiba: <code>=</code> írása <code>==</code> helyett, a kettőspont elhagyása, és a rossz behúzás. Az első és a második SyntaxError-t okoz, a hiányzó behúzás IndentationError-t.
+```python
+if szam = 5:     # hibás: = helyett ==
+if szam == 5     # hibás: hiányzik a kettőspont
+```
+
+## Összefoglalás
+Az if feltétel igaz esetén, az else hamis esetén fut. A feltétel logikai érték. Összehasonlítás: ==, !=, <, >, <=, >=. Logikai műveletek: and, or, not. Az ágakat behúzás jelöli.
+
+### teszt
+kerdes: Melyik kifejezés vizsgálja, hogy x egyenlő-e 5-tel?
+valaszok:
+- x = 5
+- x == 5
+- x != 5
+jo: 1
+magyarazat: Az = értékadás, az egyenlőség vizsgálata ==.
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: |
+  x = 8
+  if x > 10 or x % 2 == 0:
+      print("igen")
+  else:
+      print("nem")
+valaszok:
+- igen
+- nem
+- hiba
+jo: 0
+magyarazat: Az x > 10 hamis, de az x % 2 == 0 igaz, és az or-nál elég az egyik.
+
+### teszt
+kerdes: Mi a hiba ebben a kódban?
+kod: |
+  if x > 3
+      print("nagy")
+valaszok:
+- hiányzik a kettőspont
+- hiányzik az else
+- rossz az összehasonlítás
+jo: 0
+magyarazat: Az if sor végére kettőspont kell.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  a = 7
+  print(a > 5 and a < 7)
+elfogad:
+- false
+segitseg: Az and csak akkor igaz, ha mindkét rész igaz.
+
+### beiros
+kerdes: Mit ír ki az ábrán látható algoritmus, ha szam = 7? (A kimenetet írd be.)
+abra: paros
+elfogad:
+- páratlan
+segitseg: A 7-et 2-vel osztva 1 a maradék.
+
+### kod
+kerdes: Olvass be egy egész számot. Ha nagyobb, mint 10, írd ki: <code>nagy</code>, különben: <code>kicsi</code>.
+kezdokod: |
+  szam = int(input())
+
+megoldas: |
+  szam = int(input())
+  if szam > 10:
+      print("nagy")
+  else:
+      print("kicsi")
+tesztek:
+- 11
+- 10
+- -4
+- 100
+
+### kod
+kerdes: Olvass be egy életkort. Ha legalább 18, írd ki: <code>felnőtt</code>, különben: <code>kiskorú</code>.
+kezdokod: |
+  kor = int(input())
+
+megoldas: |
+  kor = int(input())
+  if kor >= 18:
+      print("felnőtt")
+  else:
+      print("kiskorú")
+tesztek:
+- 18
+- 17
+- 40
+- 0
+
+### kod
+kerdes: Olvass be egy egész számot. Írd ki: <code>igen</code>, ha a szám 1 és 100 között van (a két határ is beleértve), különben <code>nem</code>.
+kezdokod: |
+  szam = int(input())
+
+megoldas: |
+  szam = int(input())
+  if szam >= 1 and szam <= 100:
+      print("igen")
+  else:
+      print("nem")
+tesztek:
+- 1
+- 100
+- 0
+- 101
+- 50
+segitseg: Két feltétel kell egyszerre: <code>and</code>.
+
+### kod
+kerdes: Olvass be egy egész számot. Írd ki <code>igen</code>-t, ha a szám páros <b>és</b> osztható 5-tel is, különben <code>nem</code>-et.
+kezdokod: |
+  szam = int(input())
+
+megoldas: |
+  szam = int(input())
+  if szam % 2 == 0 and szam % 5 == 0:
+      print("igen")
+  else:
+      print("nem")
+tesztek:
+- 10
+- 15
+- 8
+- 0
+- 30
+
+### hiba
+kerdes: A program akkor írná ki, hogy <code>igen</code>, ha a szám 10 és 20 között van (a határokat is beleértve), különben <code>nem</code>. Néha hibás a kimenet: javítsd ki.
+kezdokod: |
+  szam = int(input())
+  if szam >= 10 or szam <= 20:
+      print("igen")
+  else:
+      print("nem")
+megoldas: |
+  szam = int(input())
+  if szam >= 10 and szam <= 20:
+      print("igen")
+  else:
+      print("nem")
+tesztek:
+- 15
+- 5
+- 25
+- 10
+- 20
+
+### sorrend
+kerdes: Rendezd sorba a sorokat: a program olvasson be egy egész számot, és írja ki, hogy páros vagy páratlan.
+sorok: |
+  szam = int(input())
+  if szam % 2 == 0:
+      print("páros")
+  else:
+      print("páratlan")
+tesztek:
+- 4
+- 7
+- 0
+segitseg: Előbb be kell olvasni a számot, aztán jöhet az elágazás. Az <code>else</code> az <code>if</code>-hez tartozik.
+
+### abrakod
+kerdes: Melyik programot rajzolja le ez a folyamatábra? (A két szám közül a nagyobbat írja ki.)
+abra: nagyobb
+valaszok:
+- |
+    if a > b:
+        print(b)
+    else:
+        print(a)
+- |
+    if a > b:
+        print(a)
+    else:
+        print(b)
+- |
+    if a < b:
+        print(a)
+    else:
+        print(b)
+jo: 1
+magyarazat: A rombusz kérdése <code>a &gt; b</code>. Ha igaz, az <code>a</code>-t írjuk ki, különben a <code>b</code>-t.
+
+### abrakod
+kerdes: Melyik program felel meg a folyamatábrának?
+abra: paros
+valaszok:
+- |
+    if szam % 2 == 1:
+        print("páros")
+    else:
+        print("páratlan")
+- |
+    if szam % 2 == 0:
+        print("páros")
+    else:
+        print("páratlan")
+- |
+    if szam / 2 == 0:
+        print("páros")
+    else:
+        print("páratlan")
+jo: 1
+magyarazat: A páros szám 2-vel osztva 0 maradékot ad: <code>szam % 2 == 0</code>.
+
+### mikiir
+kod: |
+  x = 7
+  print(x % 2 == 1 or x > 10)
+
+### mikiir
+kod: |
+  a = 5
+  b = 8
+  print(a > 3 and b < 8)

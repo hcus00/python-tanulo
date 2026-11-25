@@ -1,0 +1,93 @@
+# Kockaküzdelem
+ido: 30
+leiras: |
+  Péter és Panni kockajátékot játszik. Minden fordulóban mindketten dobnak egy-egy szabályos dobókockával, előbb Péter, utána Panni. Az nyeri a fordulót, aki nagyobbat dobott. Ha a két dobás egyenlő, a forduló döntetlen. Készíts programot, amely lejátssza a játékot!
+reszek:
+- 1 || Kérd be a lejátszandó fordulók számát (egész szám, bekérő szöveg nélkül)! Írd ki a következő alakban: <code>Fordulók száma: 6</code>
+- 2 || Játssz le annyi fordulót, amennyit megadtak! Minden dobás egy szabályos dobókockával történik (véletlenszerűen 1-től 6-ig), a dobásokat minden fordulóban <b>pontosan ebben a sorrendben</b> sorsold ki: előbb Péter, utána Panni dobását. Írd ki fordulónként egy-egy sorba a két dobást a következő alakban, például: <code>3. forduló: 1 - 4</code>
+- 2 || Írd ki, hány fordulót nyert Péter, hányat Panni, és hány forduló lett döntetlen, például: <code>Péter: 2, Panni: 3, döntetlen: 1</code>
+- 3 || Melyik forduló volt a legkiegyensúlyozatlanabb? Írd ki, mekkora volt a legnagyobb különbség a két dobás között egyetlen fordulóban, és hányadik fordulóban fordult ez elő először, például: <code>Legnagyobb különbség: 4 (2. forduló)</code>
+- 4 || Győzelmi sorozatnak nevezzük az egymás utáni fordulókat, amelyeket ugyanaz a játékos nyert meg. A döntetlen megszakítja a sorozatot. Írd ki a leghosszabb győzelmi sorozat gazdáját és hosszát, például: <code>Leghosszabb sorozat: Panni, 3 forduló</code> Ha több azonos hosszúságú legjobb sorozat van, a korábban kezdődőt add meg. Ha egyetlen forduló sem volt eldöntött, ezt írd ki: <code>Nem volt nyertes forduló.</code>
+- 3 || Készíts oszlopdiagramot a dobásokról! Az 1-től 6-ig minden értéknél írd ki az értéket, egy kettőspontot, egy szóközt, majd annyi <code>#</code> jelet, ahányszor ezt az értéket dobták (Péter és Panni dobásait együtt számold), például: <code>4: ###</code>
+megoldas: |
+  import random
+
+  n = int(input())
+  print("1. feladat")
+  print("Fordulók száma:", n)
+
+  print("2. feladat")
+  peter = []
+  panni = []
+  for i in range(1, n + 1):
+      a = random.randint(1, 6)
+      b = random.randint(1, 6)
+      peter.append(a)
+      panni.append(b)
+      print(str(i) + ". forduló: " + str(a) + " - " + str(b))
+
+  print("3. feladat")
+  p_nyert = 0
+  q_nyert = 0
+  dontetlen = 0
+  for i in range(n):
+      if peter[i] > panni[i]:
+          p_nyert += 1
+      elif panni[i] > peter[i]:
+          q_nyert += 1
+      else:
+          dontetlen += 1
+  print("Péter: " + str(p_nyert) + ", Panni: " + str(q_nyert) + ", döntetlen: " + str(dontetlen))
+
+  print("4. feladat")
+  legnagyobb = 0
+  melyik = 0
+  for i in range(n):
+      kulonbseg = abs(peter[i] - panni[i])
+      if kulonbseg > legnagyobb:
+          legnagyobb = kulonbseg
+          melyik = i
+  print("Legnagyobb különbség: " + str(legnagyobb) + " (" + str(melyik + 1) + ". forduló)")
+
+  print("5. feladat")
+  nyertes = 0
+  hossz = 0
+  legjobb_nyertes = 0
+  legjobb_hossz = 0
+  for i in range(n):
+      if peter[i] > panni[i]:
+          fordulo_nyertes = 1
+      elif panni[i] > peter[i]:
+          fordulo_nyertes = 2
+      else:
+          fordulo_nyertes = 0
+      if fordulo_nyertes == 0:
+          hossz = 0
+      elif fordulo_nyertes == nyertes:
+          hossz += 1
+      else:
+          hossz = 1
+      nyertes = fordulo_nyertes
+      if hossz > legjobb_hossz:
+          legjobb_hossz = hossz
+          legjobb_nyertes = nyertes
+  if legjobb_hossz == 0:
+      print("Nem volt nyertes forduló.")
+  elif legjobb_nyertes == 1:
+      print("Leghosszabb sorozat: Péter, " + str(legjobb_hossz) + " forduló")
+  else:
+      print("Leghosszabb sorozat: Panni, " + str(legjobb_hossz) + " forduló")
+
+  print("6. feladat")
+  for ertek in range(1, 7):
+      db = 0
+      for x in peter + panni:
+          if x == ertek:
+              db += 1
+      print(str(ertek) + ": " + "#" * db)
+tesztek:
+- 6 || seed: 1
+- 1 || seed: 2
+- 10 || seed: 87
+- 14 || seed: 52
+- 12 || seed: 13

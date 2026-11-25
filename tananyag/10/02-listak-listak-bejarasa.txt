@@ -1,0 +1,241 @@
+# Lista bejárása elemenként (for … in lista)
+
+## Mit jelent a bejárás?
+A <b>bejárás</b> azt jelenti, hogy a lista minden elemét sorban, egyszer megvizsgáljuk. Szinte minden listás feladat bejárással kezdődik. A legegyszerűbb módja a <code>for elem in lista:</code> szerkezet: a ciklusváltozó minden körben a lista következő elemét kapja meg, a törzs pedig pontosan annyiszor fut le, ahány eleme van a listának.
+```python
+jegyek = [4, 5, 3, 5, 4]
+for jegy in jegyek:
+    print(jegy)
+```
+
+## A bejárás képen
+A <code>for x in lista:</code> ciklus minden körben a lista <b>következő elemét</b> teszi az <code>x</code> változóba, az elsőtől az utolsóig. A kiemelt elem az, amelyik az adott körben az <code>x</code> értéke.
+@abra bejaras
+
+## Kiírás bejárás közben
+Az elemeket egymás alá vagy egy sorba is kiírhatod, és számlálóval sorszámot is adhatsz nekik. A számláló kezdőértékét mindig a ciklus előtt kell megadni.
+```python
+nevek = ["Anna", "Bence", "Csilla"]
+sorszam = 1
+for nev in nevek:
+    print(f"{sorszam}. {nev}")
+    sorszam += 1
+
+for nev in nevek:
+    print(nev, end=" ")   # Anna Bence Csilla
+```
+
+## Válogatás bejárás közben
+A ciklus törzsében elágazást is használhatsz, így csak a megfelelő elemekkel foglalkozol. A feltétel az aktuális elemre vonatkozik.
+```python
+jegyek = [4, 5, 3, 5, 2]
+for jegy in jegyek:
+    if jegy >= 4:
+        print(jegy, "jó jegy")
+```
+
+## Számolás bejárás közben
+Bejárás közben egy külön változóban gyűjthetsz is valamit, például összeget. Ez a gondolat adja majd a programozási tételek alapját, ezeket a következő témákban külön, tételenként tanuljuk meg.
+```python
+jegyek = [4, 5, 3, 5, 4]
+osszeg = 0
+for jegy in jegyek:
+    osszeg += jegy
+print(osszeg)   # 21
+```
+
+## Szövegek bejárása
+A bejárás nem csak listákra működik. A szöveg karakterei is bejárhatók ugyanígy.
+```python
+for betu in "alma":
+    print(betu)
+```
+
+## Gyakori tévedés
+Bejárás közben a ciklusváltozó az elem <b>másolatát</b> kapja meg. Ha megváltoztatod, a lista nem változik. A lista elemeinek módosításához index kell, erről a következő témák szólnak.
+```python
+l = [1, 2, 3]
+for x in l:
+    x = x * 2
+print(l)        # [1, 2, 3], a lista nem változott
+```
+
+## Összefoglalás
+A for elem in lista a lista minden elemét sorban egyszer adja. Bejárás közben kiírhatunk, válogathatunk és gyűjthetünk értéket egy külön változóba. A ciklusváltozó módosítása nem változtatja a listát.
+
+### teszt
+kerdes: Hányszor fut le a ciklus törzse?
+kod: |
+  for x in [5, 6, 7, 8]:
+      print(x)
+valaszok:
+- 3
+- 4
+- 5
+jo: 1
+magyarazat: A lista négy elemű.
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: |
+  for x in [3, 8, 1]:
+      if x > 2:
+          print(x)
+valaszok:
+- 3 és 8
+- 3, 8 és 1
+- csak 8
+jo: 0
+magyarazat: Csak a 2-nél nagyobb elemek íródnak ki.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  for b in "alma":
+      print(b, end="-")
+elfogad:
+- a-l-m-a-
+segitseg: Minden betű után kiírja a kötőjelet is, az utolsó után is.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [2, 4, 6]
+  s = 0
+  for x in l:
+      s += x
+  print(s)
+elfogad:
+- 12
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [1, 2, 3]
+  for x in l:
+      x = x * 2
+  print(l)
+elfogad:
+- [1, 2, 3]
+segitseg: A ciklusváltozó módosítása nem változtatja a listát.
+
+### kod
+kerdes: A lista elemeit írd ki külön sorban, a kétszeresükre növelve. <b>Az első sort ne módosítsd</b>, a tesztek más listákkal is kipróbálják.
+kezdokod: |
+  lista = [4, 9, 2, 7]
+
+megoldas: |
+  lista = [4, 9, 2, 7]
+  for x in lista:
+      print(x * 2)
+tesztek:
+- |
+     || pre: lista = [4, 9, 2, 7]
+- |
+     || pre: lista = [1, 0, -3]
+- |
+     || pre: lista = [10]
+
+### kod
+kerdes: Írd ki a lista páros elemeit külön sorban. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [5, 8, 3, 6, 10]
+
+megoldas: |
+  lista = [5, 8, 3, 6, 10]
+  for x in lista:
+      if x % 2 == 0:
+          print(x)
+tesztek:
+- |
+     || pre: lista = [5, 8, 3, 6, 10]
+- |
+     || pre: lista = [1, 3, 5]
+- |
+     || pre: lista = [2, 4]
+
+### kod
+kerdes: Olvass be egy szót, és írd ki a betűit külön sorban.
+kezdokod: |
+  szo = input()
+
+megoldas: |
+  szo = input()
+  for betu in szo:
+      print(betu)
+tesztek:
+- alma
+- x
+- Python
+
+### kod
+kerdes: Olvass be egy szót, és számold meg, hányszor szerepel benne az <code>a</code> betű. Csak a kisbetűs <code>a</code>-t számold.
+kezdokod: |
+  szo = input()
+
+megoldas: |
+  szo = input()
+  db = 0
+  for betu in szo:
+      if betu == "a":
+          db += 1
+  print(db)
+tesztek:
+- banana
+- alma
+- kutya
+- Aaa
+
+### hiba
+kerdes: A program a lista páros elemeit írná ki külön sorban, de a páratlanokat írja ki. Javítsd ki. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [5, 8, 3, 6, 10]
+  for x in lista:
+      if x % 2 == 1:
+          print(x)
+megoldas: |
+  lista = [5, 8, 3, 6, 10]
+  for x in lista:
+      if x % 2 == 0:
+          print(x)
+tesztek:
+- |
+     || pre: lista = [5, 8, 3, 6, 10]
+- |
+     || pre: lista = [1, 3, 5]
+- |
+     || pre: lista = [2, 4]
+
+### nyomkovetes
+kerdes: Kövesd végig a programot, és töltsd ki a táblázatot: a változók értéke minden alkalommal, amikor a program a(z) 4. sorhoz ér (a sor végrehajtása <b>előtt</b>). Az első sor példa. Segít a 🔍 Lépésenként gomb a Játszótéren.
+kod: |
+  lista = [4, 9, 2, 7]
+  db = 0
+  for x in lista:
+      if x > 5:
+          db += 1
+  print(db)
+sor: 4
+valtozok: x, db
+
+### beiros
+kerdes: Mi az <code>x</code> értéke a 3. körben? (A számot írd be.)
+abra: bejaras
+elfogad:
+- 2
+
+### mikiir
+kod: |
+  s = 0
+  for x in [1, 2, 3, 4]:
+      if x % 2 == 0:
+          s += x
+  print(s)
+
+### mikiir
+kod: |
+  db = 0
+  for c in "banán":
+      if c == "a":
+          db += 1
+  print(db)

@@ -1,0 +1,253 @@
+# Szövegek és listák: szeletelés, split, join
+
+## A szöveg is sorozat
+A szöveg karakterek sorozata, ezért sok minden úgy működik rajta, mint a listán:
+- a <code>len(s)</code> a karakterek számát adja
+- az indexelés 0-tól indul, a negatív index hátulról számol
+- a <code>for betu in s</code> bejárja a karaktereket
+- az <code>x in s</code> azt mondja meg, szerepel-e az x karakter vagy részszöveg
+```python
+szo = "program"
+print(len(szo))          # 7
+print(szo[0], szo[-1])   # p m
+print("gram" in szo)     # True
+for betu in "abc":
+    print(betu)
+```
+
+## Szeletelés
+A <b>szeletelés</b> a sorozat egy részét adja vissza. Az <code>s[a:b]</code> az a indexű elemtől tart, de a <b>b indexű már nem tartozik bele</b>, a <code>range</code>-hez hasonlóan. Az eleje (0-tól) és a vége (az utolsóig) elhagyható. A harmadik paraméter a lépésköz, a <code>-1</code> lépésköz megfordítja a sorozatot.
+```python
+szo = "programozas"
+print(szo[0:4])    # prog
+print(szo[:4])     # prog
+print(szo[4:])     # ramozas
+print(szo[-3:])    # zas
+print(szo[::2])    # pormzs
+print(szo[::-1])   # sazomargorp
+```
+
+## A szeletek határai
+A szeletelésnél az indexeket a karakterek <b>közötti határoknak</b> képzeld el. A <code>szo[1:4]</code> az 1. és a 4. határ között lévő karaktereket adja: a kezdő határ még benne van, a záró határ már nem.
+@abra szelet
+
+## Listák szeletelése
+A szeletelés listákra is ugyanígy működik, és új listát ad vissza.
+```python
+l = [10, 20, 30, 40, 50]
+print(l[1:3])    # [20, 30]
+print(l[:2])     # [10, 20]
+print(l[-2:])    # [40, 50]
+print(l[::-1])   # [50, 40, 30, 20, 10]
+```
+
+## A szöveg nem módosítható
+A lista elemei átírhatók, a szöveg karakterei <b>nem</b>. Ha megpróbálod, <code>TypeError</code> keletkezik. Szöveg módosításához új szöveget kell készíteni, például szeletelés és összefűzés segítségével.
+```python
+szo = "alma"
+# szo[0] = "e"     # TypeError: a szöveg nem módosítható
+szo = "e" + szo[1:]
+print(szo)         # elma
+```
+
+## Szövegből lista
+Két gyakori mód van:
+- <code>list(s)</code> a szöveg karaktereiből listát készít
+- <code>s.split()</code> a szöveget szavakra bontja a szóközök mentén; az <code>s.split(";")</code> a megadott elválasztónál vág szét
+Az eredmény mindig <b>szövegekből álló lista</b>, a számokat tartalmazó elemeket át kell alakítani. A Python a lista szövegeit kiíráskor aposztróffal mutatja, a példák megjegyzéseiben a megszokott dupla idézőjelet írtuk.
+```python
+print(list("alma"))             # ["a", "l", "m", "a"]
+print("a b  c".split())         # ["a", "b", "c"]
+print("Anna;16;5".split(";"))   # ["Anna", "16", "5"]
+```
+
+## Listából szöveg
+A <code>"elválasztó".join(lista)</code> a lista elemeit fűzi össze egyetlen szöveggé, a megadott elválasztóval. Csak <b>szövegekből</b> álló listára működik: számok esetén <code>TypeError</code> keletkezik, ezért előbb át kell alakítani őket <code>str()</code>-rel.
+```python
+szavak = ["alma", "körte", "szilva"]
+print(" ".join(szavak))      # alma körte szilva
+print("-".join(szavak))      # alma-körte-szilva
+print("".join(["a", "b"]))   # ab
+
+szamok = [3, 5, 8]
+szovegek = []
+for szam in szamok:
+    szovegek.append(str(szam))
+print(", ".join(szovegek))   # 3, 5, 8
+```
+
+## Adatsor feldolgozása
+A programozási feladatokban az adatok sokszor egyetlen szövegsorban, elválasztó jellel (például pontosvesszővel) érkeznek. A feldolgozás menete: <code>split</code>, majd az elemek átalakítása a megfelelő típusra.
+```python
+sor = "Anna;16;5"
+adatok = sor.split(";")
+nev = adatok[0]
+kor = int(adatok[1])
+jegy = int(adatok[2])
+print(nev, "jövőre", kor + 1, "éves.")   # Anna jövőre 17 éves.
+```
+
+## Tételek szövegeken: a leghosszabb szó
+A szöveg szavakra bontása után a tételeket alkalmazhatjuk. A szélsőérték kiválasztásánál az összehasonlítás alapja most a szó <b>hossza</b>.
+```python
+mondat = "a programozas izgalmas feladat"
+szavak = mondat.split()
+leghosszabb = szavak[0]
+for szo in szavak:
+    if len(szo) > len(leghosszabb):
+        leghosszabb = szo
+print(leghosszabb)       # programozas
+print(len(szavak))       # 4, a szavak száma
+```
+
+## Összefoglalás
+A szöveg és a lista is sorozat: közös az index, a len, a bejárás, az in és a szeletelés. A lista módosítható, a szöveg nem. A split szövegből listát, a join listából szöveget készít. Az adatsorokat split után alakítjuk a megfelelő típusra.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: print("python"[1:4])
+elfogad:
+- yth
+segitseg: Az 1-es indextől a 4-es indexig tart, a 4-es már nincs benne.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: print("abcdef"[::-1])
+elfogad:
+- fedcba
+
+### beiros
+kerdes: Mit ír ki? (A számot írd be.)
+kod: |
+  l = "a;b;c".split(";")
+  print(len(l))
+elfogad:
+- 3
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: print("-".join(["x", "y", "z"]))
+elfogad:
+- x-y-z
+
+### teszt
+kerdes: Mi történik, ha egy szöveg egy karakterét megpróbáljuk átírni (szo[0] = "e")?
+valaszok:
+- TypeError keletkezik, mert a szöveg nem módosítható
+- a karakter átíródik
+- IndexError keletkezik
+jo: 0
+magyarazat: A szöveg nem módosítható, új szöveget kell készíteni.
+
+### beiros
+kerdes: Mit ír ki? (A számot írd be.)
+kod: |
+  sor = "Bence;17;4"
+  adatok = sor.split(";")
+  print(int(adatok[1]) + int(adatok[2]))
+elfogad:
+- 21
+
+### kod
+kerdes: Olvass be egy szót, és írd ki az első három és az utolsó két betűjét két sorban. (Legalább 3 betűs szó lesz.)
+kezdokod: |
+  szo = input()
+
+megoldas: |
+  szo = input()
+  print(szo[:3])
+  print(szo[-2:])
+tesztek:
+- Python
+- alma
+- kutya
+
+### kod
+kerdes: Olvass be egy sort, amelyben szóközzel elválasztott egész számok vannak. Írd ki az összegüket.
+kezdokod: |
+  sor = input()
+
+megoldas: |
+  sor = input()
+  osszeg = 0
+  for x in sor.split():
+      osszeg += int(x)
+  print(osszeg)
+tesztek:
+- 3 4 5
+- 10
+- -1 1 -2 2
+
+### kod
+kerdes: Olvass be egy mondatot, és írd ki a szavait fordított sorrendben, szóközzel elválasztva. Például <code>alma körte szilva</code> → <code>szilva körte alma</code>.
+kezdokod: |
+  mondat = input()
+
+megoldas: |
+  mondat = input()
+  szavak = mondat.split()
+  szavak.reverse()
+  print(" ".join(szavak))
+tesztek:
+- alma körte szilva
+- egy
+- a b c d
+
+### kod
+kerdes: Olvass be egy mondatot, és írd ki a leghosszabb szavát. Ha több ilyen van, az elsőt.
+kezdokod: |
+  mondat = input()
+
+megoldas: |
+  mondat = input()
+  leghosszabb = ""
+  for szo in mondat.split():
+      if len(szo) > len(leghosszabb):
+          leghosszabb = szo
+  print(leghosszabb)
+tesztek:
+- a kutya fut
+- alma kör
+- x yy zz
+
+### hiba
+kerdes: A program a mondat szavainak számát akarja kiírni, de a karakterek számát írja ki. Javítsd ki.
+kezdokod: |
+  mondat = input()
+  print(len(mondat))
+megoldas: |
+  mondat = input()
+  print(len(mondat.split()))
+tesztek:
+- alma körte
+- egy
+- a b c d
+
+### sorrend
+kerdes: Rendezd sorba a sorokat: a program olvasson be egy mondatot, és írja ki a leghosszabb szavát.
+sorok: |
+  mondat = input()
+  leghosszabb = ""
+  for szo in mondat.split():
+      if len(szo) > len(leghosszabb):
+          leghosszabb = szo
+  print(leghosszabb)
+tesztek:
+- a kutya fut
+- alma kör
+- x yy zz
+
+### beiros
+kerdes: Mit ír ki a <code>print(szo[2:5])</code>, ha a <code>szo</code> értéke <code>"Python"</code>? (A kimenetet írd be, idézőjelek nélkül.)
+abra: szelet
+elfogad:
+- tho
+segitseg: A 2. és az 5. határ közötti karaktereket kell kiolvasnod.
+
+### mikiir
+kod: |
+  s = "programozas"
+  print(s[3:7])
+
+### mikiir
+kod: print("-".join(["x", "y"]))

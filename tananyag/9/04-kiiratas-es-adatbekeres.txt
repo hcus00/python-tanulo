@@ -1,0 +1,152 @@
+# Kiírás és adatbekérés (print, input)
+
+## A print részletesebben
+Egy <code>print</code>-ben több értéket is megadhatsz vesszővel, ezeket alapból szóköz választja el. A <code>sep</code> megadja az elválasztót, az <code>end</code> azt, hogy mi kerüljön a kiírás végére (alapból sortörés).
+```python
+print("Szia", "Anna")             # Szia Anna
+print("Szia", "Anna", sep="-")    # Szia-Anna
+print("Első", end=" ")
+print("Második")                  # Első Második egy sorban
+print()                           # üres sor
+```
+
+## Formázott szöveg
+Kényelmes megoldás az f-string: a szöveg elé f betűt írsz, a kapcsos zárójelbe pedig változót vagy kifejezést teszel. Nem kell átalakítanod a számokat.
+```python
+nev = "Anna"
+kor = 16
+print(f"{nev} {kor} éves.")        # Anna 16 éves.
+print(f"Jövőre {kor + 1} lesz.")   # Jövőre 17 lesz.
+```
+
+## Adatbekérés: input()
+Az <code>input()</code> megállítja a programot, megvárja, míg a felhasználó beír valamit és entert nyom, majd visszaadja a beírtat. A zárójelbe írt szöveg a kérdés. <b>Fontos:</b> az <code>input()</code> mindig szöveget (str) ad vissza, akkor is, ha számot írtak be.
+```python
+nev = input("Mi a neved? ")
+print("Szia, " + nev + "!")
+```
+
+## Számok beolvasása
+Ha számmal akarsz számolni, át kell alakítanod: <code>int(input())</code> egész, <code>float(input())</code> tizedes tört számot ad. Ha a felhasználó nem számot ír be, ValueError keletkezik.
+```python
+kor = int(input("Hány éves vagy? "))
+print("Jövőre", kor + 1, "éves leszel.")
+```
+
+## Bemenet, feldolgozás, kimenet
+Az első fejezetben tanult három lépés itt jelenik meg programként: beolvasod az adatokat, kiszámolod az eredményt, kiírod. Így néz ki két szám összeadása:
+```python
+a = int(input("Első szám: "))
+b = int(input("Második szám: "))
+print("Az összegük:", a + b)
+```
+
+## Összefoglalás
+A print többféleképp kiír (sep, end, f-string). Az input() mindig szöveget ad vissza, számhoz int() vagy float() kell.
+
+### teszt
+kerdes: Milyen típusú értéket ad vissza az input()?
+valaszok:
+- mindig szöveget (str)
+- mindig egész számot
+- azt, amit a felhasználó beírt
+jo: 0
+magyarazat: Akkor is szöveg, ha számjegyeket írtak be, ezért kell az int() vagy a float().
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: print("a", "b", sep="")
+valaszok:
+- a b
+- ab
+- a,b
+jo: 1
+magyarazat: A sep="" üres elválasztót jelent, ezért nincs szóköz.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  print("x", end="-")
+  print("y")
+elfogad:
+- x-y
+segitseg: Az end az első sor végére kerül a sortörés helyett.
+
+### beiros
+kerdes: A felhasználó 12-t ír be. Mit ír ki? (A kimenetet írd be.)
+kod: |
+  n = int(input())
+  print(n * 2)
+elfogad:
+- 24
+
+### kod
+kerdes: Olvass be két egész számot (külön sorban), és írd ki ebben a formában: <code>Az összegük: 7</code>.
+kezdokod: |
+  a = int(input())
+  b = int(input())
+
+megoldas: |
+  a = int(input())
+  b = int(input())
+  print("Az összegük:", a + b)
+tesztek:
+- 3\n4
+- 10\n-2
+- 0\n0
+
+### kod
+kerdes: Olvass be egy nevet, majd egy életkort. Írd ki két sorban: <code>Szia, Anna!</code> és <code>Jövőre 17 éves leszel.</code> (a név és a kor a bemenetből jön).
+kezdokod: |
+  nev = input()
+  kor = int(input())
+
+megoldas: |
+  nev = input()
+  kor = int(input())
+  print("Szia, " + nev + "!")
+  print("Jövőre", kor + 1, "éves leszel.")
+tesztek:
+- Anna\n16
+- Bence\n14
+- Zsófi\n17
+
+### kod
+kerdes: Írd ki az 1, 2, 3 számokat egy sorban, kötőjellel elválasztva: <code>1-2-3</code>. Használd a <code>sep</code> paramétert.
+kezdokod: |
+  # Írd ide a programot
+
+megoldas: print(1, 2, 3, sep="-")
+tesztek:
+-
+
+### hiba
+kerdes: Olvass be két egész számot (külön sorban), és írd ki: <code>Az összegük: 7</code>. A program nem a várt eredményt adja: javítsd ki.
+kezdokod: |
+  a = input()
+  b = input()
+  print("Az összegük:", a + b)
+megoldas: |
+  a = int(input())
+  b = int(input())
+  print("Az összegük:", a + b)
+tesztek:
+- 3\n4
+- 10\n-2
+- 0\n0
+
+### sorrend
+kerdes: Rendezd sorba a sorokat úgy, hogy a program beolvasson két számot, és kiírja az összegüket: <code>Az összegük: 7</code>.
+sorok: |
+  a = int(input())
+  b = int(input())
+  osszeg = a + b
+  print("Az összegük:", osszeg)
+tesztek:
+- 3\n4
+- 10\n-2
+
+### mikiir
+kod: |
+  print("x", end="-")
+  print("y")

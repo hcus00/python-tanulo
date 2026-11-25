@@ -1,0 +1,168 @@
+# Elemek elérése indexszel
+
+## Az index
+A lista minden eleméhez tartozik egy sorszám, az <b>index</b>, amellyel az elemet közvetlenül elérheted. Az indexelés <b>0-tól indul</b>: az első elem indexe 0, a másodiké 1, és így tovább. Az elemet szögletes zárójellel kéred le: <code>lista[index]</code>.
+```python
+nevek = ["Anna", "Bence", "Csilla", "Dani"]
+#          0        1         2        3
+print(nevek[0])    # Anna
+print(nevek[2])    # Csilla
+```
+
+## Negatív index
+A negatív index hátulról számol: a <code>-1</code> az utolsó, a <code>-2</code> az utolsó előtti elem. Így az utolsó elemet akkor is elérheted, ha nem tudod, hány eleme van a listának.
+```python
+nevek = ["Anna", "Bence", "Csilla", "Dani"]
+print(nevek[-1])   # Dani
+print(nevek[-2])   # Csilla
+```
+
+## Indexek előre és hátra
+Ugyanaz a lista kétféleképpen indexelhető: elölről <code>0</code>-tól, hátulról <code>-1</code>-től. Egy ötelemű listában a <code>lista[0]</code> és a <code>lista[-5]</code> ugyanaz az elem.
+@abra lista_index
+
+## Az érvényes indexek
+Ha a listának <code>n</code> eleme van, az érvényes indexek 0-tól n-1-ig terjednek, a negatív indexek pedig -1-től -n-ig. Az utolsó elem indexe tehát <code>len(lista) - 1</code>, ez ugyanaz az elem, mint a <code>lista[-1]</code>.
+```python
+l = [10, 20, 30]
+print(len(l))          # 3
+print(l[len(l) - 1])   # 30
+print(l[-1])           # 30
+```
+
+## Elem módosítása
+A lista <b>módosítható</b>: egy elemét az index megadásával átírhatod, ez ugyanúgy értékadás, mint a változóknál. A bal oldalon áll a módosítandó elem, a jobb oldalon az új érték.
+```python
+nevek = ["Anna", "Bence", "Csilla"]
+nevek[1] = "Balázs"
+print(nevek)      # ["Anna", "Balázs", "Csilla"]
+
+szamok = [4, 9, 2]
+szamok[0] = szamok[1] + 1
+print(szamok)     # [10, 9, 2]
+```
+
+## A tipikus hiba: IndexError
+Ha olyan indexet adsz meg, amilyen elem nincs a listában, a Python <code>IndexError: list index out of range</code> hibát jelez. Ez azt jelenti, hogy az index kívül esik a lista határain. Leggyakoribb oka az, hogy a 0-tól indulást elfelejted, és az utolsó elem indexének a <code>len(lista)</code>-ot gondolod. Üres listának nincs egyetlen érvényes indexe sem.
+```python
+l = [1, 2, 3]
+print(l[3])    # IndexError: az utolsó index 2
+
+ures = []
+print(ures[0]) # IndexError: nincs elem
+```
+
+## Összefoglalás
+Az index 0-tól indul, a negatív index hátulról számol. Az érvényes indexek 0-tól len(lista) - 1-ig tartanak. Az elem a lista[index] alakkal kérhető le és írható át. Érvénytelen indexnél IndexError keletkezik.
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: |
+  l = [10, 20, 30, 40]
+  print(l[1])
+valaszok:
+- 10
+- 20
+- 30
+jo: 1
+magyarazat: Az 1-es index a második elem.
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: |
+  l = [5, 6, 7, 8]
+  print(l[-2])
+valaszok:
+- 6
+- 7
+- 8
+jo: 1
+magyarazat: A -1 a 8, a -2 a 7.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [4, 9, 2]
+  l[0] = l[1] + 1
+  print(l)
+elfogad:
+- [10, 9, 2]
+segitseg: Először a jobb oldalt számoljuk ki: 9 + 1.
+
+### teszt
+kerdes: Melyik hibát okozza ez a kód?
+kod: |
+  l = [1, 2, 3]
+  print(l[3])
+valaszok:
+- IndexError
+- ValueError
+- NameError
+jo: 0
+magyarazat: A lista indexei 0, 1, 2. A 3-as index nem létezik.
+
+### kod
+kerdes: Írd ki a lista első, utolsó és harmadik (index: 2) elemét külön sorban. <b>Az első sort ne módosítsd</b>; a lista mindig legalább 3 elemű.
+kezdokod: |
+  lista = [4, 8, 15, 16, 23]
+
+megoldas: |
+  lista = [4, 8, 15, 16, 23]
+  print(lista[0])
+  print(lista[-1])
+  print(lista[2])
+tesztek:
+- |
+     || pre: lista = [4, 8, 15, 16, 23]
+- |
+     || pre: lista = [1, 2, 3]
+- |
+     || pre: lista = [9, 8, 7, 6]
+
+### kod
+kerdes: Cseréld meg a lista első és utolsó elemét, majd írd ki a listát (<code>print(lista)</code>). A lista legalább 2 elemű.
+kezdokod: |
+  lista = [1, 2, 3, 4]
+
+megoldas: |
+  lista = [1, 2, 3, 4]
+  atmeneti = lista[0]
+  lista[0] = lista[-1]
+  lista[-1] = atmeneti
+  print(lista)
+tesztek:
+- |
+     || pre: lista = [1, 2, 3, 4]
+- |
+     || pre: lista = [5, 6]
+- |
+     || pre: lista = [7, 8, 9]
+segitseg: Két változó cseréjéhez egy harmadik is kell. Listaelemeknél is ugyanez a gondolat.
+
+### kod
+kerdes: Olvass be egy indexet (0 és 4 között), és írd ki a lista ennyiedik indexű elemét.
+kezdokod: |
+  lista = [10, 20, 30, 40, 50]
+
+megoldas: |
+  lista = [10, 20, 30, 40, 50]
+  index = int(input())
+  print(lista[index])
+tesztek:
+- 0
+- 2
+- 4
+- 3
+
+### beiros
+kerdes: Mi a <code>lista[-3]</code> értéke az ábrán látható listában? (A számot írd be.)
+abra: lista_index
+elfogad:
+- 3
+segitseg: Olvasd le a negatív indexek sorából.
+
+### mikiir
+kod: |
+  l = [10, 20, 30, 40]
+  l[1] = l[-1]
+  print(l)

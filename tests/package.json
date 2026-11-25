@@ -1,0 +1,13 @@
+{
+  "name": "pytanulo-tests",
+  "private": true,
+  "description": "A PyTanuló automatikus tesztjei (böngészős végigpróba).",
+  "scripts": {
+    "test": "node run.js"
+  },
+  "devDependencies": {
+    "axe-core": "^4.10.0",
+    "playwright": "^1.50.0",
+    "pyodide": "0.26.4"
+  }
+}

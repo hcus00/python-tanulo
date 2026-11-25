@@ -1,0 +1,181 @@
+# Matematikai műveletek
+
+## Alapműveletek
+Az összeadás <code>+</code>, a kivonás <code>-</code>, a szorzás <code>*</code>, az osztás <code>/</code>. Az osztás eredménye mindig tizedes tört (float), akkor is, ha az eredmény egész.
+```python
+print(7 + 2)   # 9
+print(7 - 2)   # 5
+print(7 * 2)   # 14
+print(7 / 2)   # 3.5
+print(6 / 3)   # 2.0
+```
+
+## Egész osztás és maradék
+A <code>//</code> az egész osztás hányadosát, a <code>%</code> a maradékot adja. Mivel 17 = 3 · 5 + 2, ezért 17 // 5 = 3 és 17 % 5 = 2. Ezekkel dönthető el, hogy egy szám páros-e (<code>n % 2 == 0</code>), vagy ezekkel választható le egy szám utolsó számjegye.
+```python
+print(17 // 5)     # 3
+print(17 % 5)      # 2
+print(1234 % 10)   # 4, az utolsó számjegy
+print(1234 // 10)  # 123, az utolsó számjegy nélkül
+```
+
+## Hányados és maradék képen
+A <code>17 // 5</code> azt kérdezi, hány <b>teljes</b> ötös csoport kerül a 17-be (3). A <code>17 % 5</code> azt, hogy mennyi <b>marad</b> a csoportok után (2). A két művelet együtt adja a számot: <code>17 = 3 · 5 + 2</code>.
+@abra maradek
+
+## Hatványozás és műveleti sorrend
+A <code>**</code> a hatványozás. A sorrend ugyanaz, mint a matematikában: zárójel, hatványozás, szorzás/osztás/maradék, összeadás/kivonás. Egyenrangú műveleteknél balról jobbra számol, kivéve a hatványozást, ott jobbról balra.
+```python
+print(2 ** 3)        # 8
+print(2 + 3 * 4)     # 14
+print((2 + 3) * 4)   # 20
+print(2 ** 3 ** 2)   # 512
+```
+
+## Hasznos beépített függvények
+Az <code>abs()</code> abszolútértéket, a <code>round(x, n)</code> n tizedesre kerekítést, a <code>min()</code> és a <code>max()</code> a legkisebb és a legnagyobb értéket adja.
+```python
+print(abs(-5))           # 5
+print(round(2.567, 2))   # 2.57
+print(max(3, 9, 4))      # 9
+```
+
+## Összevont operátorok
+Programozás közben gyakran kell egy változó értékét a régi értékéből kiszámolni, például <code>x = x + 1</code>. Erre rövidebb írásmód az <b>összevont (értékadó) operátor</b>: <code>x += 1</code>. Minden művelethez van ilyen: <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>, <code>//=</code>, <code>%=</code>, <code>**=</code>. Később ezekkel számolunk összeget (<code>s += x</code>) és darabszámot (<code>db += 1</code>).
+```python
+x = 10
+x += 5     # x = x + 5    → 15
+x -= 3     # x = x - 3    → 12
+x *= 2     # x = x * 2    → 24
+x //= 5    # x = x // 5   → 4
+x %= 3     # x = x % 3    → 1
+x **= 4    # x = x ** 4   → 1
+```
+
+## Összefoglalás
+A / mindig float-ot ad, a // egész hányadost, a % maradékot. A ** hatvány. A műveleti sorrend a matematikai. Az összevont operátorok (+=, -=, *=, …) a változó régi értékét módosítják.
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: print(17 % 5)
+valaszok:
+- 3
+- 2
+- 3.4
+jo: 1
+magyarazat: 17 = 3 · 5 + 2, a maradék 2.
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: print(8 / 4)
+valaszok:
+- 2
+- 2.0
+- 4
+jo: 1
+magyarazat: Az osztás eredménye mindig float.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  x = 6
+  x *= 2
+  x -= 5
+  print(x)
+elfogad:
+- 7
+segitseg: Lépésenként: 6, majd 12, majd 7.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: print(2 + 3 * 2 ** 2)
+elfogad:
+- 14
+segitseg: Előbb a hatvány, utána a szorzás, végül az összeadás.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: print(4827 // 100)
+elfogad:
+- 48
+segitseg: Az egész osztás a maradékot eldobja.
+
+### kod
+kerdes: Olvass be egy kétjegyű pozitív egész számot. Írd ki külön sorban az utolsó számjegyét, majd azt a számot, amit az utolsó számjegy elhagyása után kapsz. Például <code>47</code> → <code>7</code> és <code>4</code>.
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  print(n % 10)
+  print(n // 10)
+tesztek:
+- 47
+- 90
+- 13
+- 99
+
+### kod
+kerdes: Olvass be két egész számot (külön sorban). Írd ki egy sorba, szóközzel elválasztva az egész osztás hányadosát és a maradékot. Például <code>17</code> és <code>5</code> → <code>3 2</code>.
+kezdokod: |
+  a = int(input())
+  b = int(input())
+
+megoldas: |
+  a = int(input())
+  b = int(input())
+  print(a // b, a % b)
+tesztek:
+- 17\n5
+- 20\n4
+- 3\n8
+
+### kod
+kerdes: Olvass be egy egész számot: ennyi másodperc telt el. Írd ki percben és másodpercben, így: <code>2 perc 15 mp</code> (a 135 másodperc eredménye).
+kezdokod: |
+  mp = int(input())
+
+megoldas: |
+  mp = int(input())
+  print(mp // 60, "perc", mp % 60, "mp")
+tesztek:
+- 135
+- 59
+- 60
+- 3600
+
+### hiba
+kerdes: A program két szám átlagát akarja kiírni, de rossz az eredmény. Javítsd ki.
+kezdokod: |
+  a = int(input())
+  b = int(input())
+  print(a + b / 2)
+megoldas: |
+  a = int(input())
+  b = int(input())
+  print((a + b) / 2)
+tesztek:
+- 3\n4
+- 10\n20
+- 7\n7
+segitseg: Gondold végig a műveleti sorrendet: melyik művelet kerül előre zárójel nélkül?
+
+### beiros
+kerdes: Mennyi a <code>23 % 5</code>? (A számot írd be.)
+abra: maradek
+elfogad:
+- 3
+segitseg: Hány teljes ötös fér a 23-ba, és mennyi marad?
+
+### mikiir
+kod: print(23 // 4, 23 % 4)
+
+### mikiir
+kod: |
+  x = 10
+  x += 5
+  x //= 2
+  print(x)
+
+### mikiir
+kod: print(2 + 3 * 4 ** 2)

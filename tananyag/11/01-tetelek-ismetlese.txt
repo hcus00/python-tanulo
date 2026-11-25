@@ -1,0 +1,218 @@
+# Ismétlés: a programozási tételek
+
+## Az öt tétel egy pillantásra
+A feladat szövegéből ismerhető fel a tétel:
+- <b>összegzés</b>: „mennyi az összeg?”, a kezdőérték 0 (szorzatnál 1)
+- <b>megszámlálás</b>: „hány darab?”, számláló, a kezdőérték 0
+- <b>eldöntés</b>: „van-e ilyen?”, a válasz igen vagy nem
+- <b>keresés</b>: „hol van az első ilyen, ha van?”
+- <b>kiválasztás</b>: „hol van az első ilyen, ha biztosan van?”
+A hatodik, a szélsőérték-kiválasztás a következő téma.
+
+## Melyik tételt válaszd?
+A feladat kérdéséből a tétel egy döntési ábrával is kitalálható. Kezdd felülről: az első kérdésre adott „igen” válasz már megadja a tételt, a „nem” a következő kérdéshez visz. A szélsőérték-kiválasztás a következő témában lesz részletes.
+@abra valaszto
+
+## Összegzés és megszámlálás
+Ez a két tétel minden elemet feldolgoz, ezért <code>for</code> ciklust használ. A kezdőértéket a ciklus előtt adjuk meg, az eredményt a ciklus után írjuk ki. Az összegzésnél az elem <b>értékét</b> adjuk hozzá, a megszámlálásnál mindig csak 1-et, és csak akkor, ha a feltétel igaz.
+```python
+szamok = [12, 7, 25, 8, 30, 3]
+osszeg = 0
+db = 0
+for szam in szamok:
+    osszeg += szam
+    if szam > 10:
+        db += 1
+print(osszeg)   # 85
+print(db)       # 3
+```
+
+## Eldöntés, keresés, kiválasztás
+Ez a három tétel megállhat az első találatnál, ezért <code>while</code> ciklust és <code>index</code> változót használ. A ciklus addig lép, amíg van még elem <b>és</b> az aktuális elem <b>nem</b> megfelelő. A ciklus után az <code>index &lt; len(l)</code> mondja meg, találtunk-e. A kiválasztásnál nincs szükség a lista végének vizsgálatára, de csak akkor használható, ha biztosan van találat.
+```python
+szamok = [12, 7, 25, 8, 30, 3]
+index = 0
+while index < len(szamok) and szamok[index] <= 20:
+    index += 1
+if index < len(szamok):
+    print("Van 20-nál nagyobb szám.")    # eldöntés
+    print("Indexe:", index)               # keresés: 2
+    print("Sorszáma:", index + 1)         # 3
+    print("Értéke:", szamok[index])       # 25
+else:
+    print("Nincs ilyen szám.")
+```
+
+## Index, sorszám, érték
+A feladat szövege dönti el, mit kell kiírni:
+- az <b>index</b> a lista belső számozása, 0-tól indul: <code>index</code>
+- a <b>sorszám</b> a „hányadik” kérdésre válaszol, 1-től indul: <code>index + 1</code>
+- az <b>érték</b> maga az elem: <code>lista[index]</code>
+
+## For vagy while?
+A választás szabálya:
+- ha minden elemet meg kell vizsgálni (összegzés, megszámlálás, szélsőérték), <code>for</code> ciklus kell
+- ha az első találatnál megállhatsz (eldöntés, keresés, kiválasztás), <code>while</code> ciklus kell
+- a <code>for</code> változója legyen <code>i</code> vagy beszédes név, a <code>while</code> helyét jelző változó pedig <code>index</code>
+
+## Rövidítések
+Adott <b>értékre</b> a tételek egyetlen sorban is megoldhatók. Ha viszont a feltétel nem egy konkrét érték, hanem egy tulajdonság (például „nagyobb 20-nál”), marad a ciklus.
+```python
+szamok = [12, 7, 25, 8, 30, 3]
+print(sum(szamok))        # 85, összegzés
+print(szamok.count(7))    # 1, megszámlálás
+print(25 in szamok)       # True, eldöntés
+print(szamok.index(25))   # 2, keresés vagy kiválasztás
+```
+
+## Tételek kombinálása
+Egy feladatban több tétel is kellhet. Az átlag feletti elemek számához először az átlagot kell kiszámolni (összegzés), és csak utána lehet megszámolni (megszámlálás), ezért két külön lépés kell.
+```python
+szamok = [12, 7, 25, 8, 30, 3]
+atlag = sum(szamok) / len(szamok)
+db = 0
+for szam in szamok:
+    if szam > atlag:
+        db += 1
+print(round(atlag, 2), db)   # 14.17 2
+```
+
+## Tipikus hibák
+Ezekre figyelj:
+- a kezdőérték a ciklusba kerül, ezért minden körben nullázódik
+- az összegzés és a megszámlálás összekeveredik (<code>db += szam</code> vagy <code>osszeg += 1</code>)
+- a <code>while</code> feltételében az elem vizsgálata áll elöl, ezért a lista végén <code>IndexError</code> keletkezik
+- a feltétel tagadása hibás: a keresett „nagyobb mint 20” esetén a ciklus feltétele <code>&lt;= 20</code>
+- az index és a sorszám összekeveredik
+
+## Összefoglalás
+Minden tételnél három dolgot döntsd el: melyik tétel illik a feladatra, for vagy while kell, és mit kér a feladat eredményül (érték, darabszám, igen/nem, index, sorszám vagy elem).
+
+### teszt
+kerdes: Melyik tétel kell ehhez: „Hányadik az első 100-nál nagyobb szám a listában?” (Nem biztos, hogy van ilyen.)
+valaszok:
+- összegzés
+- keresés
+- kiválasztás
+jo: 1
+magyarazat: Hely kell, és nem biztos, hogy van találat, ez a keresés.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [4, 9, 2, 9]
+  db = 0
+  for x in l:
+      if x == 9:
+          db += 1
+  print(db)
+elfogad:
+- 2
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [3, 6, 9, 12]
+  index = 0
+  while index < len(l) and l[index] % 2 == 1:
+      index += 1
+  print(index)
+elfogad:
+- 1
+segitseg: A 3 páratlan, a 6 már páros, itt áll meg a ciklus.
+
+### teszt
+kerdes: Mi a hiba ebben a ciklusfeltételben?
+kod: while l[index] != 5 and index < len(l):
+valaszok:
+- a feltételek sorrendje: a lista végén IndexError keletkezhet
+- hiányzik a kettőspont
+- az != helyett == kell
+jo: 0
+magyarazat: Az index &lt; len(l) vizsgálatnak előrébb kell állnia.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [2, 5, 8]
+  print(sum(l) / len(l))
+elfogad:
+- 5.0
+segitseg: Az összeg 15, osztva 3-mal, az osztás eredménye float.
+
+### teszt
+kerdes: A feladat: „Hány páros szám van a listában?” A döntési ábra szerint melyik tételt kell használni?
+abra: valaszto
+valaszok:
+- összegzés
+- megszámlálás
+- eldöntés
+jo: 1
+magyarazat: „Hány darab felel meg egy feltételnek?” – megszámlálás.
+
+### kod
+kerdes: Írd ki, hány olyan elem van a listában, amely nagyobb az elemek átlagánál. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 9, 2, 7, 10]
+
+megoldas: |
+  lista = [4, 9, 2, 7, 10]
+  atlag = sum(lista) / len(lista)
+  db = 0
+  for x in lista:
+      if x > atlag:
+          db += 1
+  print(db)
+tesztek:
+- |
+     || pre: lista = [4, 9, 2, 7, 10]
+- |
+     || pre: lista = [5, 5, 5]
+- |
+     || pre: lista = [1, 2]
+
+### kod
+kerdes: Döntsd el, van-e a listában két <b>egymás melletti</b> egyenlő elem. Írd ki: <code>igen</code> vagy <code>nem</code>. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [3, 5, 5, 8]
+
+megoldas: |
+  lista = [3, 5, 5, 8]
+  index = 0
+  while index < len(lista) - 1 and lista[index] != lista[index + 1]:
+      index += 1
+  if index < len(lista) - 1:
+      print("igen")
+  else:
+      print("nem")
+tesztek:
+- |
+     || pre: lista = [3, 5, 5, 8]
+- |
+     || pre: lista = [1, 2, 3, 1]
+- |
+     || pre: lista = [7]
+- |
+     || pre: lista = [4, 4]
+
+### kod
+kerdes: Add meg az első 3-mal osztható elem <b>sorszámát</b> (az első elem sorszáma 1). Ha nincs ilyen, írd ki: <code>nincs</code>. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 7, 9, 12]
+
+megoldas: |
+  lista = [4, 7, 9, 12]
+  index = 0
+  while index < len(lista) and lista[index] % 3 != 0:
+      index += 1
+  if index < len(lista):
+      print(index + 1)
+  else:
+      print("nincs")
+tesztek:
+- |
+     || pre: lista = [4, 7, 9, 12]
+- |
+     || pre: lista = [1, 2, 4]
+- |
+     || pre: lista = [3]

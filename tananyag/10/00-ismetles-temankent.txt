@@ -1,0 +1,134 @@
+# Ismétlés: a 9. évfolyam anyaga
+
+## Miért ismétlünk?
+A 10. évfolyam anyaga (listák, programozási tételek) a 9. évfolyami alapokra épül. Gyorsan végigmegyünk a legfontosabb elemeken. Ha valami bizonytalan, lépj vissza a 9. évfolyam megfelelő témájához: a felső címre kattintva a témák listájához jutsz.
+
+## Adatok, típusok, be- és kivétel
+Ezeket kell biztosan tudnod:
+- a változó egy névvel ellátott tárolóhely, az <code>=</code> értékadás, jobbról balra olvasd
+- a típusok: <code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>
+- átalakítás: <code>int()</code>, <code>float()</code>, <code>str()</code>
+- az <code>input()</code> mindig szöveget ad vissza
+- a <code>print()</code> paraméterei: <code>sep</code>, <code>end</code>
+```python
+nev = input("Neved: ")
+kor = int(input("Korod: "))
+print(nev, "jövőre", kor + 1, "éves lesz.")
+```
+
+## Műveletek és döntések
+A legfontosabb szabályok:
+- <code>/</code> valós osztás, <code>//</code> egész osztás, <code>%</code> maradék, <code>**</code> hatvány
+- összevont operátorok: <code>+=</code>, <code>-=</code>, <code>*=</code>, …
+- összehasonlítás: <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>
+- logikai műveletek: <code>and</code>, <code>or</code>, <code>not</code>
+- az <code>if</code>, <code>elif</code>, <code>else</code> ágait a behúzás jelöli
+```python
+szam = int(input("Szám: "))
+if szam % 2 == 0 and szam > 0:
+    print("pozitív páros")
+elif szam % 2 == 0:
+    print("nem pozitív páros")
+else:
+    print("páratlan")
+```
+
+## Ciklusok
+Mit kell tudnod:
+- a <code>for i in range(a, b)</code> a-tól b-1-ig fut, a felső határ nincs benne
+- a <code>while</code> addig ismétel, amíg a feltétel igaz, és kell hozzá kezdőérték és léptetés
+- beágyazott ciklusnál a belső mindig teljesen lefut
+- a ciklusban állhat elágazás
+```python
+osszeg = 0
+for i in range(1, 11):
+    if i % 2 == 1:
+        osszeg += i
+print(osszeg)       # 25, az 1 és 10 közötti páratlan számok összege
+```
+
+## Ellenőrzőlista: gyakori hibák
+Mielőtt továbblépsz, gondold át, hogy ezeket felismered-e:
+- <code>=</code> írása <code>==</code> helyett
+- hiányzó kettőspont vagy rossz behúzás
+- a range felső határának félreértése
+- az input szöveg, számhoz int() kell
+- végtelen while: nincs léptetés
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: print(17 // 5, 17 % 5)
+valaszok:
+- 3 2
+- 2 3
+- 3.4 2
+jo: 0
+magyarazat: 17 = 3 · 5 + 2.
+
+### teszt
+kerdes: Hányszor fut le a ciklus törzse?
+kod: |
+  for i in range(2, 9):
+      print(i)
+valaszok:
+- 6
+- 7
+- 8
+jo: 1
+magyarazat: Az értékek: 2, 3, 4, 5, 6, 7, 8.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  n = 5
+  while n > 0:
+      n -= 2
+  print(n)
+elfogad:
+- -1
+segitseg: Az n értékei: 5, 3, 1, -1.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  x = 10
+  x //= 3
+  x += 4
+  print(x)
+elfogad:
+- 7
+segitseg: Az egész osztás után x = 3.
+
+### kod
+kerdes: Olvass be három számot (külön sorban), és írd ki az átlagukat 2 tizedesre kerekítve (<code>round</code>). Például 1, 2, 4 → <code>2.33</code>.
+kezdokod: |
+  a = int(input())
+  b = int(input())
+  c = int(input())
+
+megoldas: |
+  a = int(input())
+  b = int(input())
+  c = int(input())
+  print(round((a + b + c) / 3, 2))
+tesztek:
+- 1\n2\n4
+- 3\n3\n3
+- 0\n0\n1
+
+### kod
+kerdes: Olvass be egy pozitív egész számot (n), és írd ki az n-ig terjedő páratlan számok összegét.
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  osszeg = 0
+  for i in range(1, n + 1, 2):
+      osszeg += i
+  print(osszeg)
+tesztek:
+- 5
+- 1
+- 10
+- 2

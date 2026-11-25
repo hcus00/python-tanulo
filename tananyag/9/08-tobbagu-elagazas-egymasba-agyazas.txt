@@ -1,0 +1,327 @@
+# Többágú (elif) és egymásba ágyazott elágazás
+
+## Több ágú elágazás: elif
+Ha kettőnél több eset van, az <code>elif</code> (az "else if" rövidítése) segít. A Python a feltételeket <b>sorban</b> vizsgálja, az első igaz ág fut le, a többit már kihagyja. Az utolsó <code>else</code> azokat az eseteket fogja fel, amelyekre egyik feltétel sem igaz.
+```python
+pont = int(input("Pontszám: "))
+if pont >= 90:
+    jegy = 5
+elif pont >= 75:
+    jegy = 4
+elif pont >= 60:
+    jegy = 3
+else:
+    jegy = 2
+print("Jegy:", jegy)
+```
+
+## Az elif lánc folyamatábrán
+Az <code>elif</code> lánc olyan, mint egymás alá fűzött rombuszok. Ha egy kérdésre <b>igen</b> a válasz, jobbra kilépünk, és beállítjuk a jegyet. Ha <b>nem</b>, lefelé lépünk a következő kérdéshez. Az utolsó, kérdés nélküli ág az <code>else</code>. A jobb oldali vonal azt mutatja, hogy a kiírás már mindegyik ágnál közös.
+@abra jegy
+
+## A sorrend számít
+Mivel az első igaz ág lefut, a feltételeket úgy kell sorba tenni, hogy ne fedjék el egymást. Ha a pont >= 60 vizsgálat az első lenne, a 95 pont is hármast kapna.
+```python
+pont = 95
+if pont >= 60:
+    print(3)    # ez fut le, pedig ötös kellene
+elif pont >= 90:
+    print(5)    # ide már el sem jut
+```
+
+## Elágazások egymásba ágyazása
+Egy ág belsejében újabb elágazás is lehet. Ilyenkor a behúzás szintje mutatja meg, melyik <code>else</code> melyik <code>if</code>-hez tartozik.
+```python
+szam = int(input("Szám: "))
+if szam > 0:
+    if szam % 2 == 0:
+        print("pozitív páros")
+    else:
+        print("pozitív páratlan")
+else:
+    print("nem pozitív")
+```
+
+## Melyiket mikor használd?
+Az <code>elif</code> akkor jó, ha egymást kizáró esetek vannak ugyanarra a mennyiségre (például pontszám és jegy). A beágyazás akkor jó, ha egy második döntés csak az első eredményétől függően kell. Sokszor az <code>and</code> is egyszerűsíthet: <code>if szam > 0 and szam % 2 == 0:</code> egyetlen feltétel.
+
+## Összetett példa: szökőév
+Egy év szökőév, ha osztható 4-gyel, de a 100-zal oszthatók közül csak akkor, ha 400-zal is. A feltételeket a legkülönlegesebb esettől haladva kell sorba állítani: 2000 szökőév, 1900 nem, 2024 igen.
+```python
+ev = int(input("Év: "))
+if ev % 400 == 0:
+    print("szökőév")
+elif ev % 100 == 0:
+    print("nem szökőév")
+elif ev % 4 == 0:
+    print("szökőév")
+else:
+    print("nem szökőév")
+```
+
+## Összefoglalás
+Az elif több esetet kezel, az első igaz ág fut le, ezért a sorrend számít. Az elágazások egymásba ágyazhatók, a behúzás mutatja a hozzátartozást. Az and és or gyakran kiválthatja a beágyazást.
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: |
+  pont = 70
+  if pont >= 90:
+      jegy = 5
+  elif pont >= 75:
+      jegy = 4
+  elif pont >= 60:
+      jegy = 3
+  else:
+      jegy = 2
+  print(jegy)
+valaszok:
+- 3
+- 4
+- 2
+jo: 0
+magyarazat: A 70 nem éri el a 90-et és a 75-öt, de a 60 felett van, ezért 3.
+
+### teszt
+kerdes: Mi a gond ezzel a programrésszel?
+kod: |
+  if x >= 10:
+      print("nagy")
+  elif x >= 100:
+      print("nagyon nagy")
+valaszok:
+- A második ág soha nem fut le
+- Hiányzik az else
+- Rossz az összehasonlítás
+jo: 0
+magyarazat: Ha x >= 100, akkor x >= 10 is igaz, tehát az első ág lefut, a második már nem.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  x = -4
+  if x > 0:
+      if x % 2 == 0:
+          print("A")
+      else:
+          print("B")
+  else:
+      print("C")
+elfogad:
+- c
+segitseg: Az első feltétel (x > 0) hamis.
+
+### beiros
+kerdes: Mit ír ki a szökőéves program, ha ev = 1900? (A kimenetet írd be.)
+elfogad:
+- nem szökőév
+segitseg: Az 1900 osztható 100-zal, de 400-zal nem.
+
+### beiros
+kerdes: Mit ír ki az ábrán látható algoritmus, ha pont = 80? (A számot írd be.)
+abra: jegy
+elfogad:
+- 4
+segitseg: A 80 nem éri el a 90-et, de eléri a 75-öt.
+
+### kod
+kerdes: Olvass be egy hőmérsékletet (egész szám). Írd ki: <code>fagy</code>, ha 0 alatt van; <code>hűvös</code>, ha 0 és 15 között (a határokat is beleértve); <code>kellemes</code>, ha 16 és 25 között; különben <code>meleg</code>.
+kezdokod: |
+  ho = int(input())
+
+megoldas: |
+  ho = int(input())
+  if ho < 0:
+      print("fagy")
+  elif ho <= 15:
+      print("hűvös")
+  elif ho <= 25:
+      print("kellemes")
+  else:
+      print("meleg")
+tesztek:
+- -5
+- 0
+- 15
+- 16
+- 25
+- 26
+
+### kod
+kerdes: Olvass be három egész számot (külön sorban). Írd ki a legnagyobbat. Elágazással oldd meg.
+kezdokod: |
+  a = int(input())
+  b = int(input())
+  c = int(input())
+
+megoldas: |
+  a = int(input())
+  b = int(input())
+  c = int(input())
+  if a >= b and a >= c:
+      print(a)
+  elif b >= c:
+      print(b)
+  else:
+      print(c)
+tesztek:
+- 1\n2\n3
+- 9\n4\n6
+- 5\n8\n2
+- 7\n7\n7
+- -1\n-5\n-3
+
+### kod
+kerdes: Három szakasz hossza adott (külön sorban). Írd ki <code>igen</code>-t, ha szerkeszthető belőlük háromszög (mindegyik oldal kisebb a másik kettő összegénél), különben <code>nem</code>-et.
+kezdokod: |
+  a = int(input())
+  b = int(input())
+  c = int(input())
+
+megoldas: |
+  a = int(input())
+  b = int(input())
+  c = int(input())
+  if a < b + c and b < a + c and c < a + b:
+      print("igen")
+  else:
+      print("nem")
+tesztek:
+- 3\n4\n5
+- 1\n2\n3
+- 5\n5\n5
+- 10\n2\n3
+
+### kod
+kerdes: Olvass be egy egész számot. Ha osztható 15-tel, írd ki: <code>FizzBuzz</code>; ha 3-mal: <code>Fizz</code>; ha 5-tel: <code>Buzz</code>; különben magát a számot.
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  if n % 15 == 0:
+      print("FizzBuzz")
+  elif n % 3 == 0:
+      print("Fizz")
+  elif n % 5 == 0:
+      print("Buzz")
+  else:
+      print(n)
+tesztek:
+- 15
+- 9
+- 10
+- 7
+- 30
+segitseg: A sorrend számít: melyik feltételt kell elsőnek vizsgálni?
+
+### hiba
+kerdes: A jegyadó program 90 pont felett ötöst, 75 felett négyest, 60 felett hármast, különben kettest ad. Valami miatt mindenki hármast kap. Javítsd ki.
+kezdokod: |
+  pont = int(input())
+  if pont >= 60:
+      print(3)
+  elif pont >= 75:
+      print(4)
+  elif pont >= 90:
+      print(5)
+  else:
+      print(2)
+megoldas: |
+  pont = int(input())
+  if pont >= 90:
+      print(5)
+  elif pont >= 75:
+      print(4)
+  elif pont >= 60:
+      print(3)
+  else:
+      print(2)
+tesztek:
+- 95
+- 80
+- 65
+- 50
+- 90
+- 75
+- 60
+segitseg: Az elif lánc sorrendje számít: az első igaz feltétel ága fut le. Melyik feltételt kell előre tenni?
+
+### sorrend
+kerdes: Rendezd sorba a sorokat: 90 pont felett ötös, 75 felett négyes, 60 felett hármas, különben kettes.
+sorok: |
+  pont = int(input())
+  if pont >= 90:
+      print(5)
+  elif pont >= 75:
+      print(4)
+  elif pont >= 60:
+      print(3)
+  else:
+      print(2)
+tesztek:
+- 95
+- 80
+- 65
+- 50
+- 75
+
+### abrakod
+kerdes: Melyik program felel meg a folyamatábrának?
+abra: jegy
+valaszok:
+- |
+    if pont >= 90:
+        jegy = 5
+    if pont >= 75:
+        jegy = 4
+    if pont >= 60:
+        jegy = 3
+    else:
+        jegy = 2
+    print(jegy)
+- |
+    if pont >= 60:
+        jegy = 3
+    elif pont >= 75:
+        jegy = 4
+    elif pont >= 90:
+        jegy = 5
+    else:
+        jegy = 2
+    print(jegy)
+- |
+    if pont >= 90:
+        jegy = 5
+    elif pont >= 75:
+        jegy = 4
+    elif pont >= 60:
+        jegy = 3
+    else:
+        jegy = 2
+    print(jegy)
+jo: 2
+magyarazat: Az ábrán a kérdések egymás alatt, nagyobbtól kisebb felé következnek, és az első igaz ágon kilépünk: ez az <code>elif</code> lánc.
+
+### mikiir
+kod: |
+  p = 70
+  if p >= 90:
+      print("A")
+  elif p >= 60:
+      print("B")
+  elif p >= 50:
+      print("C")
+  else:
+      print("D")
+
+### mikiir
+kod: |
+  x = 5
+  if x > 0:
+      if x % 2 == 0:
+          print("a")
+      else:
+          print("b")
+  else:
+      print("c")

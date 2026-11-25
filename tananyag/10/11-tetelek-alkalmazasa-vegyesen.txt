@@ -1,0 +1,198 @@
+# Vegyes feladatok: melyik tételt válaszd?
+
+## Hogyan válasszunk tételt?
+A feladat szövegéből felismerhető a tétel. Néhány kulcsszó:
+- „mennyi az összege”, „összesen” → <b>összegzés</b>
+- „hány darab” → <b>megszámlálás</b>
+- „van-e” → <b>eldöntés</b>
+- „hol”, „hányadik”, ha nem biztos, hogy van → <b>keresés</b>
+- „hol”, „hányadik”, ha biztosan van → <b>kiválasztás</b>
+
+## Több tétel egy bejárásban
+Ha ugyanazt a listát kell többféleképpen feldolgozni, sokszor egyetlen <code>for</code> ciklus is elég. A tételek kezdőértékei a ciklus előtt, a tételek lépései a törzsben állnak.
+```python
+jegyek = [5, 4, 1, 3, 5, 2]
+osszeg = 0
+otos = 0
+for jegy in jegyek:
+    osszeg += jegy
+    if jegy == 5:
+        otos += 1
+print("Átlag:", round(osszeg / len(jegyek), 2))   # 3.33
+print("Ötösök száma:", otos)                     # 2
+```
+
+## Megszámlálás és keresés együtt
+A <code>while</code> alapú tételek (eldöntés, keresés, kiválasztás) külön ciklust kapnak, mert korábban megállhatnak. Példa: hány fagyos nap volt, és hányadik volt az első?
+```python
+homerseklet = [4, 2, -1, 3, -5, 0]
+fagyos = 0
+for ho in homerseklet:
+    if ho < 0:
+        fagyos += 1
+print("Fagyos napok száma:", fagyos)   # 2
+
+index = 0
+while index < len(homerseklet) and homerseklet[index] >= 0:
+    index += 1
+if index < len(homerseklet):
+    print("Az első fagyos nap sorszáma:", index + 1)   # 3
+else:
+    print("Nem volt fagyos nap.")
+```
+
+## Összegzés és megszámlálás: átlag
+Egy feltételnek megfelelő elemek átlagához az összegzés és a megszámlálás kell, ugyanazzal a feltétellel. Üres találati halmaznál nem szabad 0-val osztani.
+```python
+szamok = [120, 40, 250, 90, 130]
+osszeg = 0
+db = 0
+for szam in szamok:
+    if szam > 100:
+        osszeg += szam
+        db += 1
+if db > 0:
+    print("Átlag:", osszeg / db)
+else:
+    print("Nincs ilyen szám.")
+```
+
+## Mire figyelj?
+Összetett feladatnál:
+- bontsd a feladatot kérdésekre, és minden kérdéshez válassz tételt
+- a <code>for</code> változója legyen <code>i</code> vagy beszédes név, a <code>while</code> helyét jelző változó legyen <code>index</code>
+- tesztelj üres listával, egyetlen elemmel és olyan esettel, amikor nincs találat
+- ellenőrizd, hogy indexet, sorszámot vagy értéket kértek
+
+## Összefoglalás
+A feladat szövege dönti el, melyik tétel kell. Több tétel egy for ciklusban is megvalósítható, a while alapú tételek külön ciklust kapnak. Mindig gondold végig a határeseteket.
+
+### teszt
+kerdes: Melyik tétel kell ehhez: „Hányadik helyen van a listában az első negatív szám?” (Nem biztos, hogy van.)
+valaszok:
+- összegzés
+- keresés
+- megszámlálás
+jo: 1
+magyarazat: Hely kell, és nem biztos, hogy van találat.
+
+### teszt
+kerdes: Melyik tétel kell ehhez: „Összesen hány kilométert futott a héten?”
+valaszok:
+- megszámlálás
+- eldöntés
+- összegzés
+jo: 2
+magyarazat: A napi értékeket össze kell adni.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  h = [4, 2, -1, 3, -5, 0]
+  fagyos = 0
+  for x in h:
+      if x < 0:
+          fagyos += 1
+  print(fagyos)
+elfogad:
+- 2
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [120, 40, 200, 90, 160]
+  osszeg = 0
+  db = 0
+  for x in l:
+      if x > 100:
+          osszeg += x
+          db += 1
+  print(osszeg / db)
+elfogad:
+- 160.0
+segitseg: A 100-nál nagyobbak: 120, 200, 160. Az összegük 480.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  h = [4, 2, -1, 3, -5, 0]
+  index = 0
+  while index < len(h) and h[index] >= 0:
+      index += 1
+  print(index + 1)
+elfogad:
+- 3
+segitseg: Az első negatív elem indexe 2.
+
+### kod
+kerdes: Számítsd ki a lista átlagát egy bejárással (összeg és darabszám), kerekítve 2 tizedesre. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 9, 2, 7]
+
+megoldas: |
+  lista = [4, 9, 2, 7]
+  osszeg = 0
+  db = 0
+  for x in lista:
+      osszeg += x
+      db += 1
+  print(round(osszeg / db, 2))
+tesztek:
+- |
+     || pre: lista = [4, 9, 2, 7]
+- |
+     || pre: lista = [1, 2]
+- |
+     || pre: lista = [10]
+- |
+     || pre: lista = [1, 1, 2]
+
+### kod
+kerdes: Egyetlen bejárással írd ki, hány pozitív szám van a listában és mennyi az összegük, egy sorban szóközzel elválasztva (például <code>2 14</code>). <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [5, -3, 9, 0]
+
+megoldas: |
+  lista = [5, -3, 9, 0]
+  db = 0
+  osszeg = 0
+  for x in lista:
+      if x > 0:
+          db += 1
+          osszeg += x
+  print(db, osszeg)
+tesztek:
+- |
+     || pre: lista = [5, -3, 9, 0]
+- |
+     || pre: lista = [-1, -2]
+- |
+     || pre: lista = [4]
+
+### kod
+kerdes: Írd ki egy sorban, hány negatív elem van a listában, majd az első negatív elem indexét. Ha nincs negatív, a második helyre írd: <code>nincs</code>. Például <code>2 1</code> vagy <code>0 nincs</code>. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, -2, 7, -9]
+
+megoldas: |
+  lista = [4, -2, 7, -9]
+  db = 0
+  elso = -1
+  for i in range(len(lista)):
+      if lista[i] < 0:
+          db += 1
+          if elso == -1:
+              elso = i
+  if db == 0:
+      print(db, "nincs")
+  else:
+      print(db, elso)
+tesztek:
+- |
+     || pre: lista = [4, -2, 7, -9]
+- |
+     || pre: lista = [1, 2, 3]
+- |
+     || pre: lista = [-5]
+- |
+     || pre: lista = [1, 2, -3]

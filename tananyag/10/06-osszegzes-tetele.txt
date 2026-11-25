@@ -1,0 +1,300 @@
+# Összegzés tétele
+
+## Mi a feladat?
+Az <b>összegzés</b> tétele azt a feladatot oldja meg, amikor egy számsorozat elemeit össze kell adni. Hétköznapi példa a bevásárlás: a pénztáros az árucikkek árait egymás után adja össze, és a végén kapod a végösszeget. A bemenet a számokat tartalmazó lista, a kimenet egyetlen szám, az elemek összege.
+
+## Az algoritmus szavakkal
+Az összegzés három lépésből áll:
+- az összeget 0-ról indítjuk
+- a lista minden elemét sorban hozzáadjuk az összeghez
+- a ciklus végén kiírjuk az összeget
+
+## Az összegzés folyamatábrán
+Az ábrán látod, hogy a kezdőérték a ciklus <b>előtt</b> áll, a hozzáadás pedig a ciklus <b>belsejében</b>. A ciklus addig fut, amíg van még elem.
+@abra osszegzes
+
+## A program
+A kezdőértéket mindig a ciklus <b>előtt</b> adjuk meg, a hozzáadás pedig a ciklus törzsében történik. Az összevont <code>+=</code> operátor itt természetes választás.
+```python
+szamok = [3, 5, 2, 7]
+osszeg = 0
+for szam in szamok:
+    osszeg += szam
+print("Összeg:", osszeg)   # 17
+```
+
+## Nyomkövetés
+Kövessük végig, hogyan változik az <code>osszeg</code> értéke a fenti programban:
+- a ciklus előtt: 0
+- a 3 után: 3
+- az 5 után: 8
+- a 2 után: 10
+- a 7 után: 17
+A nyomkövetés a hibakeresés legjobb eszköze: mindig írd fel egy kis példán, mit tartalmaznak a változók az egyes körök után.
+<b>Tipp:</b> a Játszótéren (vagy bármelyik <b>▶ Kipróbálom</b> szerkesztőben) a <b>🔍 Lépésenként</b> gomb pontosan ezt csinálja: soronként végigköveti a programot, és megmutatja a változók értékét.
+
+## Miért éppen 0 a kezdőérték?
+A 0 az összeadás semleges eleme: nem változtatja meg az eredményt. Ennek az az előnye, hogy az üres lista összege helyesen 0 lesz. (Szorzásnál, amikor szorzatot számolunk, a semleges elem az 1.) Gyakori hiba, ha a kezdőértéket a ciklus belsejébe írod: ilyenkor az összeg minden körben nullázódik, és az eredmény csak az utolsó elem lesz.
+```python
+osszeg = 0
+for szam in szamok:
+    osszeg = 0          # hiba: minden körben nullázódik
+    osszeg += szam
+```
+
+## Összegzés feltétellel és átlag
+Az összegzést összekapcsolhatjuk elágazással: ilyenkor csak azokat az elemeket adjuk hozzá, amelyek megfelelnek egy feltételnek. Az átlag az összeg és az elemszám hányadosa. Figyelj arra, hogy üres listánál ne osszunk 0-val!
+```python
+szamok = [3, 4, 5, 6]
+paros_osszeg = 0
+for szam in szamok:
+    if szam % 2 == 0:
+        paros_osszeg += szam
+print(paros_osszeg)   # 10
+
+osszeg = 0
+for szam in szamok:
+    osszeg += szam
+print("Átlag:", osszeg / len(szamok))   # 4.5
+```
+
+## Nem csak összeadás
+Az összegzés mintája más műveletekre is érvényes: a kezdőérték és a ciklusban végzett művelet változik, a szerkezet ugyanaz. Az összes elem szorzatánál a kezdőérték 1 (a szorzás semleges eleme), kivonásnál egy kiinduló értékből vonjuk ki az elemeket, szövegnél pedig üres szövegből indulunk és összefűzünk.
+```python
+szamok = [2, 3, 4]
+szorzat = 1
+for szam in szamok:
+    szorzat *= szam
+print(szorzat)    # 24
+
+kiadasok = [1200, 800, 500]
+egyenleg = 10000
+for kiadas in kiadasok:
+    egyenleg -= kiadas
+print(egyenleg)   # 7500
+
+nevek = ["Anna", "Bence", "Csilla"]
+szoveg = ""
+for nev in nevek:
+    szoveg += nev + " "
+print(szoveg)     # Anna Bence Csilla
+```
+
+## Összefoglalás
+Az összegzés kezdőértéke 0, a ciklus minden elemet hozzáad az összeghez, és a végén kiírjuk az eredményt. A kezdőértéket a ciklus előtt adjuk meg. Feltétellel csak a megfelelő elemeket összegezzük, az átlag pedig összeg osztva az elemszámmal. A minta szorzásra, kivonásra és szövegfűzésre is működik, csak a kezdőérték és a művelet változik.
+
+### teszt
+kerdes: Mi az összegzés tételében az összeg helyes kezdőértéke?
+valaszok:
+- 0
+- 1
+- a lista hossza
+jo: 0
+magyarazat: A 0 az összeadás semleges eleme, az üres lista összege is 0.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [4, 6, 10]
+  osszeg = 0
+  for x in l:
+      osszeg += x
+  print(osszeg)
+elfogad:
+- 20
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [3, 4, 5, 6]
+  osszeg = 0
+  for x in l:
+      if x % 2 == 0:
+          osszeg += x
+  print(osszeg)
+elfogad:
+- 10
+segitseg: Csak a páros elemeket adjuk hozzá: 4 + 6.
+
+### teszt
+kerdes: Mi a hiba ebben a programban?
+kod: |
+  osszeg = 0
+  for x in l:
+      osszeg = 0
+      osszeg += x
+valaszok:
+- az összeg minden körben nullázódik
+- hiányzik az input
+- rossz a range
+jo: 0
+magyarazat: A kezdőérték beállítását a ciklus elé kell írni.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [2, 4, 6]
+  osszeg = 0
+  for x in l:
+      osszeg += x
+  print(osszeg / len(l))
+elfogad:
+- 4.0
+segitseg: A 12 osztva 3-mal, de az osztás eredménye mindig float.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [2, 3, 4]
+  szorzat = 1
+  for x in l:
+      szorzat *= x
+  print(szorzat)
+elfogad:
+- 24
+segitseg: A szorzás semleges eleme az 1.
+
+### teszt
+kerdes: Az ábra szerint melyik lépés fut le a ciklus előtt?
+abra: osszegzes
+valaszok:
+- osszeg = 0
+- osszeg = osszeg + elem
+- Ki: osszeg
+jo: 0
+magyarazat: A kezdőérték beállítása a ciklus előtt történik, egyetlen egyszer.
+
+### kod
+kerdes: Írd ki a lista elemeinek összegét <code>for</code> ciklussal. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 9, 2, 7]
+
+megoldas: |
+  lista = [4, 9, 2, 7]
+  osszeg = 0
+  for x in lista:
+      osszeg += x
+  print(osszeg)
+tesztek:
+- |
+     || pre: lista = [4, 9, 2, 7]
+- |
+     || pre: lista = [-3, 3]
+- |
+     || pre: lista = [5]
+
+### kod
+kerdes: Írd ki a lista páros elemeinek összegét. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [3, 8, 5, 6]
+
+megoldas: |
+  lista = [3, 8, 5, 6]
+  osszeg = 0
+  for x in lista:
+      if x % 2 == 0:
+          osszeg += x
+  print(osszeg)
+tesztek:
+- |
+     || pre: lista = [3, 8, 5, 6]
+- |
+     || pre: lista = [1, 3, 5]
+- |
+     || pre: lista = [2, 4, 6, 8]
+
+### kod
+kerdes: Írd ki a lista elemeinek szorzatát. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [2, 3, 4]
+
+megoldas: |
+  lista = [2, 3, 4]
+  szorzat = 1
+  for x in lista:
+      szorzat *= x
+  print(szorzat)
+tesztek:
+- |
+     || pre: lista = [2, 3, 4]
+- |
+     || pre: lista = [5]
+- |
+     || pre: lista = [1, -2, 3]
+- |
+     || pre: lista = [7, 0, 9]
+segitseg: Mi legyen a szorzat kezdőértéke, hogy ne rontsa el az eredményt?
+
+### kod
+kerdes: Fűzd össze a lista szavait egyetlen szöveggé, szóközökkel elválasztva, és írd ki. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  szavak = ["alma", "körte", "szilva"]
+
+megoldas: |
+  szavak = ["alma", "körte", "szilva"]
+  szoveg = ""
+  for szo in szavak:
+      szoveg += szo + " "
+  print(szoveg)
+tesztek:
+- |
+     || pre: szavak = ["alma", "körte", "szilva"]
+- |
+     || pre: szavak = ["egy"]
+- |
+     || pre: szavak = ["a", "b", "c", "d"]
+segitseg: A sorvégi felesleges szóközt a program nem veszi figyelembe.
+
+### hiba
+kerdes: Az összegzés rossz eredményt ad: mindig csak az utolsó elemet írja ki. Javítsd ki. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 9, 2, 7]
+  for x in lista:
+      osszeg = 0
+      osszeg += x
+  print(osszeg)
+megoldas: |
+  lista = [4, 9, 2, 7]
+  osszeg = 0
+  for x in lista:
+      osszeg += x
+  print(osszeg)
+tesztek:
+- |
+     || pre: lista = [4, 9, 2, 7]
+- |
+     || pre: lista = [1, 1]
+- |
+     || pre: lista = [5]
+segitseg: A kezdőértéket a ciklus <b>előtt</b> kell beállítani, egyszer.
+
+### sorrend
+kerdes: Rendezd sorba a sorokat: a program írja ki a lista elemeinek összegét.
+sorok: |
+  lista = [4, 9, 2, 7]
+  osszeg = 0
+  for x in lista:
+      osszeg += x
+  print(osszeg)
+tesztek:
+-
+
+### nyomkovetes
+kerdes: Kövesd végig a programot, és töltsd ki a táblázatot: a változók értéke minden alkalommal, amikor a program a(z) 5. sorhoz ér (a sor végrehajtása <b>előtt</b>). Az első sor példa. Segít a 🔍 Lépésenként gomb a Játszótéren.
+kod: |
+  lista = [3, 8, 5, 6, 10, 7]
+  osszeg = 0
+  for x in lista:
+      if x % 2 == 0:
+          osszeg += x
+  print(osszeg)
+sor: 5
+valtozok: x, osszeg
+
+### mikiir
+kod: |
+  l = [3, 8, 5]
+  s = 0
+  for x in l:
+      s += x - 4
+  print(s)

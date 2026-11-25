@@ -1,0 +1,276 @@
+# Listakezelő függvények és metódusok
+
+## Függvény és metódus
+A <code>len(l)</code> és a <code>sum(l)</code> alakban a lista paraméterként szerepel. A listametódusok viszont a lista <b>neve után, ponttal</b> állnak: <code>l.append(x)</code>. A metódus a listán dolgozik, sokszor át is írja azt. Az <code>append</code>-et és a rövidítéseket (<code>sum</code>, <code>count</code>, <code>in</code>, <code>index</code>, <code>min</code>, <code>max</code>) már ismered, ebben a témában a többi fontos műveletet rendszerezzük.
+
+## Elem hozzáadása
+Három lehetőség van:
+- <code>l.append(x)</code> a lista <b>végére</b> fűzi az x elemet
+- <code>l.insert(index, x)</code> az x elemet az adott helyre szúrja be, a későbbi elemek eggyel hátrébb csúsznak
+- <code>l.extend(m)</code> az m lista összes elemét a végére fűzi
+```python
+l = [10, 20, 30]
+l.append(40)
+print(l)          # [10, 20, 30, 40]
+l.insert(1, 15)
+print(l)          # [10, 15, 20, 30, 40]
+l.extend([50, 60])
+print(l)          # [10, 15, 20, 30, 40, 50, 60]
+```
+
+## Elem törlése
+Törlésre több módszer van:
+- <code>l.remove(x)</code> az x érték <b>első</b> előfordulását törli; ha nincs ilyen elem, <code>ValueError</code> keletkezik
+- <code>l.pop()</code> az utolsó elemet törli, és vissza is adja
+- <code>l.pop(index)</code> az adott helyen lévő elemet törli, és vissza is adja
+- <code>del l[index]</code> az adott helyen lévő elemet törli
+- <code>l.clear()</code> az összes elemet törli
+```python
+l = [5, 8, 5, 3, 9]
+l.remove(5)        # az első 5-öst törli
+print(l)           # [8, 5, 3, 9]
+utolso = l.pop()
+print(utolso, l)   # 9 [8, 5, 3]
+del l[0]
+print(l)           # [5, 3]
+```
+
+## Rendezés
+A rendezéshez több lehetőség van:
+- <code>l.sort()</code> <b>helyben</b> rendezi a listát, vagyis az eredetit írja át, alapból növekvő sorrendbe; a <code>l.sort(reverse=True)</code> csökkenő sorrendbe rendez
+- <code>sorted(l)</code> <b>új</b> rendezett listát ad vissza, az eredeti marad
+- <code>l.reverse()</code> megfordítja a lista sorrendjét, de nem rendez
+```python
+l = [4, 9, 1, 7]
+uj = sorted(l)
+print(uj, l)       # [1, 4, 7, 9] [4, 9, 1, 7]
+l.sort()
+print(l)           # [1, 4, 7, 9]
+l.sort(reverse=True)
+print(l)           # [9, 7, 4, 1]
+l.reverse()
+print(l)           # [1, 4, 7, 9]
+```
+
+## Szövegek rendezése
+Szövegek listája karakterkód szerint rendeződik, ezért a nagybetűs szavak a kisbetűsek előtt állnak, az ékezetes betűk pedig az ábécé végére kerülnek. Ezt a magyar ábécé szerinti rendezésnél figyelembe kell venni.
+```python
+nevek = ["Csilla", "anna", "Bence"]
+print(sorted(nevek))   # Bence, Csilla, anna sorrendben
+```
+
+## Másolás: az = nem másol
+Ha egy listát egyszerűen egy másik változónak adsz értékül (<code>m = l</code>), nem készül új lista: a két név <b>ugyanarra</b> a listára mutat, ezért az egyiken végzett módosítás a másikon is látszik. Valódi másolatot az <code>l.copy()</code> készít.
+```python
+l = [1, 2, 3]
+m = l            # ugyanaz a lista, két névvel
+m.append(4)
+print(l)         # [1, 2, 3, 4]
+
+k = l.copy()     # önálló másolat
+k.append(5)
+print(l)         # [1, 2, 3, 4]
+print(k)         # [1, 2, 3, 4, 5]
+```
+
+## Listák összefűzése és létrehozása
+A <code>+</code> két lista elemeiből új listát készít, a <code>*</code> ismétli a listát. Utóbbi hasznos adott méretű, azonos elemekkel feltöltött lista létrehozására. A <code>list(range(...))</code> számsorozatból készít listát.
+```python
+a = [1, 2]
+b = [3, 4]
+print(a + b)               # [1, 2, 3, 4]
+print([0] * 5)             # [0, 0, 0, 0, 0]
+print(list(range(1, 6)))   # [1, 2, 3, 4, 5]
+```
+
+## Gyakori hibák
+Ezekre figyelj:
+- <code>l = l.sort()</code>: a <code>sort</code> nem ad vissza listát, hanem <code>None</code>-t (ez azt jelenti, hogy nincs érték), ezért a lista elvész
+- <code>l.remove(x)</code>, ha az x nincs a listában: <code>ValueError</code>
+- <code>l.pop()</code> üres listán: <code>IndexError</code>
+- <code>m = l</code> másolás helyett: a két név ugyanazt a listát jelöli
+- lista elemeinek törlése bejárás közben: kimaradhatnak elemek, ilyenkor inkább új listát építs
+```python
+l = [3, 1, 2]
+l = l.sort()
+print(l)    # None
+```
+
+## Összefoglaló
+Melyik műveletet mikor használd:
+- hozzáadás: <code>append</code>, <code>insert</code>, <code>extend</code>
+- törlés: <code>remove</code>, <code>pop</code>, <code>del</code>, <code>clear</code>
+- rendezés: <code>sort</code> (helyben), <code>sorted</code> (új lista), <code>reverse</code>
+- információ: <code>len</code>, <code>count</code>, <code>index</code>, <code>in</code>, <code>min</code>, <code>max</code>, <code>sum</code>
+- másolás: <code>copy</code>, az <code>=</code> nem másol
+- építés: <code>+</code>, <code>*</code>, <code>list(range(...))</code>
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [3, 5]
+  l.append(7)
+  l.insert(0, 1)
+  print(l)
+elfogad:
+- [1, 3, 5, 7]
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [4, 9, 4, 2]
+  l.remove(4)
+  print(l)
+elfogad:
+- [9, 4, 2]
+segitseg: A remove csak az első előfordulást törli.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [5, 2, 8]
+  l.sort(reverse=True)
+  print(l)
+elfogad:
+- [8, 5, 2]
+
+### beiros
+kerdes: Mit ír ki? (A számot írd be.)
+kod: |
+  a = [1, 2]
+  b = a
+  b.append(3)
+  print(len(a))
+elfogad:
+- 3
+segitseg: A b = a nem másol, a két név ugyanazt a listát jelöli.
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: |
+  l = [2, 1]
+  l = l.sort()
+  print(l)
+valaszok:
+- None
+- [1, 2]
+- [2, 1]
+jo: 0
+magyarazat: A sort a listát helyben rendezi, és None-t ad vissza.
+
+### teszt
+kerdes: Melyik művelet törli az utolsó elemet, és vissza is adja?
+valaszok:
+- l.remove()
+- l.pop()
+- l.clear()
+jo: 1
+magyarazat: A pop() törli az utolsó elemet, és az értékét visszaadja.
+
+### kod
+kerdes: Rendezd sorba növekvő sorrendbe a listát, és írd ki (<code>print(lista)</code>). <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 9, 2, 7]
+
+megoldas: |
+  lista = [4, 9, 2, 7]
+  lista.sort()
+  print(lista)
+tesztek:
+- |
+     || pre: lista = [4, 9, 2, 7]
+- |
+     || pre: lista = [1]
+- |
+     || pre: lista = [3, 3, 1]
+
+### kod
+kerdes: Fűzd a lista végére a lista elemeinek összegét (<code>append</code>), majd írd ki a listát. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [1, 2, 3]
+
+megoldas: |
+  lista = [1, 2, 3]
+  lista.append(sum(lista))
+  print(lista)
+tesztek:
+- |
+     || pre: lista = [1, 2, 3]
+- |
+     || pre: lista = [5]
+- |
+     || pre: lista = [4, -4]
+
+### kod
+kerdes: Írd ki a lista második legnagyobb elemét. A lista elemei különbözők, legalább 2 elemű. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 9, 2, 7]
+
+megoldas: |
+  lista = [4, 9, 2, 7]
+  lista.sort()
+  print(lista[-2])
+tesztek:
+- |
+     || pre: lista = [4, 9, 2, 7]
+- |
+     || pre: lista = [1, 2]
+- |
+     || pre: lista = [10, 5, 8]
+
+### kod
+kerdes: Készíts rendezett másolatot a listáról, de az eredeti maradjon változatlan. Írd ki az eredeti listát, majd a rendezettet, két sorban. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 9, 2, 7]
+
+megoldas: |
+  lista = [4, 9, 2, 7]
+  masolat = lista.copy()
+  masolat.sort()
+  print(lista)
+  print(masolat)
+tesztek:
+- |
+     || pre: lista = [4, 9, 2, 7]
+- |
+     || pre: lista = [3, 1]
+- |
+     || pre: lista = [5]
+segitseg: A <code>masolat = lista</code> nem másol, csak egy második nevet ad ugyanannak a listának.
+
+### hiba
+kerdes: A program rendezett másolatot akar készíteni, az eredeti listának változatlannak kell maradnia, de az is rendezett lesz. Javítsd ki. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 9, 2, 7]
+  masolat = lista
+  masolat.sort()
+  print(lista)
+  print(masolat)
+megoldas: |
+  lista = [4, 9, 2, 7]
+  masolat = lista.copy()
+  masolat.sort()
+  print(lista)
+  print(masolat)
+tesztek:
+- |
+     || pre: lista = [4, 9, 2, 7]
+- |
+     || pre: lista = [3, 1]
+- |
+     || pre: lista = [5]
+segitseg: A <code>masolat = lista</code> nem másol, csak egy második nevet ad ugyanannak a listának.
+
+### mikiir
+kod: |
+  l = [3, 1, 2]
+  l.sort()
+  l.append(0)
+  print(l)
+
+### mikiir
+kod: |
+  a = [1, 2]
+  b = a
+  b.append(3)
+  print(a)

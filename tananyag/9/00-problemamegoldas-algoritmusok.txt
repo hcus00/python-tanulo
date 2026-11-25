@@ -1,0 +1,88 @@
+# Problémamegoldás, algoritmusok, folyamatábra
+
+## Mi a probléma, és mi a megoldás?
+Programozni úgy tanulunk meg, hogy előbb gondolkodni tanulunk. Minden feladatot három kérdésre bonthatsz: Mi a <b>bemenet</b>, vagyis amiből kiindulunk? Mi a <b>kimenet</b>, vagyis amit meg szeretnénk kapni? Mi a <b>feldolgozás</b>, vagyis a lépések a kettő között? Példa: két szám közül a nagyobbat keressük. Bemenet: a két szám. Kimenet: a nagyobbik. Feldolgozás: a két szám összehasonlítása.
+
+## Mi az algoritmus?
+Az <b>algoritmus</b> véges sok, egyértelműen megfogalmazott lépésből álló utasítássorozat, amely egy feladat megoldását adja. Három fontos tulajdonsága van:
+- <b>Véges</b>: egyszer véget ér
+- <b>Egyértelmű</b>: minden lépést csak egyféleképpen lehet érteni
+- <b>Általános</b>: nem egyetlen esetre, hanem a feladat minden hasonló esetére működik.
+Hétköznapi algoritmus a sütirecept, a mosógép programja vagy az útvonal a buszmegállóig.
+
+## Példa: teafőzés szavakkal
+Az algoritmust először mindig szavakkal is leírhatjuk. Figyeld meg a 3. lépést: ott egy feltételtől függ, hogy meddig kell várni. Ez a későbbi ciklusok előképe.
+```python
+1. Tölts vizet a vízforralóba.
+2. Kapcsold be a vízforralót.
+3. Amíg a víz nem forr, várj.
+4. Tedd a teafiltert a bögrébe, és öntsd rá a vizet.
+5. Várj 3 percet, majd vedd ki a filtert.
+```
+
+## Folyamatábra
+A folyamatábra az algoritmus rajzos leírása. Jelei:
+- a <b>lekerekített téglalap</b> a kezdés és a vége (START, STOP)
+- a <b>paralelogramma</b> a bemenet és a kimenet (adat beolvasása, kiírás)
+- a <b>téglalap</b> egy tevékenység (például számolás)
+- a <b>rombusz</b> az elágazás, vagyis egy igen/nem kérdés két kimenő nyíllal
+- a <b>nyilak</b> a lépések sorrendjét mutatják.
+Az ábrát mindig fentről lefelé olvasd, a START jeltől a STOP jelig.
+@abra jelek
+
+## Példa: a nagyobb szám kiválasztása
+Nézzük meg a két szám közül a nagyobbat kiválasztó algoritmust! Beolvassuk az <code>a</code> és <code>b</code> számot. A rombusz kérdése: igaz-e, hogy <code>a > b</code>? Ha igen, az <code>a</code>, ha nem, a <code>b</code> a nagyobb. A két ág a végén újra egyesül, és mindkettő a STOP jelhez ér.
+@abra nagyobb
+
+## A teafőzés folyamatábrán
+Az előbbi teafőzést is lerajzolhatjuk. Figyeld meg a „Forr a víz?” rombuszt: ha a válasz <b>nem</b>, a nyíl <b>visszamegy</b> a kérdés elé, vagyis várunk, és újra megkérdezzük. Az ilyen visszacsatolt nyíl jelzi az <b>ismétlést</b>. Ezt a szerkezetet fogod később ciklusnak (<code>while</code>) hívni.
+@abra tea
+
+## Hogyan ellenőrizzük?
+Az algoritmust mindig próbáld ki néhány példán, „papíron futtatva”. Gondolj a különleges esetekre is! Mi történik, ha a = b? A rombusz kérdésére a válasz „nem”, ezért b íródik ki, de ez ugyanannyi, mint a, tehát az algoritmus jól működik.
+
+## Összefoglalás
+Feladatnál először azonosítsd a bemenetet, a kimenetet és a feldolgozást. Az algoritmus véges, egyértelmű és általános. A folyamatábrán a rombusz jelöli az elágazást, a paralelogramma az adatbeolvasást és a kiírást.
+
+### teszt
+kerdes: Egy téglalap területét szeretnénk kiszámolni. Mi a feladat bemenete?
+valaszok:
+- a két oldal hossza
+- a terület
+- a szorzás
+jo: 0
+magyarazat: A bemenet az, amiből kiindulunk. A terület a kimenet, a szorzás a feldolgozás.
+
+### teszt
+kerdes: Melyik NEM tulajdonsága az algoritmusnak?
+valaszok:
+- véges
+- egyértelmű
+- soha nem ér véget
+jo: 2
+magyarazat: Az algoritmusnak végesnek kell lennie, vagyis egyszer be kell fejeződnie.
+
+### teszt
+kerdes: Melyik alakzat jelöli a folyamatábrán az adat beolvasását?
+valaszok:
+- paralelogramma
+- rombusz
+- nyíl
+jo: 0
+
+### beiros
+kerdes: Mit ír ki az ábrán látható algoritmus, ha a = 4 és b = 9? (A kimenetet írd be.)
+abra: nagyobb
+elfogad:
+- 9
+segitseg: Igaz-e, hogy 4 > 9? Melyik ágon haladsz tovább?
+
+### teszt
+kerdes: Mi történik a teafőzés folyamatábráján, ha a víz még nem forr?
+abra: tea
+valaszok:
+- várunk 10 másodpercet, és újra megkérdezzük, hogy forr-e
+- a tea elkészül
+- az algoritmus véget ér
+jo: 0
+magyarazat: A „nem” ágon a nyíl visszavezet a kérdéshez: ez az ismétlés.

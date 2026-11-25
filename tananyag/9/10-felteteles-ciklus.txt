@@ -1,0 +1,280 @@
+# Feltételes ciklus (while)
+
+## Mikor kell feltételes ciklus?
+Néha nem tudjuk előre, hányszor kell ismételni, például amíg a felhasználó helyes adatot nem ír be, vagy amíg egy szám el nem ér egy határt. Ilyenkor a <b>feltételes ciklust</b> használjuk, amely addig ismétel, amíg a feltétel igaz.
+
+## A while szerkezet
+A <code>while</code> ciklus a feltételt a törzs <b>előtt</b> vizsgálja. Ha igaz, lefut a törzs, aztán újra vizsgál. Ha a feltétel már az elején hamis, a törzs egyszer sem fut le. Három dolgra kell figyelni: kezdőérték, feltétel, léptetés.
+```python
+n = 1                 # kezdőérték
+while n <= 5:         # feltétel
+    print(n)
+    n += 1            # léptetés
+```
+
+## Végtelen ciklus
+Ha a feltétel sosem válik hamissá, a ciklus sosem áll le. Ez a leggyakoribb while hiba. Szinte mindig az hiányzik, hogy a törzs megváltoztassa a feltételben szereplő változót.
+```python
+n = 1
+while n <= 5:
+    print(n)      # hiba: n nem változik, a ciklus sosem áll le
+```
+
+## Tipikus feladatok
+Az első példa addig kér adatot, amíg az megfelelő. A második egy szám számjegyeit számolja: minden lépésben levágja az utolsó számjegyet (az egész osztással), és eggyel növeli a számlálót.
+```python
+szam = int(input("Pozitív szám: "))
+while szam <= 0:
+    print("Hibás adat!")
+    szam = int(input("Pozitív szám: "))
+print("Rendben:", szam)
+
+n = 1234
+db = 0
+while n > 0:
+    n = n // 10
+    db += 1
+print(db)       # 4
+```
+
+## Az adatellenőrzés folyamatábrán
+Az első példa folyamatábrája: ha a beírt szám nem pozitív, kiírjuk a hibaüzenetet, és <b>visszatérünk az adatbekéréshez</b>. Csak akkor lépünk ki a ciklusból, ha a szám megfelelő. Ez is egy feltételes ciklus: addig ismétlünk, amíg a feltétel igaz.
+@abra while_hiba
+
+## For vagy while?
+Ha előre tudod, hányszor kell ismételni, a <code>for</code> a kényelmesebb. Ha az ismétlések száma a feltételtől függ, a <code>while</code> való. A <code>break</code> utasítás a ciklusból azonnal kilép, de a feladatok többségét nélküle is jól meg lehet oldani.
+
+## Összefoglalás
+A while addig ismétel, amíg a feltétel igaz. A feltételt a törzs előtt vizsgálja. Kell kezdőérték, feltétel és léptetés. Ha a feltétel sosem lesz hamis, végtelen ciklus keletkezik.
+
+### teszt
+kerdes: Hányszor fut le a ciklus törzse?
+kod: |
+  n = 3
+  while n < 3:
+      n += 1
+valaszok:
+- 0
+- 1
+- 3
+jo: 0
+magyarazat: A feltétel már az elején hamis, ezért a törzs egyszer sem fut le.
+
+### teszt
+kerdes: Mi a hiba ebben a programban?
+kod: |
+  k = 0
+  while k < 5:
+      print(k)
+valaszok:
+- végtelen ciklus: k nem változik
+- hiányzik az else
+- rossz a feltétel jele
+jo: 0
+magyarazat: A k értéke sosem nő, a feltétel mindig igaz marad.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  n = 1
+  while n < 20:
+      n *= 3
+  print(n)
+elfogad:
+- 27
+segitseg: Az n értékei: 1, 3, 9, 27.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  n = 905
+  db = 0
+  while n > 0:
+      n = n // 10
+      db += 1
+  print(db)
+elfogad:
+- 3
+segitseg: Az n értékei: 905, 90, 9, 0.
+
+### beiros
+kerdes: Hányszor íródik ki a „Hibás adat!” szöveg az ábrán látható algoritmusban, ha a beírt számok sorban −3, 0, 5? (A számot írd be.)
+abra: while_hiba
+elfogad:
+- 2
+segitseg: A −3 és a 0 sem pozitív, az 5 már igen.
+
+### kod
+kerdes: Olvass be számokat (soronként egyet) addig, amíg 0-t nem kapsz. A 0 már nem számít bele. Írd ki a beolvasott számok összegét.
+kezdokod: |
+  szam = int(input())
+
+megoldas: |
+  szam = int(input())
+  osszeg = 0
+  while szam != 0:
+      osszeg += szam
+      szam = int(input())
+  print(osszeg)
+tesztek:
+- 4\n5\n6\n0
+- 0
+- 10\n-3\n0
+segitseg: Az első számot a ciklus előtt olvasd be, a következőt a ciklus végén.
+
+### kod
+kerdes: Olvass be egy pozitív egész számot, és írd ki, hány számjegyből áll. Használj while ciklust, és vágd le egyenként az utolsó számjegyet.
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  db = 0
+  while n > 0:
+      n = n // 10
+      db += 1
+  print(db)
+tesztek:
+- 7
+- 1234
+- 1000000
+- 10
+
+### kod
+kerdes: Kérj be egy számot 1 és 10 között. Ha nem jó, írd ki: <code>Hibás adat!</code>, és kérd be újra. Ha jó, írd ki: <code>Rendben: 7</code> (a szám behelyettesítésével).
+kezdokod: |
+  szam = int(input())
+
+megoldas: |
+  szam = int(input())
+  while szam < 1 or szam > 10:
+      print("Hibás adat!")
+      szam = int(input())
+  print("Rendben:", szam)
+tesztek:
+- 5
+- 0\n11\n7
+- 10
+- -1\n-2\n1
+
+### kod
+kerdes: Olvass be egy pozitív egész számot. Ha páros, felezd meg; ha páratlan, szorozd meg 3-mal és adj hozzá 1-et. Ismételd, amíg 1 nem lesz. Írd ki, hány lépés kellett. (Például 6 → 3 → 10 → 5 → 16 → 8 → 4 → 2 → 1: 8 lépés.)
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  lepes = 0
+  while n != 1:
+      if n % 2 == 0:
+          n = n // 2
+      else:
+          n = 3 * n + 1
+      lepes += 1
+  print(lepes)
+tesztek:
+- 6
+- 1
+- 27
+- 7
+
+### hiba
+kerdes: A program 1-től n-ig kiírja a számokat, de nem áll le. Keresd meg a hibát.
+kezdokod: |
+  n = int(input())
+  i = 1
+  while i <= n:
+      print(i)
+megoldas: |
+  n = int(input())
+  i = 1
+  while i <= n:
+      print(i)
+      i += 1
+tesztek:
+- 3
+- 1
+- 5
+segitseg: Mitől lesz egyszer hamis a <code>while</code> feltétele? A 🔍 Lépésenként gomb segít.
+
+### sorrend
+kerdes: Rendezd sorba a sorokat: a program számokat olvas be 0-ig, és kiírja az összegüket.
+sorok: |
+  szam = int(input())
+  osszeg = 0
+  while szam != 0:
+      osszeg += szam
+      szam = int(input())
+  print(osszeg)
+tesztek:
+- 4\n5\n0
+- 0
+- 7\n-2\n0
+segitseg: Az első beolvasás a ciklus előtt, a következő a ciklus végén van.
+
+### nyomkovetes
+kerdes: Kövesd végig a programot, és töltsd ki a táblázatot: a változók értéke minden alkalommal, amikor a program a(z) 4. sorhoz ér (a sor végrehajtása <b>előtt</b>). Az első sor példa. Segít a 🔍 Lépésenként gomb a Játszótéren.
+kod: |
+  n = 1
+  db = 0
+  while n < 20:
+      n = n * 2
+      db += 1
+  print(db)
+sor: 4
+valtozok: n, db
+
+### nyomkovetes
+kerdes: Kövesd végig a programot, és töltsd ki a táblázatot: a változók értéke minden alkalommal, amikor a program a(z) 4. sorhoz ér (a sor végrehajtása <b>előtt</b>). Az első sor példa. Segít a 🔍 Lépésenként gomb a Játszótéren.
+kod: |
+  n = 5
+  lepes = 0
+  while n != 1:
+      if n % 2 == 0:
+          n = n // 2
+      else:
+          n = 3 * n + 1
+      lepes += 1
+  print(lepes)
+sor: 4
+valtozok: n, lepes
+
+### abrakod
+kerdes: Melyik program felel meg a folyamatábrának?
+abra: while_hiba
+valaszok:
+- |
+    szam = int(input())
+    while szam <= 0:
+        print("Hibás adat!")
+    print("Rendben!")
+- |
+    szam = int(input())
+    while szam <= 0:
+        print("Hibás adat!")
+        szam = int(input())
+    print("Rendben!")
+- |
+    szam = int(input())
+    while szam <= 0:
+        print("Hibás adat!")
+        szam = int(input())
+        print("Rendben!")
+jo: 1
+magyarazat: A hibaüzenet után újra be kell kérni a számot (a nyíl visszavezet a bekérésre), a „Rendben!” pedig csak a ciklus után következik.
+
+### mikiir
+kod: |
+  n = 100
+  k = 0
+  while n > 1:
+      n = n // 3
+      k += 1
+  print(k)
+
+### mikiir
+kod: |
+  x = 1
+  while x < 50:
+      x *= 3
+  print(x)

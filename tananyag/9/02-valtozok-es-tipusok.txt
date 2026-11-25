@@ -1,0 +1,140 @@
+# Változók és adattípusok
+
+## Mi a változó?
+A változó egy névvel ellátott tárolóhely a memóriában. Képzelj el egy dobozt, amelyre ráírtad a nevét, és belerakhatsz egy értéket. Az <code>=</code> jel itt nem egyenlőséget jelent, hanem <b>értékadást</b>: a jobb oldalon lévő kifejezést kiszámolja, és az eredményt eltárolja a bal oldali nevű változóban.
+```python
+kor = 16
+print(kor)       # 16
+kor = kor + 1    # jobb oldal: 16 + 1 = 17
+print(kor)       # 17
+```
+
+## A változó mint doboz
+Képzeld el a változót egy <b>címkézett dobozként</b>: a címke a neve, a doboz tartalma az értéke. A Python azt is nyilvántartja, hogy milyen <b>típusú</b> az érték. A doboz tartalma bármikor kicserélhető, ilyenkor a régi érték elvész.
+@abra valtozo
+
+## Az értékadás képben
+Az <code>x = x + 5</code> nem matematikai egyenlet! Jobbról balra olvasd: a gép előbb kiszámolja a jobb oldalt (a doboz <i>mostani</i> értékéhez hozzáad 5-öt), és az eredményt <b>visszateszi ugyanabba a dobozba</b>.
+@abra ertekadas
+
+## Hogyan nevezzük el?
+A változónév betűvel vagy aláhúzással kezdődik, utána betű, szám és aláhúzás állhat benne, szóköz nem. A nagy és a kis betű különbözik: a <code>kor</code> és a <code>Kor</code> két külön változó. Nem lehet a nyelv saját szavaival megegyező (például <code>if</code>, <code>for</code>). Érdemes beszédes és ékezet nélküli nevet választani, például <code>atlag</code>, <code>pont_szam</code>.
+
+## Az adattípusok
+Minden értéknek van típusa, ez dönti el, mit lehet vele csinálni. Négy alaptípus van: <b>int</b> (egész szám), <b>float</b> (tizedes tört), <b>str</b> (szöveg), <b>bool</b> (logikai, True vagy False). A típust a <code>type()</code> függvény adja meg. A Python a típust az értékből magától megállapítja.
+```python
+db = 3          # int
+ar = 2.5        # float (tizedespont!)
+nev = 'Anna'    # str
+kesz = True     # bool
+print(type(db)) # <class 'int'>
+```
+
+## Gyakori hibák
+A tizedestört Pythonban <b>tizedesponttal</b> íródik: 2.5, nem 2,5. A <code>3</code> és a <code>'3'</code> különböző dolog: az első szám, a második szöveg. A változó értékét az utolsó értékadás határozza meg, a korábbi érték elvész.
+
+## Összefoglalás
+A változó névvel ellátott tárolóhely. Az = értékadás: jobbról balra olvasd. A típusok: int, float, str, bool. A változónév betűvel vagy aláhúzással kezdődik.
+
+### teszt
+kerdes: Mi lesz az x értéke a végén?
+kod: |
+  x = 4
+  x = x + 3
+valaszok:
+- 4
+- 7
+- hiba
+jo: 1
+magyarazat: A jobb oldalt számoljuk ki: 4 + 3 = 7, ez kerül az x-be.
+
+### teszt
+kerdes: Melyik NEM lehet változónév?
+valaszok:
+- pont_szam
+- 2fok
+- szam2
+jo: 1
+magyarazat: A változónév nem kezdődhet számjeggyel.
+
+### teszt
+kerdes: Milyen típusú az x változó?
+kod: x = '7'
+valaszok:
+- int
+- float
+- str
+jo: 2
+magyarazat: Az idézőjel miatt szöveg, nem szám.
+
+### mikiir
+kod: |
+  a = 10
+  b = a
+  a = 20
+  print(b)
+segitseg: A b a másoláskor kapta az értékét, a későbbi változás már nem érinti.
+
+### kod
+kerdes: Az <code>a</code> és <code>b</code> változó értékét cseréld meg úgy, hogy a végén a <code>print</code> a cserélt értékeket írja ki. (Segítség: kell hozzá egy harmadik változó.)
+kezdokod: |
+  a = 3
+  b = 7
+  # Cseréld meg a két változó értékét!
+
+  print(a, b)
+megoldas: |
+  a = 3
+  b = 7
+  c = a
+  a = b
+  b = c
+  print(a, b)
+tesztek:
+-
+segitseg: Ha először <code>a = b</code>-t írsz, elveszted az <code>a</code> régi értékét. Előbb tedd el egy új változóba!
+
+### kod
+kerdes: Az <code>x</code> változó értéke 10. Növeld meg 5-tel úgy, hogy az eredményt visszaírod az <code>x</code> változóba, majd írd ki az <code>x</code> értékét.
+kezdokod: |
+  x = 10
+  # Írd ide a növelést
+
+megoldas: |
+  x = 10
+  x = x + 5
+  print(x)
+tesztek:
+-
+
+### teszt
+kerdes: Az ábra szerint melyik változó típusa <code>str</code>?
+abra: valtozo
+valaszok:
+- kor
+- nev
+- ar
+- kesz
+jo: 1
+magyarazat: A <code>nev</code> értéke idézőjelek közötti szöveg, ezért <code>str</code>.
+
+### beiros
+kerdes: Az ábrán látható x = 10 után lefut az <code>x = x + 5</code>, majd az <code>x = x - 3</code>. Mennyi lesz az x? (A számot írd be.)
+abra: ertekadas
+elfogad:
+- 12
+segitseg: Előbb 15 lesz, aztán abból vonsz le 3-at.
+
+### mikiir
+kod: |
+  a = 4
+  b = a
+  a = 7
+  print(a, b)
+
+### mikiir
+kod: |
+  x = 3
+  x = x + x
+  x = x + 1
+  print(x)

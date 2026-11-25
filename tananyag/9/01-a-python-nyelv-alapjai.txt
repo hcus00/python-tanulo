@@ -1,0 +1,135 @@
+# A Python alapjai: első program, hibaüzenetek
+
+## Miért a Python?
+A Python egy olvasmányos, az angol nyelvhez közel álló programozási nyelv, ezért gyorsan lehet vele eredményt elérni. Az érettségi gyakorlati vizsgán a programozási nyelvet az iskola által megadott szoftverek közül választhatod, és a korábbi érettségi feladatokhoz Python megoldások is készültek. A programot a Python <b>soronként, fentről lefelé</b> hajtja végre.
+
+## Az első program
+A <code>print()</code> függvény kiír valamit a képernyőre. A szöveget idézőjel közé kell tenni, ez jelzi, hogy nem utasítás, hanem szöveg. Az idézőjel lehet szimpla vagy dupla, de a nyitó és a záró ugyanolyan legyen.
+```python
+print('Helló, világ!')
+```
+
+## Szintaktika: a nyelv helyesírása
+A <b>szintaktika</b> azt mondja meg, hogyan kell leírni az utasításokat. Néhány alapszabály: a nagy és a kis betű számít, tehát a <code>Print</code> már hibás; a zárójelnek és az idézőjelnek mindig van párja; a sor elején ne legyen véletlenül szóköz, mert a Python a <b>behúzást</b> is jelentésként értelmezi (ezt az elágazásoknál és a ciklusoknál fogjuk használni).
+```python
+Print('Szia')   # hibás: nagy P
+print('Szia)    # hibás: hiányzik a záró idézőjel
+```
+
+## A hibaüzenet a barátod
+Ha hibázol, a Python hibaüzenetet ír, például SyntaxError. Ez nem büntetés, hanem segítség, mert megmondja, melyik sorban és milyen jellegű a hiba. Mindig olvasd el, és az utolsó sorától kezdd!
+
+## Hibaüzenetek típusai és értelmezésük
+Három nagy hibacsoport van:
+- <b>Szintaktikai hiba</b>: a leírás hibás, ezért a program el sem indul
+- <b>Futásidejű hiba</b>: a program elindul, de menet közben megáll, és hibaüzenetet kapsz
+- <b>Logikai hiba</b>: nincs hibaüzenet, de az eredmény rossz, ezt csak te veheted észre tesztelés közben.
+Az üzenet utolsó sora a hiba típusát és rövid leírását adja, fölötte látod, hányadik sorban történt. A leggyakoribb üzenetek és jelentésük:
+```python
+SyntaxError: unterminated string literal
+  → hibás leírás, például hiányzó záró idézőjel vagy zárójel
+
+IndentationError: unexpected indent
+  → rossz behúzás, például véletlen szóköz a sor elején
+
+NameError: name 'szam' is not defined
+  → olyan nevet használtál, amit még nem hoztál létre (elírás, vagy hiányzó értékadás)
+
+TypeError: can only concatenate str (not "int") to str
+  → nem illő típusokat kapcsoltál össze, például "a" + 5
+
+ValueError: invalid literal for int() with base 10
+  → a típus jó, de az érték nem alakítható át, például int("abc")
+
+ZeroDivisionError: division by zero
+  → nullával osztottál
+```
+
+## Hogyan keresd meg a hibát?
+Olvasd el az üzenet utolsó sorát, és nézd meg a sorszámot. Ha ott nem látsz hibát, nézd az előző sort is, mert a hiányzó zárójel vagy idézőjel a következő sornál jelentkezhet. Ellenőrizd, hogy minden nyitó jelnek van-e párja, nem írtál-e el egy nevet, és jó-e a behúzás. Egyszerre mindig csak egy dolgot javíts. Logikai hibánál próbáld ki kis példán a programot, és íratsd ki a közbülső értékeket.
+
+## Megjegyzés és több kiírás
+A <code>#</code> jel utáni részt a Python nem hajtja végre, ez a megjegyzés, amellyel magyarázhatod a kódot. Több <code>print</code> külön sorba ír. Ha egy <code>print</code>-ben vesszővel több dolgot adsz meg, azokat szóközzel választja el.
+```python
+# Ez csak megjegyzés
+print('Első')
+print('Második')
+print('Tíz', 'év')   # Tíz év
+```
+
+## Összefoglalás
+A print kiír, a # megjegyzést jelöl, a szöveg idézőjelben áll, a kis- és nagybetű számít, a hibaüzenet segít a javításban.
+
+### teszt
+kerdes: Melyik sor helyes?
+valaszok:
+- Print('Szia')
+- print('Szia')
+- print 'Szia)
+jo: 1
+magyarazat: A Pythonban a print csupa kisbetűvel írandó, és a zárójelnek meg az idézőjelnek is pár kell.
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: |
+  # print('Alma')
+  print('Körte')
+valaszok:
+- Alma
+- Körte
+- Alma és Körte
+jo: 1
+magyarazat: Az első sor megjegyzés, azt a Python nem hajtja végre.
+
+### mikiir
+kod: print('ez', 'jó')
+segitseg: A vesszővel elválasztott részek közé szóköz kerül.
+
+### teszt
+kerdes: Mi a hiba oka, ha a Python ezt írja: NameError: name "atlag" is not defined?
+valaszok:
+- Az atlag nevet használtuk, de még nem kapott értéket
+- Az atlag értéke szöveg
+- Nullával osztottunk
+jo: 0
+magyarazat: A NameError azt jelenti, hogy a név nem létezik: elírtuk, vagy hiányzik az értékadás.
+
+### teszt
+kerdes: Melyik hibát okozza az int("szia")?
+valaszok:
+- SyntaxError
+- ValueError
+- ZeroDivisionError
+jo: 1
+magyarazat: A típus (szöveg) megfelelő, de az érték nem alakítható számmá, ez ValueError.
+
+### teszt
+kerdes: Miért hasznos a hibaüzenet?
+valaszok:
+- megmutatja, hol és milyen hiba van
+- kitörli a hibás sort
+- nem hasznos
+jo: 0
+
+### kod
+kerdes: Írj programot, amely két sorba kiírja: <code>Szia, Python!</code> és <code>Ez az első programom.</code>
+kezdokod: |
+  # Írd ide a programot
+
+megoldas: |
+  print("Szia, Python!")
+  print("Ez az első programom.")
+tesztek:
+-
+
+### kod
+kerdes: A program hibás. Javítsd ki úgy, hogy az első sorba <code>Jó reggelt!</code>, a másodikba <code>Mai nap: hétfő</code> kerüljön. Két hiba van benne.
+kezdokod: |
+  print("Jó reggelt!)
+  Print("Mai nap: hétfő")
+megoldas: |
+  print("Jó reggelt!")
+  print("Mai nap: hétfő")
+tesztek:
+-
+segitseg: Nézd meg a hibaüzenetet: melyik sorra mutat? Az idézőjelek párban vannak? A <code>print</code> csupa kisbetű?

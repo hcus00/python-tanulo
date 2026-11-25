@@ -1,0 +1,128 @@
+# Összetartozó adatok kezelése: a lista
+
+## A probléma
+Képzeld el, hogy egy tanuló öt dolgozatának jegyét kell kezelned. Ha mindegyiknek külön változót adsz, a program gyorsan kezelhetetlenné válik.
+```python
+j1 = 4
+j2 = 5
+j3 = 3
+j4 = 5
+j5 = 4
+atlag = (j1 + j2 + j3 + j4 + j5) / 5
+```
+
+## Mi a baj ezzel?
+Ez a megoldás több szempontból is rossz:
+- minden új adathoz új változót kell létrehozni
+- ciklussal nem lehet végigmenni az adatokon
+- ha az adatok száma változik, át kell írni a programot
+- 100 tanuló esetén 100 változó kellene
+
+## A megoldás: a lista
+A <b>lista</b> több összetartozó adatot egyetlen néven tárol. Szögletes zárójelben, vesszővel elválasztva adjuk meg az elemeit. Az üres lista <code>[]</code>.
+```python
+jegyek = [4, 5, 3, 5, 4]
+print(jegyek)        # [4, 5, 3, 5, 4]
+print(len(jegyek))   # 5
+
+nevek = ["Anna", "Bence", "Csilla"]
+vegyes = ["Dani", 16, True]
+ures = []
+```
+
+## A lista tulajdonságai
+Ezeket érdemes megjegyezned:
+- az elemek sorrendje számít
+- ugyanaz az érték többször is szerepelhet
+- az elemek lehetnek különböző típusúak is, de gyakran azonosak
+- a hosszúságot a <code>len()</code> adja meg
+- a lista a program közben bővíthető és módosítható
+
+## Lista feltöltése adatokkal
+Gyakori feladat, hogy a felhasználó adataiból építsünk listát. Egy üres listával indulunk, és az <code>append</code> minden új elemet a lista végére fűz. Ez az egyetlen listás függvény, amire most szükségünk van, a többit a 11. évfolyamon tanuljuk meg részletesen.
+```python
+n = int(input("Hány jegy? "))
+jegyek = []
+for i in range(n):
+    jegyek.append(int(input("Jegy: ")))
+print(jegyek)
+```
+
+## Összefoglalás
+A lista sok összetartozó adatot kezel egy néven. Szögletes zárójelben áll, az elemeket vessző választja el. A len() a hossz, az append a végére fűz.
+
+### teszt
+kerdes: Mi a lista fő előnye a külön változókkal szemben?
+valaszok:
+- sok összetartozó adat egy néven kezelhető, ciklussal feldolgozható
+- gyorsabban fut a program
+- csak számokat lehet benne tárolni
+jo: 0
+magyarazat: A lista nem gyorsabb, de lehetővé teszi az adatok ciklusos feldolgozását.
+
+### teszt
+kerdes: Melyik helyes lista?
+valaszok:
+- [1, 2, 3]
+- (1, 2, 3
+- {1; 2; 3}
+jo: 0
+magyarazat: A listát szögletes zárójel jelöli, az elemeket vessző választja el.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [4, 8, 15, 16]
+  print(len(l))
+elfogad:
+- 4
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = []
+  l.append(3)
+  l.append(7)
+  print(len(l))
+elfogad:
+- 2
+segitseg: Az üres listához két elemet fűztünk.
+
+### kod
+kerdes: Olvass be három egész számot (külön sorban), tedd őket egy listába, és írd ki a listát (<code>print(lista)</code>). Például 3, 5, 9 → <code>[3, 5, 9]</code>.
+kezdokod: |
+  lista = []
+
+megoldas: |
+  lista = []
+  for i in range(3):
+      lista.append(int(input()))
+  print(lista)
+tesztek:
+- 3\n5\n9
+- 0\n-1\n7
+segitseg: Üres listából indulj, és az <code>append</code> egyesével rakja bele az elemeket.
+
+### kod
+kerdes: Az első sorban az elemek száma (n), a következő n sorban az elemek vannak. Töltsd fel velük a listát, és írd ki.
+kezdokod: |
+  n = int(input())
+  lista = []
+
+megoldas: |
+  n = int(input())
+  lista = []
+  for i in range(n):
+      lista.append(int(input()))
+  print(lista)
+tesztek:
+- 3\n4\n5\n6
+- 1\n9
+- 5\n1\n2\n3\n4\n5
+
+### mikiir
+kod: |
+  l = []
+  l.append(3)
+  l.append(5)
+  print(l)

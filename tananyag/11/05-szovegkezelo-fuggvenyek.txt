@@ -1,0 +1,264 @@
+# Szövegkezelő metódusok
+
+## Szövegmetódusok
+A szövegeknek is vannak metódusai, ezeket is a szöveg neve után, ponttal hívjuk (<code>s.upper()</code>). Fontos szabály: a szöveg nem módosítható, ezért a metódusok <b>új szöveget adnak vissza</b>, az eredeti változatlan marad. Ha az eredményt meg akarod tartani, értékül kell adni egy változónak.
+```python
+s = "Alma"
+s.upper()
+print(s)      # Alma, nem változott
+s = s.upper()
+print(s)      # ALMA
+```
+
+## Kis- és nagybetűk
+Néhány gyakran használt metódus:
+- <code>upper()</code> csupa nagybetűssé alakít
+- <code>lower()</code> csupa kisbetűssé alakít
+- <code>capitalize()</code> csak az első betűt írja nagybetűvel
+- <code>title()</code> minden szó első betűjét nagybetűvel írja
+A <code>lower()</code> összehasonlításnál hasznos: így a kis- és nagybetű eltérése nem számít.
+```python
+print("hello VILÁG".upper())        # HELLO VILÁG
+print("Hello VILÁG".lower())        # hello világ
+print("hello világ".capitalize())   # Hello világ
+print("hello világ".title())        # Hello Világ
+print("Igen".lower() == "igen")     # True
+```
+
+## Szóközök eltávolítása
+A <code>strip()</code> eltávolítja a szöveg elejéről és végéről a szóközöket (és a sortörést), az <code>lstrip()</code> csak az elejéről, az <code>rstrip()</code> csak a végéről. A felhasználótól beolvasott adatok tisztításánál hasznos.
+```python
+print("  szia  ".strip() + "!")    # szia!
+print("  szia  ".lstrip() + "|")   # szia  |
+```
+
+## Keresés a szövegben
+A részszövegek kereséséhez ezek a műveletek valók:
+- <code>x in s</code> igaz, ha az x részszöveg szerepel az s-ben
+- <code>s.find(x)</code> az x <b>első előfordulásának indexét</b> adja, ha nincs ilyen, <code>-1</code>-et
+- <code>s.index(x)</code> ugyanezt adja, de ha nincs ilyen, <code>ValueError</code> keletkezik
+- <code>s.count(x)</code> az x (nem átfedő) előfordulásainak számát adja
+- <code>s.startswith(x)</code> és <code>s.endswith(x)</code> azt vizsgálja, hogy az s x-szel kezdődik, illetve végződik-e
+```python
+s = "banana"
+print("nan" in s)          # True
+print(s.find("an"))        # 1
+print(s.find("x"))         # -1
+print(s.count("an"))       # 2
+print(s.startswith("ba"))  # True
+print(s.endswith("na"))    # True
+```
+
+## Csere
+Az <code>s.replace(régi, új)</code> minden előfordulást lecserél. Harmadik paraméterként megadható, legfeljebb hányat cseréljen. A csere nem módosítja az eredeti szöveget, hanem újat ad vissza. Törlésre is jó: ha az új szöveg üres, a régi részszöveg eltűnik.
+```python
+s = "alma a fa alatt"
+print(s.replace("a", "o"))       # olmo o fo olott
+print(s.replace("a", "o", 2))    # olmo a fa alatt
+print(s.replace(" ", ""))        # almaafaalatt
+```
+
+## Karakterek vizsgálata
+Az <code>isdigit()</code>, <code>isalpha()</code>, <code>isspace()</code>, <code>isupper()</code> és <code>islower()</code> logikai értéket ad arról, milyen karakterekből áll a szöveg. Az <code>isdigit()</code> beolvasásnál különösen hasznos: előbb megvizsgálhatod, hogy a szöveg csupa számjegy-e, így elkerülhető a <code>ValueError</code>. Figyelj arra, hogy a negatív szám (<code>-5</code>) és a tizedes tört (<code>2.5</code>) szövege nem csupa számjegy, ezekre az <code>isdigit()</code> <code>False</code>-t ad.
+```python
+print("123".isdigit())    # True
+print("12a".isdigit())    # False
+print("alma".isalpha())   # True
+print("Alma".isupper())   # False
+
+szoveg = input("Szám: ")
+if szoveg.isdigit():
+    print(int(szoveg) * 2)
+else:
+    print("Ez nem szám!")
+```
+
+## Karakterkódok: ord és chr
+Minden karakternek van egy egész számú kódja. Az <code>ord(betu)</code> a karakter kódját adja, a <code>chr(kod)</code> a kódhoz tartozó karaktert. Az angol ábécé kisbetűi egymás után következő kódokat kapnak, ezért a betűkkel „számolni” is lehet. Ez az eltolásos (Caesar-féle) titkosítás alapja. Az ékezetes betűk az angol ábécén kívül esnek, ezért a titkosításnál ezekre külön figyelni kell.
+```python
+print(ord("a"))             # 97
+print(chr(98))              # b
+print(chr(ord("a") + 2))    # c
+
+# minden betű 3 hellyel odébb
+szoveg = "alma"
+kod = ""
+for betu in szoveg:
+    uj = (ord(betu) - ord("a") + 3) % 26
+    kod += chr(uj + ord("a"))
+print(kod)    # dopd
+```
+
+## Tipikus szövegfeladatok
+Néhány gyakori feladat megoldása:
+- palindróma: előről és hátulról olvasva ugyanaz a szöveg
+- magánhangzók megszámlálása (megszámlálás tétele)
+- a szöveg szavainak száma (<code>split</code> és <code>len</code>)
+```python
+szo = "Level"
+szo = szo.lower()
+if szo == szo[::-1]:
+    print("palindróma")
+else:
+    print("nem palindróma")
+
+mondat = "A Python izgalmas"
+db = 0
+for betu in mondat.lower():
+    if betu in "aáeéiíoóöőuúüű":
+        db += 1
+print(db)                     # 5
+print(len(mondat.split()))    # 3
+```
+
+## Összefoglalás
+A szövegmetódusok új szöveget adnak vissza, az eredeti nem változik. Kis- és nagybetű: upper, lower, capitalize, title. Tisztítás: strip. Keresés: in, find, index, count, startswith, endswith. Csere: replace. Vizsgálat: isdigit, isalpha. Karakterkód: ord, chr.
+
+### teszt
+kerdes: Mit ír ki a program?
+kod: |
+  s = "Python"
+  s.lower()
+  print(s)
+valaszok:
+- python
+- Python
+- hiba
+jo: 1
+magyarazat: A szöveg nem módosítható, a lower() új szöveget ad vissza, de azt nem tároltuk el.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: print("alma".replace("a", "e"))
+elfogad:
+- elme
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: print("banana".count("a"), "banana".find("n"))
+elfogad:
+- 3 2
+segitseg: Az a háromszor szerepel, az n első előfordulásának indexe 2.
+
+### beiros
+kerdes: Mit ír ki? (A számot írd be.)
+kod: print(ord("c") - ord("a"))
+elfogad:
+- 2
+
+### teszt
+kerdes: Mi a különbség a find és az index között, ha a keresett részszöveg nincs meg?
+valaszok:
+- a find -1-et ad, az index ValueError-t okoz
+- a find ValueError-t okoz, az index -1-et ad
+- nincs különbség
+jo: 0
+magyarazat: A find hibaüzenet helyett -1-et ad vissza.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  szo = "kajak"
+  print(szo == szo[::-1])
+elfogad:
+- True
+segitseg: A szöveg visszafelé olvasva is ugyanaz.
+
+### kod
+kerdes: Olvass be egy szót, és írd ki úgy, hogy az első betűje nagybetű, a többi kisbetű. Például <code>pYTHON</code> → <code>Python</code>.
+kezdokod: |
+  szo = input()
+
+megoldas: |
+  szo = input()
+  print(szo.capitalize())
+tesztek:
+- pYTHON
+- alma
+- KUTYA
+- x
+
+### kod
+kerdes: Olvass be egy szöveget, és számold meg, hány <code>a</code> betű van benne, a kis- és nagybetűt nem megkülönböztetve.
+kezdokod: |
+  szoveg = input()
+
+megoldas: |
+  szoveg = input()
+  print(szoveg.lower().count("a"))
+tesztek:
+- Alma a fán
+- xyz
+- AaAa
+
+### kod
+kerdes: Olvass be egy szöveget. A szóközeit cseréld kötőjelre, majd írd ki csupa nagybetűvel. Például <code>alma fa</code> → <code>ALMA-FA</code>.
+kezdokod: |
+  szoveg = input()
+
+megoldas: |
+  szoveg = input()
+  print(szoveg.replace(" ", "-").upper())
+tesztek:
+- alma fa
+- egy
+- a b c
+
+### kod
+kerdes: Titkosítsd a szöveget: minden kisbetű (a–z) helyett az ábécében következő betűt írd ki (a z után újra az a jön), a szóközöket hagyd. Például <code>abc xyz</code> → <code>bcd yza</code>. (Ékezetes betű nem lesz.)
+kezdokod: |
+  szoveg = input()
+
+megoldas: |
+  szoveg = input()
+  kod = ""
+  for betu in szoveg:
+      if betu == " ":
+          kod += " "
+      else:
+          kod += chr((ord(betu) - ord("a") + 1) % 26 + ord("a"))
+  print(kod)
+tesztek:
+- abc xyz
+- python
+- z
+segitseg: Az <code>ord</code> kódot ad, a <code>chr</code> betűt. Az ábécé végén a maradékos osztás visz vissza az elejére.
+
+### kod
+kerdes: Olvass be egy szót. Írd ki <code>igen</code>-t, ha palindrom (visszafelé olvasva is ugyanaz, a kis- és nagybetűt nem számítjuk különbözőnek), különben <code>nem</code>-et.
+kezdokod: |
+  szo = input()
+
+megoldas: |
+  szo = input()
+  szo = szo.lower()
+  if szo == szo[::-1]:
+      print("igen")
+  else:
+      print("nem")
+tesztek:
+- Level
+- alma
+- A
+- Anna
+- ab
+
+### hiba
+kerdes: A program a szöveget csupa nagybetűvel akarja kiírni, de furcsa szöveget ír ki. Javítsd ki.
+kezdokod: |
+  szoveg = input()
+  print(szoveg.upper)
+megoldas: |
+  szoveg = input()
+  print(szoveg.upper())
+tesztek:
+- alma
+- Python
+- x
+segitseg: A metódusok hívásához zárójel kell, akkor is, ha nincs benne paraméter.
+
+### mikiir
+kod: print("Alma Fa".lower().count("a"))
+
+### mikiir
+kod: print(ord("c") - ord("a"))

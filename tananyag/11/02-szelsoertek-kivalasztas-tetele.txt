@@ -1,0 +1,377 @@
+# Szélsőérték-kiválasztás tétele (min, max)
+
+## Mi a feladat?
+A <b>szélsőérték-kiválasztás</b> tétele a sorozat legnagyobb (maximum) vagy legkisebb (minimum) elemét keresi meg. Példák: ki a legmagasabb tanuló, melyik volt a hét leghidegebb napja, mi a legtöbb pont. A kimenet lehet az elem értéke, a helye, vagy mindkettő. Ez a tétel <b>mindig minden elemet megvizsgál</b>, ezért <code>for</code> ciklust használunk.
+
+## Az algoritmus szavakkal
+A maximum kiválasztása:
+- az első elemet kinevezzük a legnagyobbnak
+- végigmegyünk az elemeken
+- ha egy elem nagyobb az eddigi legnagyobbnál, ő lesz az új legnagyobb
+- a ciklus végén a <code>legnagyobb</code> változó a maximum
+
+## A maximum kiválasztása folyamatábrán
+A ciklus a megszámlálásra hasonlít, de nem számláló nő, hanem a <code>legnagyobb</code> változó értéke cserélődik, ha az elem nagyobb nála. Figyeld meg, hogy a kezdőérték a lista első eleme (<code>l[0]</code>).
+@abra maximum
+
+## A program
+A kezdőérték a lista első eleme. A ciklus ezt az elemet is megvizsgálja, önmagával hasonlítja össze, ez nem hiba, csak egy felesleges lépés.
+```python
+szamok = [14, 8, 27, 3, 19]
+legnagyobb = szamok[0]
+for szam in szamok:
+    if szam > legnagyobb:
+        legnagyobb = szam
+print("A legnagyobb:", legnagyobb)   # 27
+```
+
+## Nyomkövetés
+A <code>legnagyobb</code> változó értéke az egyes körök után:
+- kezdetben: 14 (az első elem)
+- a 14 után: 14
+- a 8 után: 14
+- a 27 után: 27
+- a 3 után: 27
+- a 19 után: 27
+<b>Tipp:</b> a Játszótéren (vagy bármelyik <b>▶ Kipróbálom</b> szerkesztőben) a <b>🔍 Lépésenként</b> gomb pontosan ezt csinálja: soronként végigköveti a programot, és megmutatja a változók értékét.
+
+## A legnagyobb változása képen
+Az oszlopok a lista elemei. Az alsó sorban az látszik, mennyi a <b>legnagyobb</b> változó értéke az adott elem vizsgálata után. Csak akkor cserélődik, ha az elem nagyobb az eddigi legnagyobbnál (ezek a kiemelt oszlopok).
+@abra maximum_nyom
+
+## Miért nem 0 a kezdőérték?
+Az összegzésnél a 0 jó kezdőérték volt, a maximumnál viszont <b>hibás</b> lehet. Ha minden szám negatív, a 0 nagyobb lenne bármelyiknél, és a program 0-t adna eredményül, pedig a 0 nincs is a listában. A kezdőértéknek mindig a lista egy eleme kell legyen, általában az első.
+```python
+szamok = [-5, -2, -9]
+legnagyobb = 0                 # hibás kezdőérték
+for szam in szamok:
+    if szam > legnagyobb:
+        legnagyobb = szam
+print(legnagyobb)              # 0, pedig a helyes válasz: -2
+```
+
+## A minimum
+A minimum kiválasztása szinte ugyanaz, csak az összehasonlítás irányát fordítjuk meg.
+```python
+szamok = [14, 8, 27, 3, 19]
+legkisebb = szamok[0]
+for szam in szamok:
+    if szam < legkisebb:
+        legkisebb = szam
+print("A legkisebb:", legkisebb)   # 3
+```
+
+## A szélsőérték helye
+Ha a szélsőérték helyére van szükség, az indexet kell megjegyezni, ezért index szerint járjuk be a listát. A <code>max_index</code> változó az eddigi legnagyobb elem indexét tárolja, az értéket a <code>szamok[max_index]</code> adja. A <code>for</code> változója itt is <code>i</code>, a megjegyzett helyé pedig <code>max_index</code>.
+```python
+szamok = [14, 8, 27, 3, 19]
+max_index = 0
+for i in range(1, len(szamok)):
+    if szamok[i] > szamok[max_index]:
+        max_index = i
+print("Indexe:", max_index)               # 2
+print("Sorszáma:", max_index + 1)         # 3
+print("Értéke:", szamok[max_index])       # 27
+```
+
+## Első vagy utolsó előfordulás?
+Ha a legnagyobb érték többször is szerepel, az összehasonlítás dönti el, melyik helyet kapjuk:
+- a <code>&gt;</code> csak szigorúan nagyobbnál cserél, ezért az <b>első</b> előfordulás helye marad meg
+- a <code>&gt;=</code> egyenlőnél is cserél, ezért az <b>utolsó</b> előfordulás helye lesz az eredmény
+```python
+szamok = [5, 9, 2, 9]
+elso = 0
+utolso = 0
+for i in range(1, len(szamok)):
+    if szamok[i] > szamok[elso]:
+        elso = i
+    if szamok[i] >= szamok[utolso]:
+        utolso = i
+print(elso, utolso)   # 1 3
+```
+
+## Szélsőérték feltétellel
+Gyakori feladat a legnagyobb <b>páros</b> szám megkeresése. Itt a kezdőérték nem lehet az első elem, mert az nem biztos, hogy páros. Ezért egy logikai jelzőt használunk: a <code>van</code> változó megmondja, találtunk-e már megfelelő elemet. Az első megfelelő elem lesz a kezdőérték, utána a szokásos módon hasonlítunk.
+```python
+szamok = [7, 14, 3, 20, 9]
+van = False
+legnagyobb = 0
+for szam in szamok:
+    if szam % 2 == 0:
+        if not van or szam > legnagyobb:
+            legnagyobb = szam
+            van = True
+if van:
+    print("A legnagyobb páros szám:", legnagyobb)   # 20
+else:
+    print("Nincs páros szám.")
+```
+
+## Rövidítés: min és max
+A legnagyobb és a legkisebb elemet a <code>max(lista)</code> és a <code>min(lista)</code> függvény adja. A helyét az <code>index</code> segítségével kapod meg, ez az <b>első</b> előfordulás helye. A <code>count</code> a darabszámot adja. A feltételes szélsőértékhez továbbra is ciklus kell.
+```python
+szamok = [5, 9, 2, 9]
+print(max(szamok))                   # 9
+print(min(szamok))                   # 2
+print(szamok.index(max(szamok)))     # 1
+print(szamok.count(max(szamok)))     # 2
+```
+
+## Üres lista
+Üres listának nincs legnagyobb eleme. A <code>szamok[0]</code> <code>IndexError</code>-t, a <code>max([])</code> pedig <code>ValueError</code>-t okoz. Ha előfordulhat üres lista, előbb ellenőrizd a hosszát.
+```python
+szamok = []
+if len(szamok) > 0:
+    print(max(szamok))
+else:
+    print("A lista üres.")
+```
+
+## Összefoglalás
+A maximum kiválasztásánál a kezdőérték a lista egy eleme, a ciklus pedig minden elemet megvizsgál. A minimumnál az összehasonlítás iránya fordított. A hely megjegyzéséhez index szerint járjuk be a listát, a &gt; az első, a &gt;= az utolsó előfordulást adja. Feltételes szélsőértéknél jelzővel követjük, találtunk-e már megfelelő elemet. A max, min, index és count rövidítések egyszerű esetben elegendők.
+
+### teszt
+kerdes: Miért hibás kezdőérték a 0 a maximum kiválasztásánál?
+valaszok:
+- mert ha minden szám negatív, a 0 maradna az eredmény
+- mert a 0 nem szám
+- mert a ciklus nem indulna el
+jo: 0
+magyarazat: A kezdőértéknek a lista egy eleme kell legyen.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [4, 11, 7, 11]
+  legnagyobb = l[0]
+  for x in l:
+      if x > legnagyobb:
+          legnagyobb = x
+  print(legnagyobb)
+elfogad:
+- 11
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [8, -3, 5]
+  legkisebb = l[0]
+  for x in l:
+      if x < legkisebb:
+          legkisebb = x
+  print(legkisebb)
+elfogad:
+- -3
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [5, 9, 2, 9]
+  max_index = 0
+  for i in range(1, len(l)):
+      if l[i] >= l[max_index]:
+          max_index = i
+  print(max_index)
+elfogad:
+- 3
+segitseg: A >= egyenlőnél is cserél, ezért az utolsó 9 helye marad.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [5, 9, 2, 9]
+  print(l.index(max(l)), l.count(max(l)))
+elfogad:
+- 1 2
+segitseg: Az index az első előfordulás helyét adja, a count a darabszámot.
+
+### teszt
+kerdes: Melyik hibát okozza a max([])?
+valaszok:
+- IndexError
+- ValueError
+- NameError
+jo: 1
+magyarazat: Üres sorozatnak nincs legnagyobb eleme, ezért ValueError keletkezik.
+
+### teszt
+kerdes: Az ábra szerint mi a legnagyobb változó kezdőértéke?
+abra: maximum
+valaszok:
+- a lista első eleme (l[0])
+- 0
+- a lista hossza
+jo: 0
+magyarazat: A lista egy tényleges elemével indulunk, így negatív számoknál sem lesz hiba.
+
+### kod
+kerdes: Keresd meg a lista legnagyobb elemét a <b>max függvény nélkül</b> (szélsőérték-kiválasztás). <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 9, 2, 7]
+
+megoldas: |
+  lista = [4, 9, 2, 7]
+  legnagyobb = lista[0]
+  for x in lista:
+      if x > legnagyobb:
+          legnagyobb = x
+  print(legnagyobb)
+tesztek:
+- |
+     || pre: lista = [4, 9, 2, 7]
+- |
+     || pre: lista = [-5, -2, -9]
+- |
+     || pre: lista = [3]
+segitseg: Miért a lista első elemével indulunk, és nem 0-val? Gondolj a csupa negatív listára.
+
+### kod
+kerdes: Add meg a lista legkisebb elemének <b>indexét</b>. Ha több ilyen van, az elsőét. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 2, 7, 2]
+
+megoldas: |
+  lista = [4, 2, 7, 2]
+  hely = 0
+  for i in range(len(lista)):
+      if lista[i] < lista[hely]:
+          hely = i
+  print(hely)
+tesztek:
+- |
+     || pre: lista = [4, 2, 7, 2]
+- |
+     || pre: lista = [5, 6, 7]
+- |
+     || pre: lista = [9, 8, 7, 1]
+- |
+     || pre: lista = [3]
+
+### kod
+kerdes: Add meg a lista legnagyobb <b>páros</b> elemét. A listában biztosan van páros szám. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [5, 8, 3, 6]
+
+megoldas: |
+  lista = [5, 8, 3, 6]
+  legnagyobb = None
+  for x in lista:
+      if x % 2 == 0:
+          if legnagyobb is None or x > legnagyobb:
+              legnagyobb = x
+  print(legnagyobb)
+tesztek:
+- |
+     || pre: lista = [5, 8, 3, 6]
+- |
+     || pre: lista = [1, 2, 3]
+- |
+     || pre: lista = [10, 4, 12, 3]
+- |
+     || pre: lista = [-4, 7, -2]
+segitseg: A legnagyobb kezdőértéke nem lehet egy tetszőleges szám, hiszen lehet, hogy a páros elemek mind negatívak. Mit tehetsz?
+
+### kod
+kerdes: Írd ki a lista legnagyobb és legkisebb elemének különbségét. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 9, 2, 7]
+
+megoldas: |
+  lista = [4, 9, 2, 7]
+  print(max(lista) - min(lista))
+tesztek:
+- |
+     || pre: lista = [4, 9, 2, 7]
+- |
+     || pre: lista = [5]
+- |
+     || pre: lista = [-3, 3]
+
+### hiba
+kerdes: A program a lista legnagyobb elemét keresi, de csupa negatív számnál rossz eredményt ad. Javítsd ki. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [-5, -2, -9]
+  legnagyobb = 0
+  for x in lista:
+      if x > legnagyobb:
+          legnagyobb = x
+  print(legnagyobb)
+megoldas: |
+  lista = [-5, -2, -9]
+  legnagyobb = lista[0]
+  for x in lista:
+      if x > legnagyobb:
+          legnagyobb = x
+  print(legnagyobb)
+tesztek:
+- |
+     || pre: lista = [-5, -2, -9]
+- |
+     || pre: lista = [4, 9, 2]
+- |
+     || pre: lista = [-1]
+segitseg: Mi legyen a legnagyobb kezdőértéke, hogy minden listánál működjön?
+
+### sorrend
+kerdes: Rendezd sorba a sorokat: a program keresse meg a lista legnagyobb elemét.
+sorok: |
+  lista = [4, 9, 2, 7]
+  legnagyobb = lista[0]
+  for x in lista:
+      if x > legnagyobb:
+          legnagyobb = x
+  print(legnagyobb)
+tesztek:
+-
+
+### nyomkovetes
+kerdes: Kövesd végig a programot, és töltsd ki a táblázatot: a változók értéke minden alkalommal, amikor a program a(z) 5. sorhoz ér (a sor végrehajtása <b>előtt</b>). Az első sor példa. Segít a 🔍 Lépésenként gomb a Játszótéren.
+kod: |
+  lista = [3, 5, 4, 8, 6, 11]
+  legnagyobb = lista[0]
+  for x in lista:
+      if x > legnagyobb:
+          legnagyobb = x
+  print(legnagyobb)
+sor: 5
+valtozok: x, legnagyobb
+
+### abrakod
+kerdes: Melyik program felel meg a folyamatábrának?
+abra: maximum
+valaszok:
+- |
+    legnagyobb = 0
+    for elem in lista:
+        if elem > legnagyobb:
+            legnagyobb = elem
+    print(legnagyobb)
+- |
+    legnagyobb = lista[0]
+    for elem in lista:
+        if elem < legnagyobb:
+            legnagyobb = elem
+    print(legnagyobb)
+- |
+    legnagyobb = lista[0]
+    for elem in lista:
+        if elem > legnagyobb:
+            legnagyobb = elem
+    print(legnagyobb)
+jo: 2
+magyarazat: A kezdőérték a lista első eleme, a csere pedig akkor történik, ha az elem <b>nagyobb</b> az eddigi legnagyobbnál.
+
+### beiros
+kerdes: Az ábra szerint mennyi a <code>legnagyobb</code> értéke a 4. elem (7) vizsgálata után? (A számot írd be.)
+abra: maximum_nyom
+elfogad:
+- 9
+
+### mikiir
+kod: |
+  l = [4, 9, 9, 2]
+  h = 0
+  for i in range(len(l)):
+      if l[i] > l[h]:
+          h = i
+  print(h)

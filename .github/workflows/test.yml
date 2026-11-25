@@ -1,0 +1,37 @@
+name: Tesztek
+
+# Minden feltöltésnél és pull requestnél lefut: ellenőrzi, hogy a generált adatfájlok a forrásfájlokból készültek,
+# és végigpróbálja az oldalt egy böngészőben (minden feladat megoldható, az érettségi mód működik, nincs konzolhiba,
+# az akadálymentességi ellenőrzés tiszta).
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  teszt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: A generált adatok egyeznek a tananyag/ forrásfájlokkal
+        run: python3 tools/build.py --check
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Függőségek telepítése
+        working-directory: tests
+        run: |
+          npm install
+          npx playwright install --with-deps chromium
+
+      - name: Böngészős végigpróba
+        working-directory: tests
+        run: npm test

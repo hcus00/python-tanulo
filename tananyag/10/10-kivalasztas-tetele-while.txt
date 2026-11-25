@@ -1,0 +1,149 @@
+# Kiválasztás tétele: biztosan van ilyen elem (while)
+
+## Mi a feladat?
+A <b>kiválasztás</b> tétele azt kérdezi: <b>hol</b> van az első megfelelő elem, ha <b>biztosan van</b> ilyen? Az előfeltétel miatt nem kell azt vizsgálni, hogy elfogyott-e a lista. Példa: egy lista, amelyről tudjuk, hogy van benne 10-nél nagyobb szám, és meg kell adni az első helyét.
+
+## Eldöntés, keresés, kiválasztás
+Ez a három tétel egymás rokona:
+- <b>eldöntés</b>: van-e ilyen elem? (igen/nem)
+- <b>keresés</b>: hol van az első ilyen elem, <b>ha van</b>? (ellenőrizni kell a lista végét)
+- <b>kiválasztás</b>: hol van az első ilyen elem, ha <b>biztosan van</b>? (nem kell ellenőrizni a lista végét)
+
+## Az algoritmus szavakkal
+A kiválasztás a legegyszerűbb:
+- az <code>index</code> változót 0-ról indítjuk
+- addig lépünk, amíg az aktuális elem nem felel meg
+- a ciklus végén az <code>index</code> a keresett elem helye
+
+## A kiválasztás folyamatábrán
+A kiválasztásnál nincs „nincs ilyen elem” ág, mert a feladat garantálja, hogy van megfelelő elem. A ciklus biztosan megáll, és az <code>index</code> a keresett elem helye.
+@abra kivalasztas
+
+## A program
+Mivel biztosan van találat, a ciklusfeltételben elég az elemet vizsgálni.
+```python
+szamok = [3, 8, 12, 5, 20]   # biztosan van 10-nél nagyobb
+index = 0
+while szamok[index] <= 10:
+    index += 1
+print("Indexe:", index)      # 2
+```
+
+## Index, sorszám vagy érték?
+A keresésnél tanultakhoz hasonlóan itt is a feladat dönt:
+- index: <code>index</code>
+- sorszám („hányadik”): <code>index + 1</code>
+- az elem értéke: <code>szamok[index]</code>
+```python
+print("Indexe:", index)                    # 2
+print("Sorszáma:", index + 1)              # 3
+print("Az elem értéke:", szamok[index])    # 12
+```
+
+## Mikor veszélyes?
+Ha az előfeltétel mégsem teljesül, vagyis nincs megfelelő elem, az index túlfut a lista végén, és <code>IndexError</code> keletkezik. Ezért kiválasztást csak akkor használj, ha a feladat szövege garantálja, hogy van találat. Ha ebben nem vagy biztos, használd a keresést, mert az a „nincs ilyen” esetet is kezeli.
+
+## Összefoglalás
+A kiválasztás megadja az első megfelelő elem helyét, ha biztosan van ilyen. Az index 0-ról indul, és addig nő, amíg az elem nem megfelelő. A lista végét nem kell ellenőrizni, de ha mégsem volt találat, IndexError keletkezik. Az eredmény lehet index, sorszám vagy az elem értéke.
+
+### teszt
+kerdes: Mi a különbség a keresés és a kiválasztás között?
+valaszok:
+- a kiválasztásnál biztosan van megfelelő elem, ezért nem kell ellenőrizni a lista végét
+- a kiválasztás csak számokkal működik
+- a kiválasztás for ciklust használ
+jo: 0
+magyarazat: A kiválasztás előfeltétele, hogy biztosan van találat.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [3, 8, 12, 5, 20]
+  index = 0
+  while l[index] <= 10:
+      index += 1
+  print(index)
+elfogad:
+- 2
+
+### beiros
+kerdes: Mit ír ki? (A számot írd be.)
+kod: |
+  l = [3, 8, 12, 5, 20]
+  index = 0
+  while l[index] <= 10:
+      index += 1
+  print(l[index])
+elfogad:
+- 12
+segitseg: Az érték a lista[index] elem.
+
+### beiros
+kerdes: Mit ír ki? (A számot írd be.)
+kod: |
+  l = [3, 8, 12, 5, 20]
+  index = 0
+  while l[index] <= 10:
+      index += 1
+  print(index + 1)
+elfogad:
+- 3
+
+### teszt
+kerdes: Mi történik, ha a listában mégsem volt megfelelő elem?
+valaszok:
+- IndexError keletkezik
+- a program 0-t ír ki
+- a program hibaüzenet nélkül megáll
+jo: 0
+magyarazat: Az index túlfut a lista végén.
+
+### teszt
+kerdes: Miért nincs az ábrán „nincs ilyen elem” ág?
+abra: kivalasztas
+valaszok:
+- mert a feladat szerint biztosan van megfelelő elem
+- mert a program akkor nem ír ki semmit
+- mert a ciklus sosem áll meg
+jo: 0
+magyarazat: A kiválasztást akkor használjuk, ha a találat garantált.
+
+### kod
+kerdes: A listában biztosan van 10-zel osztható szám. Írd ki az <b>indexét</b> az elsőnek. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [3, 7, 20, 5, 30]
+  index = 0
+
+megoldas: |
+  lista = [3, 7, 20, 5, 30]
+  index = 0
+  while lista[index] % 10 != 0:
+      index += 1
+  print(index)
+tesztek:
+- |
+     || pre: lista = [3, 7, 20, 5, 30]
+- |
+     || pre: lista = [10]
+- |
+     || pre: lista = [1, 2, 3, 40]
+
+### kod
+kerdes: A szavak között biztosan van legalább 6 betűs. Írd ki az elsőt. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  szavak = ["fa", "alma", "szilva", "kör"]
+  index = 0
+
+megoldas: |
+  szavak = ["fa", "alma", "szilva", "kör"]
+  index = 0
+  while len(szavak[index]) < 6:
+      index += 1
+  print(szavak[index])
+tesztek:
+- |
+     || pre: szavak = ["fa", "alma", "szilva", "kör"]
+- |
+     || pre: szavak = ["hosszúszó"]
+- |
+     || pre: szavak = ["a", "b", "banán", "citrom!"]

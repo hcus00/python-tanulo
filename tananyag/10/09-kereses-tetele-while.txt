@@ -1,0 +1,243 @@
+# Keresés tétele: hol az első ilyen elem? (while)
+
+## Mi a feladat?
+A <b>keresés</b> tétele azt kérdezi: ha van a sorozatban a feltételnek megfelelő elem, <b>hol</b> van? Az eldöntés csak azt mondta meg, hogy van-e ilyen elem, a keresés a helyét is megadja. Példák: hányadik helyen áll az első elégtelen jegy, hol van az első 10-nél nagyobb szám. Mivel nem biztos, hogy van ilyen elem, a „nincs” esetet is kezelnünk kell.
+
+## Az algoritmus szavakkal
+A ciklus ugyanaz, mint az eldöntésnél, a különbség a végén van:
+- az <code>index</code> változót 0-ról indítjuk
+- addig lépünk, amíg van még elem, és az aktuális elem nem felel meg
+- a ciklus után: ha az <code>index</code> még a listán belül van, az <code>index</code> a keresett elem helye, egyébként nincs ilyen elem
+
+## A keresés folyamatábrán
+A ciklus ugyanaz, mint az eldöntésnél. A különbség: ha találtunk, nem azt írjuk ki, hogy van ilyen elem, hanem azt, <b>hol</b> van, vagyis az <code>index</code> értékét.
+@abra kereses
+
+## A program
+Keressük meg az első elégtelen (1-es) jegyet! A <code>for</code> ciklus változóját (<code>i</code>) a bejárásra tartogatjuk, a keresésnél az <code>index</code> nevet használjuk, mert ez a keresett hely.
+```python
+jegyek = [5, 4, 1, 3, 1]
+index = 0
+while index < len(jegyek) and jegyek[index] != 1:
+    index += 1
+if index < len(jegyek):
+    print("Az első elégtelen jegy indexe:", index)   # 2
+else:
+    print("Nincs elégtelen jegy.")
+```
+
+## Index vagy sorszám?
+A feladat szövege dönti el, mit kell kiírni:
+- az <b>index</b> a lista belső számozása, 0-tól indul
+- a <b>sorszám</b> a hétköznapi „hányadik”, 1-től indul, ezért <code>index + 1</code>
+- ha a szöveg azt kérdezi, „melyik indexen”, az <code>index</code> kell
+- ha azt kérdezi, „hányadik elem”, az <code>index + 1</code> kell
+```python
+print("Indexe:", index)           # 2
+print("Sorszáma:", index + 1)     # 3
+```
+
+## Index, sorszám, érték egy képen
+A kiemelt elem <b>értéke</b> -2, <b>indexe</b> 2 (0-tól számolva), <b>sorszáma</b> 3 (1-től számolva). Mindig olvasd el pontosan a feladatot: melyiket kérdezi?
+@abra index_sorszam
+
+## Az elem értéke
+Előfordulhat, hogy nem a helyet, hanem magát az elemet kérik. Ilyenkor a megtalált indexet visszahelyettesítjük a listába: <code>lista[index]</code>. Ez főleg akkor fontos, ha a feltételből nem derül ki az érték (például „10-nél nagyobb”). Ha a feltétel megadja az értéket (például „egyenlő 1-gyel”), nem kell kikeresni.
+```python
+szamok = [4, 8, 15, 6, 23]
+index = 0
+while index < len(szamok) and szamok[index] <= 10:
+    index += 1
+if index < len(szamok):
+    print("Az első 10-nél nagyobb szám:", szamok[index])   # 15
+    print("Indexe:", index)                                # 2
+    print("Sorszáma:", index + 1)                          # 3
+else:
+    print("Nincs ilyen szám.")
+```
+
+## Eldöntés és keresés
+A kettő összehasonlítva:
+- az <b>eldöntés</b> kimenete igen/nem
+- a <b>keresés</b> kimenete egy hely (vagy elem), illetve annak jelzése, hogy nincs ilyen
+- a ciklus mindkettőnél azonos, csak az eredmény kiolvasása más
+- a keresés mindig az <b>első</b> megfelelő elemet adja meg, a továbbiakat nem
+
+## Összefoglalás
+A keresés megadja az első megfelelő elem helyét, ha van ilyen. While ciklussal és index változóval oldjuk meg. A ciklus után az index &lt; len(l) vizsgálat dönti el, van-e találat. Az eredmény lehet index, sorszám (index + 1) vagy az elem értéke (lista[index]), ezt a feladat szövege dönti el.
+
+### teszt
+kerdes: Mit ad meg a keresés tétele?
+valaszok:
+- az első megfelelő elem helyét, ha van ilyen
+- csak azt, hogy van-e ilyen elem
+- az összes megfelelő elemet
+jo: 0
+magyarazat: A kereséssel az első találat helyét kapjuk meg.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [5, 4, 1, 3, 1]
+  index = 0
+  while index < len(l) and l[index] != 1:
+      index += 1
+  print(index)
+elfogad:
+- 2
+segitseg: Az első 1-es a harmadik elem, az indexe 2.
+
+### beiros
+kerdes: Mit ír ki? (A számot írd be.)
+kod: |
+  l = [5, 4, 1, 3, 1]
+  index = 0
+  while index < len(l) and l[index] != 1:
+      index += 1
+  print(index + 1)
+elfogad:
+- 3
+segitseg: A sorszám eggyel nagyobb az indexnél.
+
+### beiros
+kerdes: Mit ír ki? (A kimenetet írd be.)
+kod: |
+  l = [4, 8, 15, 6, 23]
+  index = 0
+  while index < len(l) and l[index] <= 10:
+      index += 1
+  print(l[index])
+elfogad:
+- 15
+segitseg: Az első 10-nél nagyobb elem értékét kérjük.
+
+### teszt
+kerdes: Hányadik elem a [3, 7, 8, 5] listában az első páros szám?
+valaszok:
+- 2
+- 3
+- 8
+jo: 1
+magyarazat: A 8 indexe 2, a sorszáma pedig 3.
+
+### teszt
+kerdes: Mit ír ki az ábrán látható algoritmus, ha a keresett elem a 3. helyen (index = 2) van?
+abra: kereses
+valaszok:
+- Ki: 2, vagyis az index
+- Ki: nincs ilyen elem
+- Ki: 3, az elem sorszáma
+jo: 0
+magyarazat: Az ábra az index értékét írja ki, ami itt 2.
+
+### kod
+kerdes: Keresd meg az első negatív elem <b>indexét</b>. Ha nincs ilyen, írd ki: <code>nincs</code>. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [4, 7, -2, 3, -9]
+  index = 0
+
+megoldas: |
+  lista = [4, 7, -2, 3, -9]
+  index = 0
+  while index < len(lista) and lista[index] >= 0:
+      index += 1
+  if index < len(lista):
+      print(index)
+  else:
+      print("nincs")
+tesztek:
+- |
+     || pre: lista = [4, 7, -2, 3, -9]
+- |
+     || pre: lista = [1, 2, 3]
+- |
+     || pre: lista = [-1]
+
+### kod
+kerdes: Keresd meg az első 5-nél nagyobb elem <b>sorszámát</b> (az első elem sorszáma 1). Ha nincs ilyen, írd ki: <code>nincs</code>. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [2, 4, 9, 1, 12]
+  index = 0
+
+megoldas: |
+  lista = [2, 4, 9, 1, 12]
+  index = 0
+  while index < len(lista) and lista[index] <= 5:
+      index += 1
+  if index < len(lista):
+      print(index + 1)
+  else:
+      print("nincs")
+tesztek:
+- |
+     || pre: lista = [2, 4, 9, 1, 12]
+- |
+     || pre: lista = [1, 2, 3]
+- |
+     || pre: lista = [6]
+segitseg: A sorszám eggyel nagyobb, mint az index.
+
+### kod
+kerdes: Keresd meg az első páros elem <b>értékét</b>. Ha nincs ilyen, írd ki: <code>nincs</code>. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [3, 7, 8, 5, 4]
+  index = 0
+
+megoldas: |
+  lista = [3, 7, 8, 5, 4]
+  index = 0
+  while index < len(lista) and lista[index] % 2 != 0:
+      index += 1
+  if index < len(lista):
+      print(lista[index])
+  else:
+      print("nincs")
+tesztek:
+- |
+     || pre: lista = [3, 7, 8, 5, 4]
+- |
+     || pre: lista = [1, 3]
+- |
+     || pre: lista = [2, 4]
+
+### hiba
+kerdes: A feladat: írd ki az első 5-nél nagyobb elem <b>sorszámát</b> (az első elem sorszáma 1). A program az indexét írja ki. Javítsd ki. <b>Az első sort ne módosítsd.</b>
+kezdokod: |
+  lista = [2, 4, 9, 1, 12]
+  index = 0
+  while index < len(lista) and lista[index] <= 5:
+      index += 1
+  if index < len(lista):
+      print(index)
+  else:
+      print("nincs")
+megoldas: |
+  lista = [2, 4, 9, 1, 12]
+  index = 0
+  while index < len(lista) and lista[index] <= 5:
+      index += 1
+  if index < len(lista):
+      print(index + 1)
+  else:
+      print("nincs")
+tesztek:
+- |
+     || pre: lista = [2, 4, 9, 1, 12]
+- |
+     || pre: lista = [1, 2, 3]
+- |
+     || pre: lista = [6]
+
+### beiros
+kerdes: Az ábrán a -2 érték a 3. sorszámú elem. Mi az indexe? (A számot írd be.)
+abra: index_sorszam
+elfogad:
+- 2
+
+### mikiir
+kod: |
+  l = [4, 7, 9, 12]
+  index = 0
+  while index < len(l) and l[index] < 8:
+      index += 1
+  print(index + 1)

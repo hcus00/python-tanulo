@@ -1,0 +1,171 @@
+# Vegyes gyakorlófeladatok (9. évfolyam)
+
+## Hogyan fogj hozzá?
+Egy hosszabb feladatnál ne kezdj rögtön kódolni. Haladj lépésről lépésre:
+1. Értsd meg a feladatot: mi a bemenet, mi a kimenet, és próbáld ki néhány példán fejben.
+2. Bontsd részfeladatokra.
+3. Írd le szavakkal vagy folyamatábrán.
+4. Programozd részenként, és mindegyiket próbáld ki.
+5. Tesztelj különleges esetekkel is.
+
+## 1. feladat: számkitaláló
+A gép gondol egy számot 1 és 100 között, te tippelsz, ő pedig megmondja, hogy nagyobbra vagy kisebbre gondolt. Ez a feladat több tanult elemet használ: véletlen szám, feltételes ciklus, elágazás, számláló.
+```python
+import random
+gondolt = random.randint(1, 100)
+tipp = int(input("Tipp: "))
+probalkozas = 1
+while tipp != gondolt:
+    if tipp < gondolt:
+        print("Nagyobbra gondoltam.")
+    else:
+        print("Kisebbre gondoltam.")
+    tipp = int(input("Tipp: "))
+    probalkozas += 1
+print("Eltaláltad", probalkozas, "próbából!")
+```
+
+## 2. feladat: osztók száma
+Adott egy n pozitív egész szám. Számoljuk meg az osztóit! Mivel minden i-re egyenként el kell dönteni, hogy osztója-e n-nek, ez számlálós ciklus és elágazás. Ha a szám pontosan két osztóval rendelkezik, prímszám.
+```python
+n = int(input("n = "))
+db = 0
+for i in range(1, n + 1):
+    if n % i == 0:
+        db += 1
+print(n, "osztóinak száma:", db)
+if db == 2:
+    print("prímszám")
+```
+
+## 3. feladat: átlag a nulláig
+A felhasználó addig ad meg számokat, amíg 0-t nem ír. Írjuk ki az átlagukat! Az ismétlések száma előre nem ismert, ezért while ciklus kell. Az if az üres esetet védi: ha rögtön 0-t írnak, nem szabad nullával osztani.
+```python
+szam = int(input("Szám (0 = vége): "))
+osszeg = 0
+db = 0
+while szam != 0:
+    osszeg += szam
+    db += 1
+    szam = int(input("Szám (0 = vége): "))
+if db > 0:
+    print("Átlag:", osszeg / db)
+else:
+    print("Nem volt adat.")
+```
+
+## Tippek a hibakereséshez
+Írass ki köztes értékeket, hogy lásd, mit csinál a program. Adj beszédes neveket a változóknak. Mindig próbáld ki a határesetekkel is: például n = 1, vagy egy rögtön 0-val induló bemenettel.
+
+## Összefoglalás
+Összetett feladatnál előbb értsd meg és bontsd részekre a problémát, utána kódolj és tesztelj. A tanult elemeket (változók, input, elágazás, for, while) együtt használhatod.
+
+### teszt
+kerdes: Mi az első lépés egy összetett feladat megoldásánál?
+valaszok:
+- megérteni: mi a bemenet, mi a kimenet, és kipróbálni példán
+- azonnal megírni a teljes kódot
+- kimásolni egy kész megoldást
+jo: 0
+magyarazat: A jó terv sokat spórol a hibakereséssel.
+
+### beiros
+kerdes: Hány osztója van a 12-nek? Ennyit ír ki az osztós program, ha n = 12. (A számot írd be.)
+elfogad:
+- 6
+segitseg: Az osztók: 1, 2, 3, 4, 6, 12.
+
+### teszt
+kerdes: Miért van az átlagos programban az if db > 0 vizsgálat?
+valaszok:
+- hogy ne osszunk nullával, ha nem volt adat
+- mert így gyorsabb a program
+- mert a Python kötelezően kéri
+jo: 0
+magyarazat: Ha db értéke 0, az osszeg / db ZeroDivisionError-t okozna.
+
+### beiros
+kerdes: Mit ír ki az átlagos program, ha a bevitt számok sorban 4, 6, 0? (A teljes kiírt sort írd be.)
+elfogad:
+- átlag: 5.0
+segitseg: Az osztás eredménye float.
+
+### kod
+kerdes: Olvass be egy pozitív egész számot. Írd ki: <code>prím</code>, ha pontosan két osztója van (1 és önmaga), különben <code>nem prím</code>. (Az 1 nem prím.)
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  db = 0
+  for i in range(1, n + 1):
+      if n % i == 0:
+          db += 1
+  if db == 2:
+      print("prím")
+  else:
+      print("nem prím")
+tesztek:
+- 7
+- 12
+- 1
+- 2
+- 97
+- 91
+
+### kod
+kerdes: Olvass be számokat addig, amíg 0-t nem kapsz. Írd ki, hány pozitív szám volt közöttük.
+kezdokod: |
+  szam = int(input())
+
+megoldas: |
+  szam = int(input())
+  db = 0
+  while szam != 0:
+      if szam > 0:
+          db += 1
+      szam = int(input())
+  print(db)
+tesztek:
+- 3\n-2\n8\n0
+- 0
+- -1\n-5\n0
+- 1\n2\n3\n4\n0
+
+### kod
+kerdes: Olvass be egy pozitív egész számot, és írd ki a számjegyeinek összegét. Például <code>123</code> → <code>6</code>.
+kezdokod: |
+  n = int(input())
+
+megoldas: |
+  n = int(input())
+  osszeg = 0
+  while n > 0:
+      osszeg += n % 10
+      n = n // 10
+  print(osszeg)
+tesztek:
+- 123
+- 7
+- 9999
+- 100
+
+### kod
+kerdes: Olvass be két pozitív egész számot (külön sorban), és írd ki a legnagyobb közös osztójukat. (Próbáld végig az osztókat 1-től a kisebbik számig.)
+kezdokod: |
+  a = int(input())
+  b = int(input())
+
+megoldas: |
+  a = int(input())
+  b = int(input())
+  lnko = 1
+  for d in range(1, min(a, b) + 1):
+      if a % d == 0 and b % d == 0:
+          lnko = d
+  print(lnko)
+tesztek:
+- 12\n18
+- 7\n5
+- 100\n75
+- 9\n9
