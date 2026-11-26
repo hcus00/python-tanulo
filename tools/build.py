@@ -526,16 +526,21 @@ def grade_files():
 
 def exam_file():
     L = []
+    files = {}
     for sub, group in (('', 'e'), ('hosszu', 'h')):
         d = os.path.join(SRC, 'erettsegi', sub)
         if not os.path.isdir(d): continue
         for fn in sorted(x for x in os.listdir(d) if x.endswith('.txt')):
             m = re.match(r'^(\d+)-', fn)
             if not m: raise BuildError('erettsegi/%s: a fájlnév sorszámmal kezdődjön' % fn)
+            files.setdefault('%02d' % int(m.group(1)), []).append(os.path.join('erettsegi', sub, fn))
             L.append(build_exam(os.path.join(d, fn), int(m.group(1)), group))
-    ids = [e['id'] for e in L]
-    if len(set(ids)) != len(ids):
-        raise BuildError('erettsegi: két feladatsor azonosítója (a fájlnév sorszáma) megegyezik: %s' % ids)
+    dup = {i: f for i, f in files.items() if len(f) > 1}
+    if dup:
+        raise BuildError('erettsegi: két feladatsor azonosítója (a fájlnév sorszáma) megegyezik:\n' +
+                         '\n'.join('  %s: %s' % (i, ', '.join(f)) for i, f in sorted(dup.items())) +
+                         '\nA sorszámnak egyedinek kell lennie az erettsegi/ és az erettsegi/hosszu/ mappában együtt. '
+                         'Ha egy régi verzió fájljai maradtak az erettsegi/ mappában (01–06), töröld őket: ezek a hosszu/ mappába kerültek.')
     out = ['/* GENERÁLT FÁJL – ne ezt szerkeszd! A forrás: tananyag/erettsegi/, újragenerálás: python3 tools/build.py\n'
            ' * Érettségi feladatsorok: {id, g (e: érettségi típusú, h: hosszabb gyakorló), n (cím), t (perc), d (leírás), c (a feladatban megadott adatok oszlopai), cl (az oszlopok címkéi), st (kezdőkód), parts: [{n, p (pont, csak beadás után látszik), t (szöveg), h (van-e kimenete), k: [{p, k (kulcs), t}] (pontozási szempontok)}],\n'
            ' * ts: [[bemenet, várt kimenet, adat-oszlopok (a rejtett tesztekben, különben 0), seed (vagy null)]], m (mintamegoldás)} */',
