@@ -1,11 +1,12 @@
 /* Érettségi mód: az érettségi 5. feladatához (algoritmizálás és programozás) hasonló feladatsorok
-   időmérővel, beadás utáni részpontozással és opcionálisan ékezetmentes kimenet-elfogadással.
+   időmérővel, beadás utáni, szempontonkénti részpontozással és opcionálisan ékezetmentes kimenet-elfogadással.
+   Két csoport van: az érettségi típusú (g = "e": 15 pont, 3-4 rövid részfeladat) és a hosszabb gyakorló feladatsorok (g = "h").
    A diák üres szerkesztővel indul: a bemenetet (input) és a feladat szövegében megadott adatokat is neki kell beírnia.
    Az adatok: EX (js/data/erettsegi.js, a tananyag/erettsegi/*.txt fájlokból generálva). */
 var EXS = null;   /* az éppen futó feladatsor állapota */
 
 function exInfo(id) { return (S.ex && S.ex[id]) || null; }
-function exTotal(e) { return e.parts.reduce(function (a, p) { return a + p.p; }, 0); }
+function exTotal(e) { return e.parts.reduce(function (a, p) { return a + p.p; }, e.gen ? e.gen.p : 0); }
 function exCount() { return Object.keys(S.ex || {}).length; }
 function exBest(frac) {
   return EX.some(function (e) { var r = exInfo(e.id); return r && r.b >= frac * exTotal(e); });
@@ -88,22 +89,27 @@ function exData(e, cols) {
 }
 
 /* ---- a feladatsorok listája ---- */
+function exItem(e, i, n) {
+  var r = exInfo(e.id);
+  return '<button class="tp' + (r && r.b >= exTotal(e) ? " d" : "") + '" onclick="exSetup(' + i + ')"><b>' + (r && r.b >= exTotal(e) ? "✓" : n) + "</b><span>" + esc(e.n) +
+    '<br><small class="mut">' + exTotal(e) + " pont · " + e.parts.length + " részfeladat · " + e.t + " perc" + (r ? " · legjobb eredményed: " + r.b + "/" + r.tot : "") + "</small></span></button>";
+}
 function exams() {
   REV = false; scrollTo(0, 0);
   if (!S.ex) S.ex = {};
   var h = '<div class="card"><h2 style="margin-top:0">🎓 Érettségi mód</h2><div class="tx">' +
-    "<p>A digitális kultúra érettségi gyakorlati vizsgáján az <b>5. feladat</b> algoritmizálás és programozás: 15 pontot ér a 100-ból, és a 180 perces vizsgából nagyjából fél óra jut rá. Itt ugyanilyen feladatsorokat oldhatsz meg.</p>" +
-    "<ul><li>Üres szerkesztővel indulsz. Ha a feladat szövege adatokat ad meg, neked kell a programban eltárolnod őket (úgy, ahogy jónak látod), a bemenetet pedig a <b>Bemenet</b> mezőbe kell felvinned.</li>" +
+    "<p>A digitális kultúra érettségi gyakorlati vizsgáján az <b>5. feladat</b> algoritmizálás és programozás: 15 pontot ér a 100-ból, és a 180 perces vizsgából nagyjából fél óra jut rá. Az érettségin ez általában egy rövid történet 3–4 részfeladattal, a megoldás 20–30 sor. Itt ugyanilyen feladatsorokat oldhatsz meg.</p>" +
+    "<ul><li>Üres szerkesztővel indulsz. Ha a feladat adatokat ad meg, neked kell a programban eltárolnod őket (úgy, ahogy jónak látod). Ha a program bemenetet olvas, a minta bemenetét a <b>Bemenet</b> mezőbe kell felvinned, a bekéréskor pedig a minta szerinti szöveget kell megjelenítened.</li>" +
     "<li>A programodnak <b>bármilyen adatra</b> működnie kell: beadáskor más adatokkal és más bemenettel is lefuttatjuk.</li>" +
     "<li>Minden eredmény elé külön sorba írd ki a részfeladat sorszámát, például <code>3. feladat</code>, utána jön az eredmény.</li>" +
-    "<li>A pontokat részfeladatonként a beadás után látod, ahogy az éles vizsgán is az értékelésnél derül ki.</li>" +
-    "<li>Az érettségin az ékezet nélküli kimenet is elfogadott. Ezt itt is bekapcsolhatod.</li>" +
+    "<li>A javítási útmutatókhoz hasonlóan a pontokat <b>logikai egységenként</b> kapod, ezért részpontokat is szerezhetsz: a program működéséért és a képernyőre írásért (az „N. feladat” fejléc a minta szerint), az adatok eltárolásáért, a bekérés szövegéért, a mintára helyes eredményért, a más adatokra is helyes eredményért és a feliratok helyességéért. A pontokat a beadás után látod, ahogy az éles vizsgán is az értékelésnél derül ki.</li>" +
+    "<li>A kiírás szövegében a kis- és nagybetű, valamint az írásjelek eltérését elfogadjuk. Az ékezet nélküli kimenet is elfogadott, ezt itt ki is kapcsolhatod.</li>" +
     "<li>Az időmérő lejártakor a program automatikusan beadásra kerül.</li></ul></div>";
-  h += EX.map(function (e, i) {
-    var r = exInfo(e.id);
-    return '<button class="tp' + (r && r.b >= exTotal(e) ? " d" : "") + '" onclick="exSetup(' + i + ')"><b>' + (r && r.b >= exTotal(e) ? "✓" : i + 1) + "</b><span>" + esc(e.n) +
-      '<br><small class="mut">' + exTotal(e) + " pont · " + e.t + " perc" + (r ? " · legjobb eredményed: " + r.b + "/" + r.tot : "") + "</small></span></button>";
-  }).join("");
+  var n = 0;
+  h += "<h3>Érettségi típusú feladatsorok</h3>" + EX.map(function (e, i) { return e.g === "e" ? exItem(e, i, ++n) : ""; }).join("");
+  n = 0;
+  var longs = EX.map(function (e, i) { return e.g === "h" ? exItem(e, i, ++n) : ""; }).join("");
+  if (longs) h += "<h3>Hosszabb gyakorló feladatsorok</h3><p class=\"mut\">Ezek terjedelmesebbek az érettségi feladatnál (6 részfeladat, hosszabb megoldás), ha többet vagy nehezebbet szeretnél gyakorolni. Ugyanúgy működnek.</p>" + longs;
   $("v").innerHTML = h + '<button class="btn gh" onclick="home()">← Vissza a témákhoz</button></div>';
 }
 
@@ -133,9 +139,9 @@ function exRun(i) {
     (e.c.length ? "<p><b>Az adatok</b> (ezeket neked kell a programban eltárolnod; az azonos sorszámú elemek összetartoznak):</p>" + exData(e, e.c) : "") +
     "<h3>Feladatok</h3><ol class=\"exl2\">" + e.parts.map(function (p) { return "<li>" + p.t + "</li>"; }).join("") + "</ol>" +
     '<p class="mut"><small>Minden részfeladat eredménye elé külön sorba írd ki a részfeladat sorszámát (például <code>' + Math.min(2, e.parts.length) + '. feladat</code>). ' +
-    (hasIn ? "Ha a feladat nem ír elő bekérő szöveget, bekéréskor ne írj ki semmit. " : "") + "A pontokat a beadás után látod.</small></p>" +
-    "<h3>Minta</h3>" + (t0[0] ? "<p><b>Bemenet</b></p><pre class=\"exmin\">" + esc(t0[0]) + "</pre>" : "") +
-    "<p><b>Kimenet</b></p><pre class=\"exmin\">" + esc(t0[1] || "(nincs kimenet)") + "</pre>" +
+    (hasIn ? "A bekéréskor a minta szerinti szöveg jelenjen meg. " : "") + "A pontokat a beadás után látod.</small></p>" +
+    "<h3>Minta</h3>" + (t0[0] ? "<p><b>Bemenet</b> (a Bemenet mezőbe soronként ezt kell beírnod)</p><pre class=\"exmin\">" + esc(t0[0]) + "</pre>" : "") +
+    "<p><b>" + (hasIn ? "Kimenet (a bekérések és a beírt értékek is látszanak)" : "Kimenet") + "</b></p><pre class=\"exmin\">" + esc(e.sm || t0[1] || "(nincs kimenet)") + "</pre>" +
     (rnd ? '<p class="mut"><small>A minta véletlen értékeket tartalmaz, a te programod más számokat is adhat. Beadáskor a véletlenszám-generátort rögzítjük, ezért pontosan annyiszor és olyan sorrendben sorsolj, ahogy a feladat leírja.</small></p>' : "") +
     '</section><section class="card exright" aria-label="Szerkesztő és értékelés"><h3 style="margin-top:0">Program</h3>' +
     (hasIn ? '<p class="mut"><small>A bemenetet (amit a program beolvas) a szerkesztő alatti <b>Bemenet</b> mezőbe írd, soronként egyet.</small></p>' : "") +
@@ -171,15 +177,17 @@ function exTick() {
 function exSubmit(auto) {
   var st = EXS;
   if (!st || st.busy) return;
-  var e = EX[st.i], r = $(st.rn), code = r.querySelector("textarea").value, box = $("exres"), res = [], k = 0;
+  var e = EX[st.i], r = $(st.rn), code = r.querySelector("textarea").value, box = $("exres"), res = [], k = 0, dataOk = true;
   st.busy = true;
   box.innerHTML = '<p class="mut">Értékelés… (a program lefut a minta- és a rejtett adatokkal is)</p>';
   (function next() {
-    if (k >= e.ts.length) { st.busy = false; return exScore(e, res, code, !!auto); }
+    if (k >= e.ts.length) { st.busy = false; return exScore(e, res, code, !!auto, dataOk); }
     var t = e.ts[k];
-    exSub(code, e.c, t[2]).then(function (sb) {
+    (k === 0 && e.c.length ? exSub(code, e.c, e.c).then(function (d) { dataOk = d.ok; }) : Promise.resolve()).then(function () {
+      return exSub(code, e.c, t[2]);
+    }).then(function (sb) {
       if (!sb.ok) return { out: "", err: "", skip: true, code: code };
-      return pyRun(sb.code, t[0], t[3]).then(function (x) { x.code = sb.code; return x; });
+      return pyRun(sb.code, t[0], t[3], false, true).then(function (x) { x.code = sb.code; return x; });
     }).then(function (x) { res.push(x); k++; next(); }).catch(function () {
       st.busy = false;
       if ($("exres")) $("exres").innerHTML = '<p class="bd">Nem sikerült betölteni a Python-futtatót. Internetkapcsolat kell hozzá.</p>';
@@ -187,37 +195,119 @@ function exSubmit(auto) {
   })();
 }
 
-function exScore(e, res, code, auto) {
+/* A kimenetek összehasonlításához: kis- és nagybetű, írásjelek és a számok írásmódja (3.50 = 3.5) nem számít, az ékezet kérésre sem. */
+function exNz(acc) {
+  return function (s) {
+    s = s.toLowerCase().replace(/[:;,!?()"'„”–]/g, " ").replace(/\.(?!\d)/g, " ").replace(/\d+\.\d+/g, function (m) { return String(parseFloat(m)); });
+    if (acc) s = s.normalize("NFD").replace(/[̀-ͯ]/g, "");
+    return s.replace(/\s+/g, " ").trim();
+  };
+}
+
+/* Számok a kimenet soraiban (a feliratok és az írásmód nem számít). */
+function exNums(lines) {
+  return (lines.join(" ").match(/-?\d+(?:[.,]\d+)?/g) || []).map(function (t) { return parseFloat(t.replace(",", ".")); });
+}
+/* A diák kimenetének egy részfeladat-blokkja. Ha a részfeladatnál bekérés-szöveg is van, a print-tel kiírt kérdést kiszűrjük. */
+function exGot(x, p, nz) {
+  var b = exBlocks(x.out)[p.n];
+  if (b && p.q) { var q = nz(p.q); b = b.filter(function (l) { return nz(l).indexOf(q) < 0; }); }
+  return b || null;
+}
+
+/* Egy pontozási szempont kiértékelése. Kulcsok:
+   adat – az adatok felismerhetően el vannak tárolva; kerdes – a bekérésnél megjelenik a minta szerinti szöveg;
+   fut, fejlec – általános szempontok (hiba nélkül lefut; legalább egy részfeladat a minta szerint, „N. feladat” fejléc alatt);
+   blokk | sorK | szamK | felirat : minta | rejtett | mind – a részfeladat kimenete (egésze / K. sora / K. száma / a számoktól független felirata)
+   egyezik a mintatesztben / a rejtett tesztekben / mindben. */
+function exCrit(e, res, p, c, nz, dataOk) {
+  var x0 = res[0], k, x, want, got;
+  if (c.k === "adat") return { ok: dataOk, kind: "adat" };
+  if (c.k === "fut") return { ok: !x0.err && !x0.skip && /^\s*[^#\s]/m.test(x0.code || ""), kind: "fut", test: 0 };
+  if (c.k === "fejlec") {
+    var any = e.parts.some(function (q) {
+      if (!q.h) return false;
+      var w = exBlocks(e.ts[0][1])[q.n] || [], g = exGot(x0, q, nz);
+      return g && w.map(nz).join("\n") === g.map(nz).join("\n");
+    });
+    return { ok: any, kind: "fejlec" };
+  }
+  if (c.k === "kerdes") {
+    var q = nz(p.q);
+    return { ok: !x0.skip && (nz(x0.prompts || "").indexOf(q) >= 0 || x0.out.split("\n").some(function (l) { return nz(l).indexOf(q) >= 0; })), kind: "kerdes" };
+  }
+  var m = /^(blokk|sor|szam|felirat)(\d?):(minta|rejtett|mind)$/.exec(c.k), L = m[2] ? +m[2] : 0;
+  var mask = function (l) { return nz(l).replace(/-?\d+(?:\.\d+)?/g, "#"); };
+  for (k = 0; k < e.ts.length; k++) {
+    if (m[3] === "minta" ? k !== 0 : m[3] === "rejtett" ? k === 0 : false) continue;
+    if (res[k].skip) return { ok: false, skip: true };
+    x = res[k];
+    want = exBlocks(e.ts[k][1])[p.n] || [];
+    got = exGot(x, p, nz);
+    var same = !got ? false :
+      m[1] === "sor" ? nz(want[L - 1] || "") === nz(got[L - 1] || "") :
+      m[1] === "szam" ? (function () { var a = exNums(want)[L - 1], b = exNums(got)[L - 1]; return b !== undefined && Math.abs(a - b) < 1e-9; })() :
+      m[1] === "felirat" ? want.map(mask).join("\n") === got.map(mask).join("\n") :
+      want.map(nz).join("\n") === got.map(nz).join("\n");
+    if (!same) return { ok: false, test: k, none: !got, kind: m[1] };
+  }
+  return { ok: true };
+}
+
+/* Egy részfeladat (vagy az általános rész) eredménysora a szempontokkal. Visszaadja: [pont, html, az első elbukott szempont]. */
+function exPartRows(e, res, p, nz, dataOk) {
+  var got = 0, rows = "", first = null;
+  p.k.forEach(function (c) {
+    var r = exCrit(e, res, p, c, nz, dataOk);
+    if (r.ok) got += c.p;
+    else if (!first && !r.skip) first = { c: c, r: r };
+    rows += '<li class="' + (r.ok ? "ok" : "no") + '"><span aria-hidden="true">' + (r.ok ? "✔" : "✘") + "</span> " + c.t + " <b>(" + (r.ok ? c.p : 0) + "/" + c.p + " pont)</b>" +
+      (r.skip ? ' <span class="mut">– nem ellenőrizhető: nem ismertem fel az adatok tárolását</span>' : "") + "</li>";
+  });
+  return [got, rows, first];
+}
+
+function exScore(e, res, code, auto, dataOk) {
   var st = EXS, box = $("exres");
   if (!st || !box) return;
-  var nz = function (s) { s = s.replace(/\s+/g, " ").trim(); return st.acc ? s.normalize("NFD").replace(/[̀-ͯ]/g, "") : s; };
-  var blk = function (out, n) { var B = exBlocks(out); return B[n] ? B[n].map(nz).join("\n") : null; };
+  var nz = exNz(st.acc);
   var pts = 0, total = exTotal(e), li = "", errShown = false, nskip = res.filter(function (x) { return x.skip; }).length;
+  function head(got, max, title, sub, rows) {
+    var cls = got === max ? "ok" : got === 0 ? "no" : "mid";
+    return '<li class="' + cls + '"><b>' + (cls === "ok" ? "✔" : cls === "no" ? "✘" : "◐") + " " + title + ": " + got + "/" + max + ' pont</b>' + (sub ? '<br><span class="mut">' + sub + "</span>" : "") + '<ul class="cr">' + rows + "</ul>";
+  }
+  function err(x, hidden) {
+    var h = "<p>A program " + (errShown ? "ugyanezzel a hibával" : "hibával") + " állt le" + (hidden ? " a rejtett adatoknál" : "") + ".</p>";
+    if (!errShown) { errShown = true; h += '<pre class="rout er">' + esc(x.err) + "</pre>" + hibaMagyaraz(x.err, x.code); }
+    return h;
+  }
+  if (e.gen) {
+    var g = exPartRows(e, res, e.gen, nz, dataOk), more = "";
+    pts += g[0];
+    if (g[2] && g[2].r.kind === "fut" && res[0].err) more = err(res[0], false);
+    else if (g[2] && g[2].r.kind === "fejlec") more = "<p>Egyik részfeladatnál sem találtam a minta szerinti kimenetet a megfelelő <code>N. feladat</code> fejléc alatt. Minden eredmény elé külön sorba írd ki a részfeladat sorszámát, utána jöjjön az eredmény a mintának megfelelően.</p>";
+    li += head(g[0], e.gen.p, "Általános", "A program működése és a képernyőre írás", g[1]) + more + "</li>";
+  }
   e.parts.forEach(function (p) {
-    var bad = -1, why = "";
-    e.ts.forEach(function (t, k) {
-      if (bad >= 0 || res[k].skip) return;
-      if (p.h) {
-        var want = blk(t[1], p.n), got = blk(res[k].out, p.n);
-        if (got !== want) { bad = k; why = got === null ? "nincs" : "eltér"; }
-      } else if (res[k].err) { bad = k; why = "hiba"; }
-    });
-    var ok = bad < 0;
-    if (ok) pts += p.p;
-    li += '<li class="' + (ok ? "ok" : "no") + '"><b>' + (ok ? "✔" : "✘") + " " + p.n + ". részfeladat: " + (ok ? p.p : 0) + "/" + p.p + ' pont</b><br><span class="mut">' + p.t + "</span>";
-    if (!ok) {
-      var t = e.ts[bad], x = res[bad], hidden = bad > 0 || !!t[2];
-      if (why === "hiba" || x.err) {
-        li += "<br>A program hibával állt le" + (hidden ? " a rejtett adatoknál" : "") + ".";
-        if (!errShown) { errShown = true; li += '<pre class="rout er">' + esc(x.err) + "</pre>" + hibaMagyaraz(x.err, x.code); }
-      }
-      if (p.h) {
-        var wb = exBlocks(t[1])[p.n], gb = exBlocks(x.out)[p.n];
-        if (why === "nincs") li += "<br>Nem találom a kimenetben a <code>" + p.n + ". feladat</code> fejlécet: minden eredmény elé külön sorba írd ki.";
-        else if (hidden && !x.err) li += "<br>A mintaadatokra jó lehet, de <b>más adatokra nem működik</b>. Valószínűleg beleírtál valamit az adatokból, vagy egy különleges eset nem működik (üres találat, egyenlő értékek, hosszabb vagy rövidebb lista).";
-        if (hidden) li += "<br><b>Az adatok</b>" + (t[2] ? exData(e, t[2]) : "") + (t[0] ? '<pre class="exmin">bemenet: ' + esc(t[0].replace(/\n/g, " ")) + "</pre>" : "");
-        li += "<br><b>Várt kimenet</b><pre>" + esc(p.n + ". feladat\n" + (wb || []).join("\n")) + "</pre>";
-        li += "<b>A te kimeneted</b><pre>" + esc(gb ? p.n + ". feladat\n" + gb.join("\n") : "(nincs)") + "</pre>";
+    var r0 = exPartRows(e, res, p, nz, dataOk), first = r0[2];
+    pts += r0[0];
+    li += head(r0[0], p.p, p.n + ". részfeladat", p.t, r0[1]);
+    if (first) {
+      var c = first.c, r = first.r;
+      if (r.kind === "adat") {
+        li += "<p>Nem ismertem fel, hogy a feladatban megadott adatokat eltároltad a programban. Az adatok elemeit pontosan és ugyanabban a sorrendben kell beírnod (például külön sorozatokban, soronként vagy párokban); a változók neve tetszőleges.</p>";
+      } else if (r.kind === "kerdes") {
+        li += "<p>A bekérésnél nem találtam a minta szerinti szöveget (<code>" + esc(p.q) + "</code>). A mintában látszik, mit kell kiírni a beírandó érték előtt.</p>";
+      } else {
+        var t = e.ts[r.test], x = res[r.test], hidden = r.test > 0 || !!t[2];
+        if (x.err) li += err(x, hidden);
+        if (r.none && !x.err) li += "<p>Nem találom a kimenetben a <code>" + p.n + ". feladat</code> fejlécet: minden eredmény elé külön sorba írd ki.</p>";
+        else if (r.kind === "felirat" && !x.err) li += "<p>A számok lehetnek jók, de a felirat vagy a kiírás formátuma eltér a mintától.</p>";
+        else if (hidden && !x.err && /rejtett|mind/.test(c.k)) li += "<p>A mintaadatokra jó lehet, de <b>ezekre az adatokra nem működik</b>. Valószínűleg beleírtál valamit az adatokból, vagy egy különleges eset nem működik (üres találat, egyenlő értékek, határérték).</p>";
+        if (hidden) li += "<p><b>Az adatok</b></p>" + (t[2] ? exData(e, t[2]) : "") + (t[0] ? '<pre class="exmin">bemenet: ' + esc(t[0].replace(/\n/g, " ")) + "</pre>" : "");
+        var wb = exBlocks(t[1])[p.n], gb = exGot(x, p, nz);
+        li += "<p><b>Várt kimenet</b></p><pre>" + esc(p.n + ". feladat\n" + (wb || []).join("\n")) + "</pre>";
+        li += "<p><b>A te kimeneted</b></p><pre>" + esc(gb ? p.n + ". feladat\n" + gb.join("\n") : "(nincs)") + "</pre>";
       }
     }
     li += "</li>";
@@ -232,8 +322,8 @@ function exScore(e, res, code, auto) {
     touch(); checkBadges(); save(); hdr();
   } else msg = "Ez már időn túli próba, ezért nem számít bele a legjobb eredményedbe.";
   box.innerHTML = '<h3>' + (auto ? "Lejárt az idő – " : "") + "Eredményed: " + pts + "/" + total + " pont (" + pc + "%)</h3>" +
-    '<p class="exj">Ha ez a teljes gyakorlati vizsga eredménye lenne, ' + jegy + "-" + (jegy === 5 ? "ös" : jegy === 4 ? "es" : jegy === 3 ? "as" : jegy === 2 ? "es" : "es") + " jegynek felelne meg (a határok: 25, 40, 60, 80%). " + esc(msg) + "</p>" +
-    (nskip ? '<p class="mut">⚠ A rejtett adatokkal futtatott tesztek közül ' + nskip + " db-ot nem tudtam elvégezni, mert nem ismertem fel, hogyan tárolod el a feladatban megadott adatokat (a program az adatokat ugyanazokkal az elemekkel, ugyanabban a sorrendben várja, például külön listákban, soronként vagy szótárban). Ezeket nem vettem figyelembe, így a pontszám csak a többi teszten alapul.</p>" : "") +
+    '<p class="exj">Ha ez a teljes gyakorlati vizsga eredménye lenne, ' + jegy + "-" + (jegy === 5 ? "ös" : jegy === 3 ? "as" : "es") + " jegynek felelne meg (a határok: 25, 40, 60, 80%). " + esc(msg) + "</p>" +
+    (nskip ? '<p class="mut">⚠ A rejtett adatokkal futtatott tesztek közül ' + nskip + " db-ot nem tudtam elvégezni, mert nem ismertem fel, hogyan tárolod el a feladatban megadott adatokat (a program az adatokat ugyanazokkal az elemekkel, ugyanabban a sorrendben várja, például külön sorozatokban, soronként vagy szótárban). Az ezektől függő szempontokra nem járt pont.</p>" : "") +
     '<ul class="exl">' + li + "</ul>" +
     "<details><summary>Mintamegoldás (előbb próbálkozz magad!)</summary><pre>" + hl(dq(e.m)) + "</pre></details>" +
     '<div class="rb"><button class="btn gh" onclick="exSetup(' + st.i + ')">Új próba</button><button class="btn gh" onclick="exams()">Másik feladatsor</button></div>';
@@ -243,8 +333,11 @@ function exScore(e, res, code, auto) {
 /* Az Eredmények oldal érettségi része. */
 function exSummary() {
   if (!EX.length) return "";
-  return "<h3>Érettségi feladatsorok</h3>" + EX.map(function (e) {
+  function row(e) {
     var r = exInfo(e.id);
     return '<p class="exs"><b>' + esc(e.n) + ":</b> " + (r ? r.b + "/" + r.tot + " pont (" + r.n + " próba)" : '<span class="mut">még nem próbáltad</span>') + "</p>";
-  }).join("");
+  }
+  var h = "<h3>Érettségi típusú feladatsorok</h3>" + EX.filter(function (e) { return e.g === "e"; }).map(row).join("");
+  var l = EX.filter(function (e) { return e.g === "h"; });
+  return h + (l.length ? "<h3>Hosszabb gyakorló feladatsorok</h3>" + l.map(row).join("") : "");
 }

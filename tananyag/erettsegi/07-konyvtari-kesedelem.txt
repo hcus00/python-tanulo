@@ -1,0 +1,56 @@
+# Könyvtári késedelem
+ido: 30
+leiras: |
+  A városi könyvtárban a kölcsönzési idő 14 nap. Aki ennél tovább tartja magánál a könyvet, annak <b>minden késedelmes napért</b> 20 Ft késedelmi díjat kell fizetnie. A könyvtáros egy napon visszahozott 12 könyv kölcsönzési idejét (napokban) a visszahozás sorrendjében jegyezte fel. A programod <b>bármilyen, 12 könyvre vonatkozó adatra</b> működjön.
+adat: |
+  napok = [9, 14, 21, 3, 17, 14, 30, 12, 15, 8, 25, 11]
+cimkek:
+- Kölcsönzési idő (nap), a visszahozás sorrendjében
+reszek:
+- 2 || Tárold el a könyvek kölcsönzési idejét a programban!
+- 3 || Írd ki, hány késedelmes napot gyűjtöttek össze a könyvek együtt (egy könyvnél a 14 napot meghaladó napok számítanak), és mennyi a késedelmi díj összesen! Két sorba írd a mintának megfelelően: <code>Késedelmes napok összesen: 38</code> és <code>Késedelmi díj: 760 Ft</code>
+- 3 || Hány könyvet hoztak vissza késve? Írd ki a mintának megfelelően: <code>Késve visszahozott könyvek: 5</code>
+- 5 || Melyik könyvet tartották a legtovább? Írd ki a sorszámát (az első könyv sorszáma 1) és a kölcsönzési idejét: <code>A legtovább kölcsönzött könyv: 7. (30 nap)</code> Több azonos érték esetén az első könyvet add meg.
+pontozas:
+- 0 || 1 || fut || A program hiba nélkül lefut a mintaadatokkal
+- 0 || 1 || fejlec || Legalább egy részfeladat kiírása megfelel a mintának, a részfeladat sorszáma alatt
+- 1 || 2 || adat || A 12 kölcsönzési idő el van tárolva a programban
+- 2 || 1 || szam1:mind || A késedelmes napok száma helyes (minden adatra)
+- 2 || 1 || szam2:mind || A késedelmi díj helyes (minden adatra)
+- 2 || 1 || felirat:minta || A két sor felirata a mintának megfelelő
+- 3 || 1 || szam1:minta || A késve visszahozott könyvek száma helyes a mintára
+- 3 || 1 || szam1:rejtett || Más adatokra is helyes (például pontosan 14 napnál nem késés)
+- 3 || 1 || felirat:minta || A felirat a mintának megfelelő
+- 4 || 1 || szam1:minta || A legtovább kölcsönzött könyv sorszáma helyes a mintára
+- 4 || 1 || szam2:minta || A kölcsönzési idő helyes a mintára
+- 4 || 1 || szam1:rejtett || A sorszám más adatokra is helyes (azonos legnagyobb értékeknél az első)
+- 4 || 1 || szam2:rejtett || A kölcsönzési idő más adatokra is helyes
+- 4 || 1 || felirat:minta || A felirat és a kiírás formátuma a mintának megfelelő
+megoldas: |
+  napok = [9, 14, 21, 3, 17, 14, 30, 12, 15, 8, 25, 11]
+
+  print("2. feladat")
+  kesett = 0
+  db = 0
+  for nap in napok:
+      if nap > 14:
+          kesett += nap - 14
+          db += 1
+  print("Késedelmes napok összesen:", kesett)
+  print("Késedelmi díj:", kesett * 20, "Ft")
+
+  print("3. feladat")
+  print("Késve visszahozott könyvek:", db)
+
+  print("4. feladat")
+  legtobb = 0
+  for i in range(len(napok)):
+      if napok[i] > napok[legtobb]:
+          legtobb = i
+  print("A legtovább kölcsönzött könyv:", str(legtobb + 1) + ".", "(" + str(napok[legtobb]), "nap)")
+tesztek:
+-
+- || pre: napok = [14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14]
+- || pre: napok = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+- || pre: napok = [40, 15, 40, 20, 15, 30, 14, 15, 15, 33, 40, 2]
+- || pre: napok = [28, 3, 17, 15, 14, 16, 19, 22, 5, 14, 31, 9]

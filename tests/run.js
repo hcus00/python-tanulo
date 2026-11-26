@@ -60,7 +60,7 @@ const section = (s) => console.log('\n== ' + s);
         });
       }
     }
-    EX.forEach(e => { if (e.parts.reduce((a, p) => a + p.p, 0) !== 15) out.push('érettségi ' + e.id + ': nem 15 pontos'); });
+    EX.forEach(e => { if (e.parts.reduce((a, p) => a + p.p, e.gen ? e.gen.p : 0) !== 15) out.push('érettségi ' + e.id + ': nem 15 pontos'); });
     return { problems: out, topics: Object.keys(R).length, exams: EX.length };
   });
   data.problems.forEach(p => bad(p));
@@ -147,11 +147,12 @@ const section = (s) => console.log('\n== ' + s);
     const [p, t] = await score(i, 'sol', true);
     if (p !== t) bad('érettségi', i + 1 + '. feladatsor: a mintamegoldás ' + p + '/' + t + ' pontot kapott');
     const [p2] = await score(i, 'starter', true);
-    if (p2 >= t / 2) bad('érettségi', i + 1 + '. feladatsor: a kezdőkód is ' + p2 + ' pontot kap');
+    if (p2 > 0) bad('érettségi', i + 1 + '. feladatsor: a kezdőkód (üres program) is ' + p2 + ' pontot kap');
     const [p3, , skipped3] = await score(i, 'hard', true);
     const hasData = await page.evaluate(i => EX[i].c.length > 0, i);
     if (hasData && !skipped3) bad('érettségi', i + 1 + '. feladatsor: a beégetett kimenet (adat nélkül) nem kap figyelmeztetést');
-    if (!hasData && p3 > 1) bad('érettségi', i + 1 + '. feladatsor: a beégetett kimenet ' + p3 + ' pontot kap');
+    if (p3 >= t) bad('érettségi', i + 1 + '. feladatsor: a beégetett kimenet teljes pontot kap');
+    if (p3 > t * 0.6) bad('érettségi', i + 1 + '. feladatsor: a beégetett kimenet ' + p3 + '/' + t + ' pontot kap (a rejtett adatokra nem működik)');
   }
   const [pa] = await score(1, 'noacc', true), [pb] = await score(1, 'noacc', false);
   if (pa !== 15) bad('ékezetmentes kimenet bekapcsolt opcióval nem teljes pontos:', pa);
@@ -189,10 +190,46 @@ const section = (s) => console.log('\n== ' + s);
   };
   const rr = {};
   for (const k of Object.keys(variants)) rr[k] = await score(i3, variants[k], true);
+  if (process.env.DBG) console.log('variánsok:', JSON.stringify(rr));
   if (rr.rows[0] !== 4 || rr.rows[2]) bad('érettségi: soronként tárolt adat (rejtett tesztekkel) nem 4 pontos / jelzi a kihagyást:', rr.rows);
   if (rr.dict[0] !== 4 || rr.dict[2]) bad('érettségi: szótárban tárolt adat (rejtett tesztekkel) nem 4 pontos / jelzi a kihagyást:', rr.dict);
-  if (rr.hardcount[0] !== 2 || rr.hardcount[2]) bad('érettségi: a beégetett résztvevőszám nem bukik el a rejtett adatokon:', rr.hardcount);
-  if (rr.unknown[0] !== 4 || !rr.unknown[2]) bad('érettségi: a fel nem ismert adattárolásnál nincs kihagyás-jelzés vagy pontlevonás van:', rr.unknown);
+  /* részpontok: a mintára jó, de a rejtett adatokra nem működő megoldás csak a mintás szempontok pontjait kapja */
+  if (rr.hardcount[0] !== 3 || rr.hardcount[2]) bad('érettségi: a beégetett résztvevőszám nem 3 pontot kap (minta jó, rejtett nem):', rr.hardcount);
+  /* fel nem ismert adattárolás: a mintára jó pontok megvannak, a rejtettekre épülők nem, és a program jelzi */
+  if (rr.unknown[0] !== 2 || !rr.unknown[2]) bad('érettségi: a fel nem ismert adattárolásnál nincs kihagyás-jelzés vagy nem 2 pont jár:', rr.unknown);
+  /* az „adat” szempont: önmagában az adatok eltárolása már pontot ér */
+  const iA = await page.evaluate(() => EX.findIndex(e => e.g === 'e' && e.parts[0].k.some(c => c.k === 'adat') && e.ts.every(t => t[0] === '')));
+  if (iA < 0) bad('érettségi: nincs adat-szempontos, bemenet nélküli feladatsor');
+  else {
+    const rA = await score(iA, '=>(e => { const ls = e.m.split("\\n"), k = ls.findIndex(l => /feladat/.test(l)); return ls.slice(0, k).join("\\n") + "\\n"; })', true);
+    const wantA = await page.evaluate(i => EX[i].parts[0].k.find(c => c.k === 'adat').p + (EX[i].gen ? 1 : 0), iA);
+    if (rA[0] !== wantA) bad('érettségi: az adatok eltárolása önmagában ' + rA[0] + ' pontot kapott, ' + wantA + ' kellene:', rA);
+    const res = await page.evaluate(() => [...document.querySelectorAll('#exres ul.cr li')].map(l => l.className + ':' + l.textContent.slice(0, 3)).join(' | '));
+    if (!/ok:/.test(res) || !/no:/.test(res)) bad('érettségi: az eredménylistában nincs szempontonkénti ✔/✘:', res);
+    const mid = await page.evaluate(() => document.querySelectorAll('#exres ul.exl > li.mid, #exres ul.exl > li.ok').length);
+    if (!mid) bad('érettségi: nincs részben/teljesen jó részfeladat jelölve');
+  }
+  /* a hivatalos útmutatók szerinti szempontok: bekérés felirata, számok és feliratok külön, általános pontok */
+  const iP = await page.evaluate(() => EX.findIndex(e => e.n === 'Péksütemény-eladás'));
+  const iK = await page.evaluate(() => EX.findIndex(e => e.n === 'Könyvtári késedelem'));
+  const sc = (i, f) => score(i, '=>(e => { const c = e.m; return (' + f + ')(c); })', true);
+  const [pNoPrompt] = await sc(iP, 'c => c.replace(\'input("Kérem a napi feljegyzést: ")\', \'input()\')');
+  if (pNoPrompt !== 14) bad('érettségi: bekérő felirat nélkül 14 pont kellene (a felirat 1 pontot ér):', pNoPrompt);
+  const [pPrintPrompt] = await sc(iP, 'c => c.replace(\'input("Kérem a napi feljegyzést: ")\', \'input()\').replace(\'napi =\', \'print("Kérem a napi feljegyzést:")\\nnapi =\')');
+  if (pPrintPrompt !== 15) bad('érettségi: a print-tel kiírt bekérő szöveg is elfogadott kell legyen (15 pont):', pPrintPrompt);
+  /* nulla alapú sorszám: az érték (nap) jó, a sorszám nem: a szamK szempontok külön pontoznak */
+  const [pIdx] = await sc(iK, 'c => c.replace(\'str(legtobb + 1)\', \'str(legtobb)\')');
+  if (pIdx !== 13) bad('érettségi: a nulla alapú sorszám 13 pontot kapjon (az érték és a felirat jó):', pIdx);
+  const [pEmpty] = await sc(iK, 'c => "# semmi\\n"');
+  if (pEmpty !== 0) bad('érettségi: a csak megjegyzést tartalmazó program ' + pEmpty + ' pontot kap');
+  /* fejléc nélkül kiírt eredmények: nincs „fejléc” pont, a részfeladatok sem pontozhatók */
+  const [pNoHead] = await sc(iK, 'c => c.replace(/print\\("\\d\\. feladat"\\)\\n/g, "")');
+  if (pNoHead > 5) bad('érettségi: az „N. feladat” fejlécek nélkül túl sok pont jár:', pNoHead);
+  /* két csoport: érettségi típusú és hosszabb gyakorló */
+  const grp = await page.evaluate(() => { exams(); const h = [...document.querySelectorAll('#v h3')].map(x => x.textContent); const n = document.querySelectorAll('#v .tp').length; return { h, n, e: EX.filter(e => e.g === 'e').length, l: EX.filter(e => e.g === 'h').length }; });
+  if (grp.e !== 8 || grp.l !== 6 || grp.n !== 14 || !grp.h.includes('Érettségi típusú feladatsorok') || !grp.h.includes('Hosszabb gyakorló feladatsorok')) bad('érettségi: a csoportos lista nem a várt:', JSON.stringify(grp));
+  const longT = await page.evaluate(() => EX.filter(e => e.g === 'e').every(e => e.t === 30 && e.m.split('\n').filter(l => l.trim()).length <= 30));
+  if (!longT) bad('érettségi: az érettségi típusú feladatsorok mintamegoldása 30 sornál hosszabb, vagy nem 30 perces');
   console.log('  feladatsorok:', nEx);
   }
 

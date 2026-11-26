@@ -1,0 +1,68 @@
+# Kisbusz
+ido: 30
+leiras: |
+  Egy kisbusz egy 8 megállós vonalon közlekedik, és legfeljebb 20 utas fér el rajta. Az első megállóba üresen érkezik. Minden megállóban előbb leszállnak az utasok, utána a megállóban várakozók közül annyian szállnak fel, ahányan még elférnek a buszon. Aki nem fér fel, lemarad, és nem várja meg a következő járatot. A megállók szerint rendezve adott, hogy hányan szálltak le, és hányan vártak a buszra. A programod <b>bármilyen, 8 megállóra vonatkozó, a leírásnak megfelelő adatra</b> működjön (leszállni csak annyian szállnak le, ahányan a buszon ülnek).
+adat: |
+  leszallok = [0, 3, 5, 2, 6, 4, 8, 12]
+  varakozok = [14, 9, 7, 6, 3, 5, 2, 0]
+cimkek:
+- Megállónként leszálló utasok
+- Megállónként várakozó utasok
+reszek:
+- 2 || Tárold el a megállónkénti leszálló és várakozó utasok számát a programban!
+- 4 || Hány utas szállt fel összesen a vonal során, és hányan maradtak le összesen a megállókban? Két sorba írd a mintának megfelelően: <code>Felszállt utasok: 40</code> és <code>Lemaradt utasok: 6</code>
+- 4 || Hányadik megállóban indult tovább a legtöbb utassal a busz (a felszállás után)? Írd ki az utasok számát és a megálló sorszámát: <code>Legtöbb utas: 20 fő, a 2. megállóban</code> Több azonos érték esetén az első megállót add meg.
+- 3 || Hány megállóban maradt le legalább egy utas? Írd ki a mintának megfelelően: <code>Lemaradással járó megállók: 2</code>
+pontozas:
+- 0 || 1 || fut || A program hiba nélkül lefut a mintaadatokkal
+- 0 || 1 || fejlec || Legalább egy részfeladat kiírása megfelel a mintának, a részfeladat sorszáma alatt
+- 1 || 2 || adat || A leszálló és a várakozó utasok adatai el vannak tárolva a programban
+- 2 || 1 || szam1:mind || A felszállt utasok száma helyes (minden adatra)
+- 2 || 2 || szam2:mind || A lemaradt utasok száma helyes (a férőhely megfelelő kezelésével, minden adatra)
+- 2 || 1 || felirat:minta || A két sor felirata a mintának megfelelő
+- 3 || 1 || szam1:minta || A legtöbb utas száma helyes a mintára
+- 3 || 1 || szam2:minta || A megálló sorszáma helyes a mintára
+- 3 || 1 || szam1:rejtett || Az utasok száma más adatokra is helyes
+- 3 || 1 || szam2:rejtett || A sorszám más adatokra is helyes (azonos értékeknél az első megálló)
+- 4 || 1 || szam1:minta || A lemaradással járó megállók száma helyes a mintára
+- 4 || 1 || szam1:rejtett || Más adatokra is helyes
+- 4 || 1 || felirat:minta || A felirat a mintának megfelelő
+megoldas: |
+  leszallok = [0, 3, 5, 2, 6, 4, 8, 12]
+  varakozok = [14, 9, 7, 6, 3, 5, 2, 0]
+
+  utasok = 0
+  felszallt = 0
+  lemaradt = 0
+  lemaradasos = 0
+  legtobb = 0
+  legtobb_hely = 0
+  for i in range(len(leszallok)):
+      utasok -= leszallok[i]
+      hely = 20 - utasok
+      felszall = varakozok[i]
+      if felszall > hely:
+          lemaradt += felszall - hely
+          lemaradasos += 1
+          felszall = hely
+      utasok += felszall
+      felszallt += felszall
+      if utasok > legtobb:
+          legtobb = utasok
+          legtobb_hely = i + 1
+
+  print("2. feladat")
+  print("Felszállt utasok:", felszallt)
+  print("Lemaradt utasok:", lemaradt)
+
+  print("3. feladat")
+  print("Legtöbb utas:", legtobb, "fő, a", str(legtobb_hely) + ". megállóban")
+
+  print("4. feladat")
+  print("Lemaradással járó megállók:", lemaradasos)
+tesztek:
+-
+- || pre: leszallok = [0, 1, 2, 3, 4, 5, 6, 7]\nvarakozok = [3, 2, 1, 4, 2, 3, 1, 0]
+- || pre: leszallok = [0, 5, 10, 8, 3, 2, 1, 0]\nvarakozok = [25, 12, 9, 6, 4, 3, 2, 1]
+- || pre: leszallok = [0, 2, 4, 1, 10, 9, 5, 0]\nvarakozok = [20, 10, 8, 20, 15, 3, 0, 4]
+- || pre: leszallok = [0, 4, 3, 5, 7, 2, 9, 3]\nvarakozok = [6, 5, 8, 12, 0, 7, 6, 2]

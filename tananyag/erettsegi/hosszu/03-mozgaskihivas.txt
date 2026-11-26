@@ -1,0 +1,89 @@
+# Mozgáskihívás
+ido: 60
+leiras: |
+  A 9. évfolyam heti mozgás-kihívást hirdetett: aki egy héten legalább 150 percet mozog, teljesítette a kihívást. A résztvevők neveit és a heti mozgásidejüket percben az alábbi adatok adják meg, <b>ebben a sorrendben</b>: az első névhez az első mozgásidő tartozik, és így tovább. Minden névhez pontosan egy mozgásidő tartozik, de a programod <b>bármilyen adatra</b> működjön, a résztvevők száma is változhat (legalább egy résztvevő van). Két azonos nevű résztvevő nincs.
+adat: |
+  nevek = ["Anna", "Bence", "Csilla", "Dani", "Emma", "Feri", "Gabi", "Hanna"]
+  percek = [185, 90, 150, 240, 120, 150, 75, 310]
+cimkek:
+- Résztvevők
+- Heti mozgásidő (perc)
+reszek:
+- 2 || Írd ki, hány résztvevő van, és mennyi az átlagos heti mozgásidő egy tizedesre kerekítve, például: <code>Résztvevők: 8, átlag: 165.0 perc</code>
+- 2 || Hányan teljesítették a kihívást? Írd ki a következő alakban: <code>Teljesítők: 3</code>
+- 3 || Ki mozgott a legtöbbet, és ki a legkevesebbet? Írd ki két sorban a nevüket és a mozgásidejüket: <code>Legtöbb: Hanna (310 perc)</code> és <code>Legkevesebb: Gabi (75 perc)</code> Azonos értékek esetén a korábban szereplőt add meg.
+- 2 || Kérj be egy nevet (bekérő szöveg nélkül)! Írd ki, hány órát és percet mozgott az illető, például: <code>Bence: 1 óra 30 perc</code> Ha nincs ilyen nevű résztvevő, ezt írd ki: <code>Nincs ilyen résztvevő.</code>
+- 3 || Az iskola matricával jutalmaz: minden <b>teljes</b> 150 perc után egy matrica jár. Írd ki, hány matricát kell összesen venni: <code>Matricák száma: 4</code> Majd írd ki a legtöbb matricát kapók nevét az adatok sorrendjében, vesszővel és szóközzel elválasztva: <code>Legtöbb matrica: Réka, Zoli</code> Ha senki sem kapott matricát, a második sor helyett ezt írd ki: <code>Senki sem kapott matricát.</code>
+- 3 || A résztvevők az adatok sorrendjében mozogtak. Írd ki, hányadik résztvevőnél gyűlt össze először az 1000 perc, ha a mozgásidőket sorban összeadjuk: <code>A 7. résztvevőnél gyűlt össze az 1000 perc.</code> Ha mind együtt sem érik el az 1000 percet, ezt írd ki: <code>Nem gyűlt össze 1000 perc.</code>
+megoldas: |
+  nevek = ["Anna", "Bence", "Csilla", "Dani", "Emma", "Feri", "Gabi", "Hanna"]
+  percek = [185, 90, 150, 240, 120, 150, 75, 310]
+
+  print("1. feladat")
+  osszeg = 0
+  for p in percek:
+      osszeg += p
+  print("Résztvevők: " + str(len(nevek)) + ", átlag: " + str(round(osszeg / len(percek), 1)) + " perc")
+
+  print("2. feladat")
+  teljesito = 0
+  for p in percek:
+      if p >= 150:
+          teljesito += 1
+  print("Teljesítők:", teljesito)
+
+  print("3. feladat")
+  max_i = 0
+  min_i = 0
+  for i in range(len(percek)):
+      if percek[i] > percek[max_i]:
+          max_i = i
+      if percek[i] < percek[min_i]:
+          min_i = i
+  print("Legtöbb: " + nevek[max_i] + " (" + str(percek[max_i]) + " perc)")
+  print("Legkevesebb: " + nevek[min_i] + " (" + str(percek[min_i]) + " perc)")
+
+  print("4. feladat")
+  nev = input()
+  index = 0
+  while index < len(nevek) and nevek[index] != nev:
+      index += 1
+  if index < len(nevek):
+      print(nev + ": " + str(percek[index] // 60) + " óra " + str(percek[index] % 60) + " perc")
+  else:
+      print("Nincs ilyen résztvevő.")
+
+  print("5. feladat")
+  matricak = 0
+  legtobb = 0
+  for p in percek:
+      matricak += p // 150
+      if p // 150 > legtobb:
+          legtobb = p // 150
+  print("Matricák száma:", matricak)
+  if legtobb == 0:
+      print("Senki sem kapott matricát.")
+  else:
+      nyertesek = []
+      for i in range(len(nevek)):
+          if percek[i] // 150 == legtobb:
+              nyertesek.append(nevek[i])
+      print("Legtöbb matrica: " + ", ".join(nyertesek))
+
+  print("6. feladat")
+  ossz = 0
+  index = 0
+  while index < len(percek) and ossz < 1000:
+      ossz += percek[index]
+      index += 1
+  if ossz >= 1000:
+      print("A " + str(index) + ". résztvevőnél gyűlt össze az 1000 perc.")
+  else:
+      print("Nem gyűlt össze 1000 perc.")
+tesztek:
+- Bence
+- Zoli || pre: nevek = ["Zoli", "Vera", "Ági"]\npercek = [100, 149, 20]
+- Ági || pre: nevek = ["Zoli", "Vera", "Ági"]\npercek = [100, 149, 20]
+- Peti || pre: nevek = ["Peti"]\npercek = [1000]
+- Kata || pre: nevek = ["Ricsi", "Kata", "Mari", "Tomi"]\npercek = [450, 300, 449, 450]
+- Tomi || pre: nevek = ["Ricsi", "Kata", "Mari", "Tomi"]\npercek = [450, 300, 449, 450]

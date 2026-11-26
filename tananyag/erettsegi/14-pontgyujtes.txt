@@ -1,0 +1,62 @@
+# Pontgyűjtés
+ido: 30
+leiras: |
+  Egy iskolai ügyességi játékban a játékos körönként 1 és 20 közötti egész számú pontot kap. A játék véget ér, ha a játékos összpontszáma eléri vagy meghaladja az 50-et (ekkor nyer), vagy ha a játékos feladja. Feladásnál a bekért pontszám 0, és ez a 0 már nem számít körnek. A program a körök pontszámait a játék közben kéri be, és feltételezheti, hogy legalább egy kört lejátszanak, és a megadott értékek a leírásnak megfelelnek.
+reszek:
+- 1 || Kérd be a körök pontszámait egymás után, amíg a játék véget nem ér! Minden bekérés előtt jelenítsd meg a kör sorszámát a mintának megfelelően: <code>1. kör:</code>
+- 4 || Írd ki, hány kört játszottak le, és mennyi lett az összpontszám! Két sorba írd a mintának megfelelően: <code>Lejátszott körök: 4</code> és <code>Összpontszám: 53</code>
+- 3 || Nyert vagy feladta a játékos? Írd ki a mintának megfelelően: <code>A játékos nyert!</code> vagy <code>A játékos feladta.</code>
+- 5 || Melyik körben kapta a játékos a legtöbb pontot, és mennyit? Írd ki a kör sorszámát és a pontot: <code>Legjobb kör: 4. (18 pont)</code> Több azonos érték esetén az első kört add meg.
+kerdesek:
+- 1 || 1. kör:
+pontozas:
+- 0 || 1 || fut || A program hiba nélkül lefut a mintabemenettel
+- 0 || 1 || fejlec || Legalább egy részfeladat kiírása megfelel a mintának, a részfeladat sorszáma alatt
+- 1 || 1 || kerdes || A bekérésnél megjelenik a kör sorszáma a minta szerinti szöveggel
+- 2 || 2 || szam1:mind || A körök száma helyes (a feladás 0-ja nem számít körnek, minden bemenetre)
+- 2 || 1 || szam2:mind || Az összpontszám helyes (minden bemenetre)
+- 2 || 1 || felirat:minta || A két sor felirata a mintának megfelelő
+- 3 || 1 || blokk:minta || A kiírás helyes a mintára
+- 3 || 2 || blokk:rejtett || Másik kimenetre is helyes (nyerésnél és feladásnál is)
+- 4 || 1 || szam1:minta || A legjobb kör sorszáma helyes a mintára
+- 4 || 1 || szam2:minta || A legjobb kör pontszáma helyes a mintára
+- 4 || 1 || szam1:rejtett || A sorszám más bemenetre is helyes (azonos értékeknél az első kör)
+- 4 || 1 || szam2:rejtett || A pontszám más bemenetre is helyes
+- 4 || 1 || felirat:minta || A felirat és a kiírás formátuma a mintának megfelelő
+megoldas: |
+  osszeg = 0
+  korok = 0
+  legjobb = 0
+  legjobb_kor = 0
+  feladta = False
+  while osszeg < 50 and not feladta:
+      pont = int(input(str(korok + 1) + ". kör: "))
+      if pont == 0:
+          feladta = True
+      else:
+          korok += 1
+          osszeg += pont
+          if pont > legjobb:
+              legjobb = pont
+              legjobb_kor = korok
+
+  print("2. feladat")
+  print("Lejátszott körök:", korok)
+  print("Összpontszám:", osszeg)
+
+  print("3. feladat")
+  if feladta:
+      print("A játékos feladta.")
+  else:
+      print("A játékos nyert!")
+
+  print("4. feladat")
+  print("Legjobb kör:", str(legjobb_kor) + ".", "(" + str(legjobb), "pont)")
+tesztek:
+- 12\n8\n15\n18\n7
+- 10\n5\n0
+- 20\n20\n10\n3
+- 6\n6\n6\n6\n6\n6\n6\n6\n6\n6
+- 9\n7\n9\n8\n10\n9\n4
+- 3\n4\n0\n9
+- 5\n11\n3\n11\n8\n7\n9\n6\n0

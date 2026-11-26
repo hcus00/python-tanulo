@@ -1,0 +1,62 @@
+# Péksütemény-eladás
+ido: 30
+leiras: |
+  A sarki pékségben négyféle terméket árulnak: <b>K</b> = kifli (60 Ft), <b>Z</b> = zsemle (50 Ft), <b>B</b> = bagett (350 Ft) és <b>P</b> = pogácsa (90 Ft). Az eladó a nap folyamán minden eladott termék betűjelét egymás után írja egy sorba, például <code>KKZBKPZZKKB</code>. A feladat az ilyen napi feljegyzés kiértékelése. A feljegyzés legalább 1, legfeljebb 200 betűből áll, csak a fenti négy betűt (nagybetűvel) tartalmazza, helyességét nem kell ellenőrizni.
+reszek:
+- 3 || Kérd be a napi feljegyzést a mintának megfelelő felirattal, és írd ki, hány terméket adtak el összesen a nap folyamán: <code>Eladott termékek száma: 11</code>
+- 3 || Számold ki és írd ki a nap bevételét: <code>A nap bevétele: 1240 Ft</code>
+- 4 || Melyik termékből adtak el a legtöbbet? Írd ki a betűjelét és a darabszámot: <code>Legtöbbet eladott termék: K - 5 db</code> Ha több termékből is ugyanannyit adtak el, a K, Z, B, P sorrendben az első számít.
+- 3 || Állapítsd meg, hogy mind a négyféle termékből adtak-e el legalább egyet! Ha igen, írd ki, hogy <code>Teljes kínálat</code>, különben írd ki a hiányzó termék betűjelét: <code>Hiányzó termék: P</code> Több hiányzó termék esetén a K, Z, B, P sorrendben az első hiányzót add meg.
+kerdesek:
+- 1 || Kérem a napi feljegyzést:
+pontozas:
+- 0 || 1 || fut || A program hiba nélkül lefut a mintabemenettel
+- 0 || 1 || fejlec || Legalább egy részfeladat kiírása megfelel a mintának, a részfeladat sorszáma alatt
+- 1 || 1 || kerdes || A bekérésnél megjelenik a minta szerinti szöveg
+- 1 || 1 || szam1:mind || Az eladott termékek száma helyes (minden bemenetre)
+- 1 || 1 || felirat:minta || A felirat a mintának megfelelő
+- 2 || 1 || szam1:minta || A bevétel helyes a mintára
+- 2 || 1 || szam1:rejtett || A bevétel más bemenetre is helyes
+- 2 || 1 || felirat:minta || A felirat a mintának megfelelő
+- 3 || 1 || szam1:mind || A legtöbbet eladott termék darabszáma helyes
+- 3 || 1 || felirat:minta || A felirat a mintának megfelelő
+- 3 || 1 || blokk:minta || A termék betűjele is helyes a mintára
+- 3 || 1 || blokk:rejtett || Más bemenetre is helyes (például azonos darabszámnál az első)
+- 4 || 1 || blokk:minta || A kínálat vizsgálata helyes a mintára
+- 4 || 2 || blokk:rejtett || Más bemenetre is helyes (hiányzó terméknél, több hiányzónál is)
+megoldas: |
+  napi = input("Kérem a napi feljegyzést: ")
+  jelek = "KZBP"
+  arak = [60, 50, 350, 90]
+  darab = [0, 0, 0, 0]
+  for betu in napi:
+      darab[jelek.index(betu)] += 1
+
+  print("1. feladat")
+  print("Eladott termékek száma:", len(napi))
+
+  print("2. feladat")
+  bevetel = 0
+  for i in range(4):
+      bevetel += darab[i] * arak[i]
+  print("A nap bevétele:", bevetel, "Ft")
+
+  print("3. feladat")
+  legtobb = 0
+  for i in range(1, 4):
+      if darab[i] > darab[legtobb]:
+          legtobb = i
+  print("Legtöbbet eladott termék:", jelek[legtobb], "-", darab[legtobb], "db")
+
+  print("4. feladat")
+  if 0 in darab:
+      print("Hiányzó termék:", jelek[darab.index(0)])
+  else:
+      print("Teljes kínálat")
+tesztek:
+- KKZBKPZZKKB
+- KKKK
+- ZBZB
+- PPPBBKKZZ
+- BP
+- ZZZZPPPPBBBBKZ

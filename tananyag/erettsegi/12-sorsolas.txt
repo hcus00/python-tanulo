@@ -1,0 +1,64 @@
+# Iskolai sorsolás
+ido: 30
+leiras: |
+  A szülői szervezet tombolát rendez. Az 1-től 90-ig számozott szelvények közül egymás után annyiszor sorsolnak, ahány nyereményt kisorsolnak. Minden sorsolásnál bármelyik szelvény egyforma eséllyel nyerhet, és ugyanaz a szelvény többször is kisorsolható. A feladatban a sorsolást szimulálod: a nyeremények számát (N, 1 ≤ N ≤ 20) a felhasználó adja meg, helyességét nem kell ellenőrizni.
+reszek:
+- 4 || Kérd be a nyeremények számát (N) a mintának megfelelő felirattal, majd sorsolj ki N szelvényszámot <b>egyenként, egymás után</b>, 1 és 90 között (a két határ is lehet). Írd ki a kisorsolt számokat egy sorba, szóközzel elválasztva, a sorsolás sorrendjében: <code>58 72 60 58</code>
+- 3 || Hány páros szelvényszámot sorsoltak ki? Írd ki: <code>Páros számok: 4</code>
+- 4 || Melyik volt a legnagyobb kisorsolt szám, és hányadikként sorsolták ki? Írd ki: <code>A legnagyobb szám: 72 (2. sorsolás)</code> Ha a legnagyobb szám többször is kijött, az első előfordulás számít.
+- 2 || Hányszor volt egy kisorsolt szám nagyobb az előzőleg kisorsoltnál? Írd ki: <code>Növekedések száma: 1</code>
+kerdesek:
+- 1 || Hány nyereményt sorsolnak?
+pontozas:
+- 0 || 1 || fut || A program hiba nélkül lefut a mintabemenettel
+- 0 || 1 || fejlec || Legalább egy részfeladat kiírása megfelel a mintának, a részfeladat sorszáma alatt
+- 1 || 1 || kerdes || A bekérésnél megjelenik a minta szerinti szöveg
+- 1 || 2 || blokk:minta || A kisorsolt számok helyesek és a kiírás a minta szerinti a mintára
+- 1 || 1 || blokk:rejtett || Más N értékekre is helyes
+- 2 || 1 || szam1:minta || A páros számok száma helyes a mintára
+- 2 || 1 || szam1:rejtett || Más sorsolásokra is helyes
+- 2 || 1 || felirat:minta || A felirat a mintának megfelelő
+- 3 || 1 || szam1:minta || A legnagyobb szám helyes a mintára
+- 3 || 1 || szam2:minta || A sorsolás sorszáma helyes a mintára
+- 3 || 1 || szam1:rejtett || A legnagyobb szám más sorsolásokra is helyes
+- 3 || 1 || szam2:rejtett || Az első előfordulás sorszáma más sorsolásokra is helyes
+- 4 || 1 || szam1:minta || A növekedések száma helyes a mintára
+- 4 || 1 || szam1:rejtett || Más sorsolásokra is helyes
+megoldas: |
+  import random
+
+  n = int(input("Hány nyereményt sorsolnak? "))
+  szamok = []
+  for i in range(n):
+      szamok.append(random.randint(1, 90))
+
+  print("1. feladat")
+  print(*szamok)
+
+  print("2. feladat")
+  paros = 0
+  for szam in szamok:
+      if szam % 2 == 0:
+          paros += 1
+  print("Páros számok:", paros)
+
+  print("3. feladat")
+  legnagyobb = 0
+  for i in range(n):
+      if szamok[i] > szamok[legnagyobb]:
+          legnagyobb = i
+  print("A legnagyobb szám:", szamok[legnagyobb], "(" + str(legnagyobb + 1) + ". sorsolás)")
+
+  print("4. feladat")
+  novekedes = 0
+  for i in range(1, n):
+      if szamok[i] > szamok[i - 1]:
+          novekedes += 1
+  print("Növekedések száma:", novekedes)
+tesztek:
+- 4 || seed: 11
+- 1 || seed: 3
+- 10 || seed: 5
+- 20 || seed: 8
+- 15 || seed: 21
+- 6 || seed: 40

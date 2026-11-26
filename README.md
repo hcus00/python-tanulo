@@ -111,15 +111,22 @@ Az indulókód végére a build mindig sortörést tesz. Ha hibát vétesz a for
 
 ## Érettségi mód
 
-A **🎓 Érettségi mód** a digitális kultúra érettségi gyakorlati vizsgájának 5. feladatához (algoritmizálás és programozás, 15 pont) hasonló feladatsorokat ad. A feladatok egy-egy történetre épülnek (kockajáték, titkosírás, robot, számkitaláló, versenyeredmények…), és szándékosan nem nevezik meg a programozási tételt: a leírásból kell felismerni.
+A **🎓 Érettségi mód** a digitális kultúra érettségi gyakorlati vizsgájának 5. feladatához (algoritmizálás és programozás, 15 pont) hasonló feladatsorokat ad. A feladatok egy-egy történetre épülnek, és szándékosan nem nevezik meg a programozási tételt: a leírásból kell felismerni.
+
+Két csoport van, két mappában:
+
+- **Érettségi típusú feladatsorok** (`tananyag/erettsegi/`, jelenleg 07–14): 30 perc, 3–5 rövid részfeladat, a mintamegoldás legfeljebb kb. 30 sor. A 2022–2026-os középszintű érettségik 5. feladatainak felépítését és nehézségét követik (egy rövid történet, az első részfeladat az adatok eltárolása vagy bekérése, utána 2–3 egyszerű algoritmus: összegzés, számlálás, szélsőérték az első előfordulás helyével, szomszédos elemek vizsgálata, egyszerű szimuláció, ciklus megállási feltétellel), de saját történetekkel és adatokkal.
+- **Hosszabb gyakorló feladatsorok** (`tananyag/erettsegi/hosszu/`, 01–06): az eredeti, terjedelmesebb (6 részfeladatos) sorok, 60 perc. Ugyanúgy működnek, csak a listában külön szakaszban állnak.
+
+**Pontozás logikai egységenként** (a hivatalos javítási útmutatók szerint): a 15 pont szempontokra oszlik, ezért részpontok járnak. A hivatalos útmutatók általános pontjainak (a program létezése, képernyőüzenetek) megfelelője itt az **Általános** rész (2 pont: a program hiba nélkül lefut a mintával, és legalább egy részfeladat kiírása a minta szerinti, a részfeladat sorszáma alatt). Ezen kívül: az adatok eltárolása (2 pont, ha a feladat adatot ad meg), a bekérés felirata (ha a mintában van), és részfeladatonként a számok helyessége a mintára és más adatokra, valamint a feliratok. A beadás után szempontonként ✔/✘ látszik a pontokkal. A kimenet összehasonlításakor a kis- és nagybetű, az írásjelek és a számok írásmódja (`3.50` = `3.5`) nem számít; a bekérés szövege külön gyűjtődik, ezért nem rontja el a kimenet összevetését.
 
 - **Üres szerkesztővel indul** a diák. Ha a feladat adatokat ad meg (névsor, pontszámok…), azokat egyszerűen felsorolja (`Címke: elem, elem, …`), a diák dönti el, milyen adatszerkezetben és milyen néven tárolja őket (a feladat szövege nem árul el változónevet, függvényt vagy adatszerkezetet). Ha a program bemenetet olvas, a mintát a **Bemenet** mezőbe kell felvinnie. A Bemenet mező csak akkor látszik, ha a feladat olvas be adatot;
-- a feladatok **számozott pontokba szedve** állnak a feladatlapon, a pontszám **nem látszik** (csak az összes pont). A részfeladatonkénti pontokat és a hibák magyarázatát a **beadás után** mutatja az oldal, mint az éles vizsgán az értékelés;
+- a feladatok **számozott pontokba szedve** állnak a feladatlapon, a pontszám **nem látszik** (csak az összes pont). A szempontonkénti részpontokat és a hibák magyarázatát a **beadás után** mutatja az oldal, mint az éles vizsgán az értékelés;
 - asztali nézetben a **feladatlap bal oldalon, a szerkesztő jobb oldalon** áll, telefonon egymás alatt;
-- a megoldásnak bármilyen adatra működnie kell: beadáskor a program **rejtett tesztekkel** (más bemenettel, más adatokkal, rögzített véletlen sorozattal) is lefut. A feladatban megadott adatokat a diák kódjában az oldal az **értékük alapján** találja meg és cseréli le (nem számít a változó neve, a tördelés és az sem, hogy külön listákban, soronként (lista vagy rekord soronként) vagy szótárban tárolja őket). Ha egy adatoszlopot nem ismer fel (például szövegből vágja szét), a rejtett adatos tesztet kihagyja, és ezt külön jelzi (a pontszám ilyenkor csak a többi teszten alapul);
+- a megoldásnak bármilyen adatra működnie kell: beadáskor a program **rejtett tesztekkel** (más bemenettel, más adatokkal, rögzített véletlen sorozattal) is lefut. A feladatban megadott adatokat a diák kódjában az oldal az **értékük alapján** találja meg és cseréli le (nem számít a változó neve, a tördelés és az sem, hogy külön listákban, soronként (lista vagy rekord soronként) vagy szótárban tárolja őket). Ha egy adatoszlopot nem ismer fel (például szövegből vágja szét), a rejtett adatos tesztet kihagyja, és ezt külön jelzi (az ettől függő szempontokra ilyenkor nem jár pont, a mintára jó szempontokra igen);
 - minden eredmény elé külön sorba kell írni, hogy `N. feladat`, utána az eredmény, a minta kimenete szerint (az `N. feladat: eredmény` egy sorban is elfogadott);
 - a százalék alapján megmondja, melyik jegynek felel meg az eredmény (25 / 40 / 60 / 80%);
-- időmérő (alapból 30 perc, választható), lejártakor automatikus beadás; a lejárt idő utáni próbálkozás már nem számít a legjobb eredménybe;
+- időmérő (az ajánlott időkeret a feladatsoron áll, más is választható), lejártakor automatikus beadás; a lejárt idő utáni próbálkozás már nem számít a legjobb eredménybe;
 - opció: **ékezet nélküli kimenet is elfogadható**, ahogy az érettségin;
 - a beírt kód a böngészőben mentődik, a legjobb eredmények és a jelvények az Eredmények oldalon látszanak.
 
@@ -139,6 +146,11 @@ cimkek:
 reszek:
 - 2 || Írd ki, hányan teljesítették a kihívást! (pont || a részfeladat szövege)
 - 3 || Kérj be egy nevet (bekérő szöveg nélkül)! Írd ki a percét: <code>Bence: 1 óra 30 perc</code>
+pontozas:
+- 1 || 1 || minta || Mintára helyes (részfeladat || pont || kulcs || a szempont szövege)
+- 1 || 1 || rejtett || Más adatokra is helyes
+- 2 || 1 || adat || Az adatok eltárolva a programban
+- 2 || 2 || minta || A név alapján a perc helyes a mintára
 megoldas: |
   nevek = ["Anna", "Bence", "Csilla"]
   percek = [185, 90, 150]
@@ -151,8 +163,14 @@ tesztek:
 - 5 || seed: 3
 ```
 
+- A `kerdesek` **nem kötelező**: `részfeladat || a bekérés szövege` sorok. Ilyenkor a mintakimenet a bekérések szövegét és a beírt értékeket is mutatja (mint a konzol), a `kerdes` szempont pedig azt ellenőrzi, hogy a diák bekérése tartalmazza a szöveget (a `print`-tel kiírt kérdést is elfogadja). A megoldásban a bekérés szövege szerepeljen, a build ellenőrzi.
 - Az `adat` **nem kötelező** (ha az adatok `input()`-ból vagy véletlenből jönnek, hagyd el). Ha van, a feladatlapon oszloponként, a `cimkek` címkéivel jelenik meg (a változónevek **nem** látszanak), a `megoldas` pedig ugyanezekkel a sorokkal kezdődik. Az adat sorai `változó = [elemek]` alakúak (egész szám vagy szöveg elemekkel, minden oszlop egyforma hosszú), a `cimkek` pedig oszloponként egy címke.
-- A `reszek` pontjai együtt **15-öt** tegyenek ki. Minden részfeladat eredménye elé `print("N. feladat")` kerüljön a megoldásban (N a részfeladat sorszáma, 1-től).
+- A `pontozas` **nem kötelező**: ha hiányzik, a részfeladat pontjainak nagyobbik fele a mintára jó kimenetért, a többi a rejtett tesztekért jár (a hosszabb gyakorló feladatsorok így működnek). Sorai: `részfeladat || pont || kulcs || a szempont szövege`. A **0. részfeladat** az általános szempontoké (`fut`, `fejlec`). Kulcsok a részfeladatokhoz:
+  - `adat`: az adatok felismerhetően el vannak tárolva (csak adatot megadó feladatsorban);
+  - `kerdes`: a bekérésnél megjelenik a `kerdesek`-ben megadott szöveg;
+  - `blokk`, `sorK`, `szamK`, `felirat`, mindegyik `:minta`, `:rejtett` vagy `:mind` végződéssel: a részfeladat teljes kimenete, annak K. sora, K. száma (a feliratoktól és az írásmódtól függetlenül), illetve a számoktól független felirata egyezik a mintatesztben / a rejtett tesztekben / mindben. Egy kimenetnek nem szabad kevesebb sorból vagy számból állnia, mint amennyire a szempont hivatkozik (a build ellenőrzi). Önmagában `minta`, `rejtett`, `mind` a `blokk:…` rövidítése.
+  Egy részfeladat szempontjainak pontjai együtt a részfeladat pontját adják, a részfeladatok és az általános szempontok együtt 15-öt. A `rejtett` kulcshoz legalább két teszt kell. A kimenet nélküli (csak adattárolást vagy bekérést kérő) részfeladatnak csak `adat` és `kerdes` szempontja lehet.
+- A `reszek` és a 0. részfeladat pontjai együtt **15-öt** tegyenek ki. Minden részfeladat eredménye elé `print("N. feladat")` kerüljön a megoldásban (N a részfeladat sorszáma, 1-től).
 - A `tesztek` első eleme a **látható minta** (az oldal ezt mutatja a feladatlapon), a többi rejtett. A teszt alakja `bemenet || pre: adat-sorok || seed: szám`: a `pre` az `adat` sorait cseréli le (ugyanannyi sor, ugyanabban a sorrendben, a diák kódjában az értékek alapján), a `seed` a véletlenszám-generátort rögzíti. A `\n` sortörést jelent. Véletlen feladatban a feladat szövegének pontosan elő kell írnia, hányszor és milyen sorrendben sorsoljanak. A feladat szövegében **nem szerepelhet** konkrét Python-utasítás, függvény- vagy modulnév és adatszerkezet-név (a build ezt ellenőrzi, és hibával megáll).
 - A kimenetet a build a megoldás lefuttatásával számolja ki. Ha nincs `kezdokod` mező, az indulókód csak egy megjegyzés-sor.
 

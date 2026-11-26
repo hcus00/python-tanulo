@@ -1,0 +1,66 @@
+# Jelszóellenőrző
+ido: 30
+leiras: |
+  Az iskola új jelszórendszert vezet be, és a diákoknak olyan programot kell készíteniük, amely értékeli a választott jelszavukat. A jelszó legalább 1, legfeljebb 30 karakter hosszú, szóközt nem tartalmaz, a bemenet helyességét nem kell ellenőrizni.
+reszek:
+- 3 || Kérd be a jelszót a mintának megfelelő felirattal, és írd ki a hosszát: <code>A jelszó hossza: 13</code>
+- 3 || Számold meg, hány nagybetű és hány számjegy van a jelszóban (más karakter, például kisbetű vagy írásjel is lehet benne). Két sorba írd ki: <code>Nagybetűk száma: 1</code>, <code>Számjegyek száma: 2</code>
+- 4 || Értékeld a jelszó erősségét! Ha a jelszó 8 karakternél rövidebb, <b>gyenge</b>. Ha legalább 8 karakter hosszú, és van benne nagybetű és számjegy is, akkor <b>erős</b>. A többi jelszó <b>közepes</b>. Írd ki a minősítést: <code>Az erősség: erős</code>
+- 3 || A jelszóban két szomszédos karakter nem lehet azonos. Számold meg, hány helyen egyezik meg egy karakter a közvetlenül utána következővel (az <code>aabbb1</code> jelszóban például 3 ilyen hely van). Írd ki a mintának megfelelően: <code>Azonos szomszédok száma: 2</code>
+kerdesek:
+- 1 || Kérem a jelszót:
+pontozas:
+- 0 || 1 || fut || A program hiba nélkül lefut a mintabemenettel
+- 0 || 1 || fejlec || Legalább egy részfeladat kiírása megfelel a mintának, a részfeladat sorszáma alatt
+- 1 || 1 || kerdes || A bekérésnél megjelenik a minta szerinti szöveg
+- 1 || 1 || szam1:mind || A jelszó hossza helyes (minden bemenetre)
+- 1 || 1 || felirat:minta || A felirat a mintának megfelelő
+- 2 || 1 || szam1:mind || A nagybetűk száma helyes (minden bemenetre)
+- 2 || 1 || szam2:mind || A számjegyek száma helyes (minden bemenetre)
+- 2 || 1 || felirat:minta || A két sor felirata a mintának megfelelő
+- 3 || 1 || blokk:minta || A minősítés helyes a mintára
+- 3 || 3 || blokk:rejtett || A minősítés más jelszavakra is helyes (mindhárom minősítésre)
+- 4 || 1 || szam1:minta || A szomszédos azonos karakterek száma helyes a mintára
+- 4 || 1 || szam1:rejtett || Más jelszavakra is helyes
+- 4 || 1 || felirat:minta || A felirat a mintának megfelelő
+megoldas: |
+  jelszo = input("Kérem a jelszót: ")
+
+  print("1. feladat")
+  print("A jelszó hossza:", len(jelszo))
+
+  print("2. feladat")
+  nagy = 0
+  szam = 0
+  for c in jelszo:
+      if c.isupper():
+          nagy += 1
+      elif c.isdigit():
+          szam += 1
+  print("Nagybetűk száma:", nagy)
+  print("Számjegyek száma:", szam)
+
+  print("3. feladat")
+  if len(jelszo) < 8:
+      minosites = "gyenge"
+  elif nagy > 0 and szam > 0:
+      minosites = "erős"
+  else:
+      minosites = "közepes"
+  print("Az erősség:", minosites)
+
+  print("4. feladat")
+  azonos = 0
+  for i in range(len(jelszo) - 1):
+      if jelszo[i] == jelszo[i + 1]:
+          azonos += 1
+  print("Azonos szomszédok száma:", azonos)
+tesztek:
+- Sötét-éjjel99
+- abc
+- Kutya1Macska
+- jelszojelszo
+- Zz9!
+- XXXXXXXXXXXXXXXXXXXX
+- aA1aA1aA
+- aabbb1

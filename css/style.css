@@ -164,6 +164,11 @@ ul.exl{list-style:none;padding:0;margin:8px 0}
 ul.exl li{padding:8px 10px;margin-bottom:8px;border:1px solid var(--bd);border-left-width:5px;border-radius:8px}
 ul.exl li.ok{border-left-color:var(--ok)}
 ul.exl li.no{border-left-color:var(--bad)}
+ul.exl li.mid{border-left-color:var(--wr,#d9a300)}
+ul.cr{list-style:none;padding:0;margin:6px 0}
+ul.exl ul.cr li{border:0;border-radius:0;padding:2px 0;margin:0;font-size:14px}
+ul.cr li.ok span{color:var(--ok)}
+ul.cr li.no span{color:var(--bad)}
 ul.exl pre{margin:4px 0 8px;white-space:pre-wrap}
 .chk{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
 .chk input{margin-top:4px}

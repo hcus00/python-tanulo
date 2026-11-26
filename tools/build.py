@@ -146,8 +146,24 @@ def parse_section(sec, where):
 
 # ======================= Python-futtatás =======================
 
-def run_try(code, stdin, seed=None, timeout=2):
+INPUT_PRE = (
+    'import sys as _s\n'
+    '_L = _s.stdin.read().split("\\n")[:-1]\n'
+    '_i = [0]\n'
+    'def input(p=""):\n'
+    '    if _i[0] >= len(_L):\n'
+    '        raise EOFError("nincs több bemenet")\n'
+    '    v = _L[_i[0]]; _i[0] += 1\n'
+    '    if _DISP:\n'
+    '        _s.stdout.write(str(p) + v + "\\n")\n'
+    '    return v\n'
+)
+
+
+def run_try(code, stdin, seed=None, timeout=2, disp=False):
+    """A megoldás futtatása. Az input() kérdése nem kerül a kimenetbe (disp=True: a kérdés és a beírt érték is, mint a konzolon)."""
     pre = 'import random\nrandom.seed(%d)\n' % seed if seed is not None else ''
+    pre += '_DISP = %s\n' % disp + INPUT_PRE
     try:
         r = subprocess.run([sys.executable, '-I', '-c', pre + code], input=stdin + '\n',
                            capture_output=True, text=True, timeout=timeout)
@@ -156,8 +172,8 @@ def run_try(code, stdin, seed=None, timeout=2):
     return (r.stdout if r.returncode == 0 else None), r.stderr
 
 
-def run_sol(code, stdin, seed=None):
-    out, err = run_try(code, stdin, seed, 5)
+def run_sol(code, stdin, seed=None, disp=False):
+    out, err = run_try(code, stdin, seed, 5, disp)
     if out is None:
         raise BuildError('a megoldás hibás:\n%s\n--- bemenet: %r\n%s' % (code, stdin, err))
     return out
@@ -324,7 +340,7 @@ def data_cols(src, where):
     return cols
 
 
-def build_exam(path, num):
+def build_exam(path, num, group='e'):
     where = os.path.relpath(path, ROOT)
     text = open(path, encoding='utf-8').read().replace('\r', '')
     lines = text.split('\n')
@@ -353,8 +369,51 @@ def build_exam(path, num):
         m = re.match(r'^(\d+)\s*\|\|\s*(.*)$', it, re.S)
         if not m: raise BuildError('%s: a részfeladat „pont || szöveg” alakú legyen: %r' % (where, it))
         parts.append({'n': n, 'p': int(m.group(1)), 't': m.group(2)})
-    if sum(p['p'] for p in parts) != 15:
-        raise BuildError('%s: a részfeladatok pontjai együtt 15-öt tegyenek ki (most: %d)' % (where, sum(p['p'] for p in parts)))
+    # kérdések (az input() felirata): „részfeladat || a felirat szövege”; a „kerdes” szempont ellenőrzi
+    for it in f.get('kerdesek', []):
+        m = re.match(r'^(\d+)\s*\|\|\s*(.+)$', it, re.S)
+        if not m or not any(p['n'] == int(m.group(1)) for p in parts):
+            raise BuildError('%s: a kérdés „részfeladat || szöveg” alakú legyen: %r' % (where, it))
+        [p for p in parts if p['n'] == int(m.group(1))][0]['q'] = m.group(2).strip()
+    # pontozási szempontok (logikai egységek): „részfeladat || pont || kulcs || megnevezés”; a 0. „részfeladat” az általános szempontoké
+    crit = {p['n']: [] for p in parts}
+    crit[0] = []
+    KEY = re.compile(r'^(blokk|sor[1-9]|szam[1-9]|felirat):(minta|rejtett|mind)$')
+    for it in f.get('pontozas', []):
+        m = re.match(r'^(\d+)\s*\|\|\s*(\d+)\s*\|\|\s*([a-z0-9:]+)\s*\|\|\s*(.+)$', it, re.S)
+        if not m or int(m.group(1)) not in crit:
+            raise BuildError('%s: a pontozási szempont „részfeladat || pont || kulcs || megnevezés” alakú legyen: %r' % (where, it))
+        n0, key = int(m.group(1)), m.group(3)
+        if key in ('minta', 'rejtett', 'mind'): key = 'blokk:' + key
+        if n0 == 0:
+            if key not in ('fut', 'fejlec'):
+                raise BuildError('%s: az általános (0.) szempont kulcsa fut vagy fejlec lehet: %r' % (where, key))
+        elif key not in ('adat', 'kerdes') and not KEY.match(key):
+            raise BuildError('%s: ismeretlen pontozási kulcs: %r (adat, kerdes, minta, rejtett, mind, blokk/sorK/szamK/felirat:minta|rejtett|mind)' % (where, key))
+        if key == 'adat' and not cols:
+            raise BuildError('%s: „adat” szempont csak adatot megadó feladatsorban lehet' % where)
+        if key == 'kerdes' and 'q' not in [p for p in parts if p['n'] == n0][0]:
+            raise BuildError('%s: „kerdes” szempont csak a „kerdesek” mezőben szereplő részfeladathoz lehet (%d.)' % (where, n0))
+        crit[n0].append({'p': int(m.group(2)), 'k': key, 't': m.group(4).strip()})
+    gen = None
+    if crit[0]:
+        gen = {'p': sum(c['p'] for c in crit[0]), 'k': crit[0]}
+    for p in parts:
+        cs = crit[p['n']]
+        if not cs:   # alapértelmezés: a mintára, majd más adatokra helyes kimenet
+            if p['p'] == 1:
+                cs.append({'p': 1, 'k': 'blokk:mind', 't': 'A kimenet helyes minden adatra'})
+            else:
+                a = (p['p'] + 1) // 2
+                cs.append({'p': a, 'k': 'blokk:minta', 't': 'A mintaadatokra helyes a kimenet'})
+                cs.append({'p': p['p'] - a, 'k': 'blokk:rejtett', 't': 'Más adatokra és bemenetre is helyes'})
+        if sum(c['p'] for c in cs) != p['p']:
+            raise BuildError('%s: a(z) %d. részfeladat szempontjainak pontjai (%d) nem adják ki a részfeladat pontját (%d)' % (where, p['n'], sum(c['p'] for c in cs), p['p']))
+        p['k'] = cs
+        p['h'] = 1 if any(c['k'] not in ('adat', 'kerdes') for c in cs) else 0
+    total = sum(p['p'] for p in parts) + (gen['p'] if gen else 0)
+    if total != 15:
+        raise BuildError('%s: a részfeladatok és az általános szempontok pontjai együtt 15-öt tegyenek ki (most: %d)' % (where, total))
     tests = parse_tests(f['tesztek'], where)
     ts = []
     for t in tests:
@@ -369,18 +428,41 @@ def build_exam(path, num):
         out = norm(run_sol(apply_pre(sol, pre), t['i'], seed))
         ts.append([t['i'], out, hc, seed])
     heads = {int(h) for h in re.findall(r'^(\d+)\. feladat$', ts[0][1], re.M)}
-    if heads != {p['n'] for p in parts}:
-        raise BuildError('%s: a mintamegoldás minden részfeladat előtt írja ki az „N. feladat” fejlécet (talált: %s)' % (where, sorted(heads)))
+    if heads != {p['n'] for p in parts if p['h']}:
+        raise BuildError('%s: a mintamegoldás minden, kimenettel értékelt részfeladat előtt írja ki az „N. feladat” fejlécet (talált: %s)' % (where, sorted(heads)))
+    if any(c['k'].endswith(':rejtett') for p in parts for c in p['k']) and len(ts) < 2:
+        raise BuildError('%s: „rejtett” szemponthoz legalább két teszt kell' % where)
+    NUM = re.compile(r'-?\d+(?:[.,]\d+)?')
+    for t in ts:
+        B = {}
+        cur = None
+        for ln in t[1].split('\n'):
+            mm = re.match(r'^(\d+)\. feladat$', ln)
+            if mm: cur = int(mm.group(1)); B[cur] = []
+            elif cur is not None and ln.strip(): B[cur].append(ln)
+        for p in parts:
+            for c in p['k']:
+                mm = re.match(r'^sor(\d):', c['k'])
+                if mm and len(B.get(p['n'], [])) < int(mm.group(1)):
+                    raise BuildError('%s: a(z) %d. részfeladat kimenete az egyik tesztben rövidebb, mint a(z) %s szempont sora' % (where, p['n'], c['k']))
+                mm = re.match(r'^szam(\d):', c['k'])
+                if mm and len(NUM.findall(' '.join(B.get(p['n'], [])))) < int(mm.group(1)):
+                    raise BuildError('%s: a(z) %d. részfeladat kimenetében az egyik tesztben kevesebb szám van, mint a(z) %s szempont sorszáma' % (where, p['n'], c['k']))
+    sm = norm(run_sol(sol, tests[0]['i'], tests[0].get('seed'), True))
     for p in parts:
-        p['h'] = 1
+        if 'q' in p and p['q'].lower() not in sm.lower():
+            raise BuildError('%s: a megoldás kérdései között nincs ez: %r (a minta kimenetében sem szerepel)' % (where, p['q']))
     for t in ts:
         if {int(h) for h in re.findall(r'^(\d+)\. feladat$', t[1], re.M)} != heads:
             raise BuildError('%s: a tesztek kimenetében nem ugyanazok a „N. feladat” fejlécek szerepelnek' % where)
     st = f.get('kezdokod')
     if st is None:
         st = '# A megoldásod ide kerül\n'
-    return {'id': '%02d' % num, 'n': title, 't': as_int(f['ido'], where), 'd': f['leiras'], 'c': cols, 'cl': labels, 'st': st,
-            'parts': parts, 'ts': ts, 'm': sol}
+    r = {'id': '%02d' % num, 'g': group, 'n': title, 't': as_int(f['ido'], where), 'd': f['leiras'], 'c': cols, 'cl': labels, 'st': st,
+         'parts': parts, 'ts': ts, 'm': sol}
+    if gen: r['gen'] = gen
+    if sm != ts[0][1]: r['sm'] = sm
+    return r
 
 
 # ======================= kiírás =======================
@@ -443,15 +525,19 @@ def grade_files():
 
 
 def exam_file():
-    d = os.path.join(SRC, 'erettsegi')
     L = []
-    if os.path.isdir(d):
+    for sub, group in (('', 'e'), ('hosszu', 'h')):
+        d = os.path.join(SRC, 'erettsegi', sub)
+        if not os.path.isdir(d): continue
         for fn in sorted(x for x in os.listdir(d) if x.endswith('.txt')):
             m = re.match(r'^(\d+)-', fn)
             if not m: raise BuildError('erettsegi/%s: a fájlnév sorszámmal kezdődjön' % fn)
-            L.append(build_exam(os.path.join(d, fn), int(m.group(1))))
+            L.append(build_exam(os.path.join(d, fn), int(m.group(1)), group))
+    ids = [e['id'] for e in L]
+    if len(set(ids)) != len(ids):
+        raise BuildError('erettsegi: két feladatsor azonosítója (a fájlnév sorszáma) megegyezik: %s' % ids)
     out = ['/* GENERÁLT FÁJL – ne ezt szerkeszd! A forrás: tananyag/erettsegi/, újragenerálás: python3 tools/build.py\n'
-           ' * Érettségi feladatsorok: {id, n (cím), t (perc), d (leírás), c (a feladatban megadott adatok oszlopai), cl (az oszlopok címkéi), st (kezdőkód), parts: [{n, p (pont, csak beadás után látszik), t (szöveg), h}],\n'
+           ' * Érettségi feladatsorok: {id, g (e: érettségi típusú, h: hosszabb gyakorló), n (cím), t (perc), d (leírás), c (a feladatban megadott adatok oszlopai), cl (az oszlopok címkéi), st (kezdőkód), parts: [{n, p (pont, csak beadás után látszik), t (szöveg), h (van-e kimenete), k: [{p, k (kulcs), t}] (pontozási szempontok)}],\n'
            ' * ts: [[bemenet, várt kimenet, adat-oszlopok (a rejtett tesztekben, különben 0), seed (vagy null)]], m (mintamegoldás)} */',
            'var EX=[']
     out.append(',\n'.join(js_val(e) for e in L))

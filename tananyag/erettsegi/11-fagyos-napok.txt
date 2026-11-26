@@ -1,0 +1,60 @@
+# Fagyos napok
+ido: 30
+leiras: |
+  Egy hegyvidéki meteorológiai állomás 14 egymást követő napon rögzítette a napi legalacsonyabb hőmérsékletet (°C-ban, egész számokra kerekítve). Egy nap <b>fagyos</b>, ha a legalacsonyabb hőmérséklet 0 °C-nál kisebb. A programod <b>bármilyen, 14 napra vonatkozó adatra</b> működjön.
+adat: |
+  homerseklet = [3, -2, -5, 1, -1, -4, -6, -3, 2, 4, -1, -2, 0, -3]
+cimkek:
+- Napi legalacsonyabb hőmérséklet (°C), időrendben
+reszek:
+- 2 || Tárold el a mért hőmérsékleteket a programban!
+- 3 || Melyik napon volt a legalacsonyabb a hőmérséklet? Írd ki a nap sorszámát (az első nap sorszáma 1) és a hőmérsékletet: <code>A leghidegebb nap: 7. nap, -6 °C</code> Azonos értékek esetén az első napot add meg.
+- 3 || Hány fagyos nap volt? Írd ki a mintának megfelelően: <code>Fagyos napok száma: 9</code>
+- 5 || Mennyi volt a leghosszabb, <b>egymást követő</b> fagyos napokból álló időszak hossza? Írd ki: <code>A leghosszabb fagyos időszak: 4 nap</code> Ha nem volt fagyos nap, a hossz 0.
+pontozas:
+- 0 || 1 || fut || A program hiba nélkül lefut a mintaadatokkal
+- 0 || 1 || fejlec || Legalább egy részfeladat kiírása megfelel a mintának, a részfeladat sorszáma alatt
+- 1 || 2 || adat || A 14 hőmérséklet el van tárolva a programban
+- 2 || 1 || szam1:minta || A leghidegebb nap sorszáma helyes a mintára
+- 2 || 1 || szam2:minta || A leghidegebb nap hőmérséklete helyes a mintára
+- 2 || 1 || szam1:rejtett || A sorszám más adatokra is helyes (azonos legkisebb értékeknél az első nap)
+- 3 || 1 || szam1:minta || A fagyos napok száma helyes a mintára
+- 3 || 1 || szam1:rejtett || Más adatokra is helyes (például ha a 0 °C nem számít fagyosnak)
+- 3 || 1 || felirat:minta || A felirat a mintának megfelelő
+- 4 || 1 || szam1:minta || A leghosszabb időszak helyes a mintára
+- 4 || 1 || felirat:minta || A felirat a mintának megfelelő
+- 4 || 3 || szam1:rejtett || Más adatokra is helyes (az időszak a sor végén ér véget, vagy nincs fagyos nap)
+megoldas: |
+  homerseklet = [3, -2, -5, 1, -1, -4, -6, -3, 2, 4, -1, -2, 0, -3]
+
+  print("2. feladat")
+  leghidegebb = 0
+  for i in range(len(homerseklet)):
+      if homerseklet[i] < homerseklet[leghidegebb]:
+          leghidegebb = i
+  print("A leghidegebb nap:", str(leghidegebb + 1) + ". nap,", homerseklet[leghidegebb], "°C")
+
+  print("3. feladat")
+  fagyos = 0
+  for ertek in homerseklet:
+      if ertek < 0:
+          fagyos += 1
+  print("Fagyos napok száma:", fagyos)
+
+  print("4. feladat")
+  sorozat = 0
+  leghosszabb = 0
+  for ertek in homerseklet:
+      if ertek < 0:
+          sorozat += 1
+      else:
+          sorozat = 0
+      if sorozat > leghosszabb:
+          leghosszabb = sorozat
+  print("A leghosszabb fagyos időszak:", leghosszabb, "nap")
+tesztek:
+-
+- || pre: homerseklet = [5, 6, 7, 8, 9, 10, 11, 12, 13, 12, 11, 10, 9, 8]
+- || pre: homerseklet = [-3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3]
+- || pre: homerseklet = [0, 0, -2, -2, 0, 1, -2, -9, -9, -9, 0, 3, -9, -9]
+- || pre: homerseklet = [2, -4, -1, 0, -4, -4, -1, -1, 1, 5, 6, -5, -2, -7]

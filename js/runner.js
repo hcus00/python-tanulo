@@ -28,16 +28,20 @@ var PY_HARNESS = [
   "        pass",
   "    def getvalue(self):",
   "        return ''.join(self.p)",
-  "def _run(code, stdin_text, limit, seed=None, echo=False):",
+  "def _run(code, stdin_text, limit, seed=None, echo=False, sep=False):",
   "    out = _Out()",
+  "    prompts = []",
   "    data = iter(stdin_text.split('\\n') if stdin_text != '' else [])",
   "    def fake_input(prompt=''):",
-  "        out.write(str(prompt))",
+  "        if sep:",
+  "            prompts.append(str(prompt))",
+  "        else:",
+  "            out.write(str(prompt))",
   "        try:",
   "            v = next(data)",
   "        except StopIteration:",
   "            raise EOFError('Nincs több bemenet. Írd a Bemenet mezőbe az input() által kért értékeket, soronként egyet.')",
-  "        if echo:",
+  "        if echo and not sep:",
   "            out.write(v + '\\n')",
   "        return v",
   "    start = time.time()",
@@ -75,7 +79,7 @@ var PY_HARNESS = [
   "        err += ''.join(traceback.format_exception_only(type(e), e)).rstrip()",
   "    finally:",
   "        sys.stdout = old",
-  "    return (out.getvalue(), err)",
+  "    return (out.getvalue(), err, '\\n'.join(prompts))",
   "import json, types",
   "def _rp(v):",
   "    try:",
@@ -172,12 +176,13 @@ function pyLoad() {
 }
 
 /* Egy program futtatása: {out, err}. */
-/* echo: a beolvasott értéket is kiírja a kérdés után (mint egy valódi konzolon); az ellenőrzések echo nélkül futnak. */
-function pyRun(code, stdin, seed, echo) {
+/* echo: a beolvasott értéket is kiírja a kérdés után (mint egy valódi konzolon); az ellenőrzések echo nélkül futnak.
+   sep: az input() kérdéseit nem a kimenetbe írja, hanem külön gyűjti (a pontozáshoz: prompts). */
+function pyRun(code, stdin, seed, echo, sep) {
   return pyLoad().then(function (fn) {
-    var r = fn(code, stdin || "", 5, seed == null ? null : seed, !!echo), a = r.toJs();
+    var r = fn(code, stdin || "", 5, seed == null ? null : seed, !!echo, !!sep), a = r.toJs();
     r.destroy();
-    return { out: a[0], err: a[1] };
+    return { out: a[0], err: a[1], prompts: a[2] || "" };
   });
 }
 

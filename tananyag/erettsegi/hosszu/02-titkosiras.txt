@@ -1,0 +1,68 @@
+# Titkosírás
+ido: 60
+leiras: |
+  A nyári táborban a gyerekek titkos üzeneteket váltanak egymással. Az üzenet egyetlen sor, amely csak az angol ábécé kisbetűit (<code>a</code>–<code>z</code>) és szóközöket tartalmaz. A szavakat pontosan egy szóköz választja el, az üzenet elején és végén nincs szóköz. Készíts programot, amely feldolgozza az üzenetet!
+reszek:
+- 1 || Kérd be az üzenetet (bekérő szöveg nélkül)! Írd ki, hány karakterből áll (a szóközöket is beleértve) és hány szóból, például: <code>Karakterek: 41, szavak: 9</code>
+- 2 || Melyik szó a leghosszabb? Írd ki a szót és a hosszát, például: <code>Leghosszabb szó: tabori (6 betű)</code> Ha több azonos hosszúságú leghosszabb szó van, az elsőt add meg.
+- 3 || A titkosításhoz a gyerekek minden betűt az ábécében három hellyel későbbi betűre cserélnek (az <code>a</code> helyére <code>d</code> kerül, az <code>x</code> helyére <code>a</code>, az <code>y</code> helyére <code>b</code>, a <code>z</code> helyére <code>c</code>), a szóközök változatlanok maradnak. Írd ki az üzenet titkosított változatát!
+- 2 || Tréfás üzenet: Írd ki az eredeti üzenetet úgy, hogy minden szó betűit fordított sorrendben írod, a szavak sorrendje és a szóközök viszont maradnak, például a <code>kajak es level</code> helyett <code>kajak se level</code> jelenik meg.
+- 3 || Palindromnak nevezzük azt a szót, amely visszafelé olvasva is ugyanaz (például <code>kajak</code>). Írd ki az üzenet legalább három betűs palindrom szavait egy sorba, szóközzel elválasztva, a következő alakban: <code>Palindromok: kajak level</code> Ha nincs ilyen szó, ezt írd ki: <code>Nincs palindrom szó.</code> Ha egy szó többször szerepel, annyiszor írd ki, ahányszor előfordul.
+- 4 || A gyerekek szeretnének statisztikát a szavak hosszáról. Írd ki növekvő sorrendben minden olyan szóhosszra, amely előfordul, hogy hány ilyen hosszú szó van az üzenetben, például: <code>5 betűs szavak: 2 db</code> Az olyan hosszakat, amelyekből nincs szó, ne írd ki.
+megoldas: |
+  uzenet = input()
+  szavak = uzenet.split(" ")
+
+  print("1. feladat")
+  print("Karakterek: " + str(len(uzenet)) + ", szavak: " + str(len(szavak)))
+
+  print("2. feladat")
+  leghosszabb = szavak[0]
+  for szo in szavak:
+      if len(szo) > len(leghosszabb):
+          leghosszabb = szo
+  print("Leghosszabb szó: " + leghosszabb + " (" + str(len(leghosszabb)) + " betű)")
+
+  print("3. feladat")
+  titkos = ""
+  for betu in uzenet:
+      if betu == " ":
+          titkos += " "
+      else:
+          sorszam = (ord(betu) - ord("a") + 3) % 26
+          titkos += chr(sorszam + ord("a"))
+  print(titkos)
+
+  print("4. feladat")
+  forditott = []
+  for szo in szavak:
+      ujszo = ""
+      for betu in szo:
+          ujszo = betu + ujszo
+      forditott.append(ujszo)
+  print(" ".join(forditott))
+
+  print("5. feladat")
+  palindromok = []
+  for i in range(len(szavak)):
+      if len(szavak[i]) >= 3 and szavak[i] == forditott[i]:
+          palindromok.append(szavak[i])
+  if len(palindromok) == 0:
+      print("Nincs palindrom szó.")
+  else:
+      print("Palindromok: " + " ".join(palindromok))
+
+  print("6. feladat")
+  for hossz in range(1, len(leghosszabb) + 1):
+      db = 0
+      for szo in szavak:
+          if len(szo) == hossz:
+              db += 1
+      if db > 0:
+          print(str(hossz) + " betűs szavak: " + str(db) + " db")
+tesztek:
+- a kajak es a level a legjobb tabori program
+- alma
+- zebra xylofon quiz
+- level radar kajak szem
+- aaa bb aaa c bb d
